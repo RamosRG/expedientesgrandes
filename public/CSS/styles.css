@@ -1,0 +1,288 @@
+    :root {
+        --vino-oscuro: #5a0a1a;
+        --vino-medio: #8a2a3a;
+        --vino-claro: #a03a4a;
+        --vino-suave: #b04a5a;
+        --vino-palido: #f8f0f2;
+        --crema: #f9f5f0;
+        --oro: #d4af37;
+        --oro-oscuro: #b8941f;
+        --texto-oscuro: #2c1810;
+        --texto-medio: #5a4a42;
+        --sombra-suave: rgba(90, 10, 26, 0.08);
+        --sombra-media: rgba(90, 10, 26, 0.15);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: var(--crema);
+        color: var(--texto-oscuro);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .portal-header {
+        background: linear-gradient(135deg, var(--vino-oscuro) 0%, var(--vino-medio) 100%);
+        color: white;
+        padding: 30px 40px;
+        box-shadow: 0 4px 20px rgba(90, 10, 26, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .portal-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    .portal-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .portal-nav {
+        background-color: white;
+        padding: 15px 40px;
+        box-shadow: 0 2px 15px var(--sombra-suave);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid var(--vino-palido);
+    }
+
+    .breadcrumb {
+        font-size: 0.95rem;
+        color: var(--texto-medio);
+    }
+
+    .breadcrumb a {
+        color: var(--vino-medio);
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        color: var(--vino-oscuro);
+        text-decoration: underline;
+    }
+
+    .breadcrumb span {
+        color: var(--texto-oscuro);
+        font-weight: 600;
+    }
+
+    .breadcrumb-separator {
+        margin: 0 8px;
+        color: var(--vino-claro);
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--vino-medio) 0%, var(--vino-oscuro) 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px var(--sombra-media);
+    }
+
+    .btn-secondary {
+        background-color: transparent;
+        color: var(--vino-medio);
+        border: 2px solid var(--vino-medio);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--vino-palido);
+        transform: translateY(-3px);
+    }
+
+    .portal-content {
+        padding: 40px;
+        flex: 1;
+    }
+
+    .content-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px var(--sombra-media);
+        border: 1px solid var(--vino-palido);
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, var(--vino-oscuro) 0%, var(--vino-medio) 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        border-bottom: 3px solid var(--oro);
+    }
+
+    .form-header h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .form-body {
+        padding: 40px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #e1d5d8;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--vino-medio);
+        box-shadow: 0 0 0 4px rgba(138, 42, 58, 0.1);
+    }
+
+    .form-row {
+        display: flex;
+        gap: 25px;
+        margin-bottom: 25px;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .checkbox-group input {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--vino-medio);
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border-left: 5px solid #dc3545;
+    }
+
+    .alert-danger ul {
+        margin-left: 25px;
+        margin-top: 10px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 2px solid var(--vino-palido);
+    }
+
+    .portal-footer {
+        margin-top: auto;
+        padding: 25px 40px;
+        background-color: var(--vino-oscuro);
+        color: #f0e6e8;
+        text-align: center;
+        font-size: 0.9rem;
+    }
+
+    .footer-link {
+        color: var(--oro);
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+
+        .portal-header,
+        .portal-nav,
+        .portal-content {
+            padding: 20px;
+        }
+
+        .portal-title {
+            font-size: 2rem;
+        }
+
+        .form-body {
+            padding: 25px;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .form-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
