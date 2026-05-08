@@ -347,7 +347,9 @@
 
             let html = `
         <div class="card">
-            <h2>Proveedor: ${proveedor}</h2>
+            <h2 data-proveedor="${proveedor}">
+    Proveedor: ${proveedor}
+</h2>
 
             <table>
                 <thead>
@@ -355,6 +357,7 @@
                         <th>Descripción</th>
                         <th>Cantidad</th>
                         <th>Precio Unitario</th>
+                        <th>Modelo</th>
                         <th>Importe</th>
                     </tr>
                 </thead>
@@ -363,22 +366,31 @@
 
             productos.forEach((p, i) => {
                 html += `
-            <tr>
-                <td>${p.descripcion}</td>
-                <td>${p.cantidad}</td>
-                <td>
-                    <input 
-                        type="number"
-                        step="0.01"
-                        id="precio_${proveedor}_${i}"
-                        oninput="calcularTotales('${proveedor}')"
-                    >
-                </td>
-                <td id="importe_${proveedor}_${i}">
-                    $0.00
-                </td>
-            </tr>
-        `;
+        <tr>
+            <td>${p.descripcion}</td>
+            <td>${p.cantidad}</td>
+
+            <td>
+                <input 
+                    type="number"
+                    step="0.01"
+                    id="precio_${proveedor}_${i}"
+                    oninput="calcularTotales('${proveedor}')"
+                >
+            </td>
+
+            <td>
+                <input 
+                    type="text"
+                    id="modelo_${proveedor}_${i}"
+                >
+            </td>
+
+            <td id="importe_${proveedor}_${i}">
+                $0.00
+            </td>
+        </tr>
+    `;
             });
 
             html += `
@@ -406,6 +418,40 @@
 
             document.getElementById("contenedorCotizaciones").innerHTML += html;
             document.getElementById("proveedores").value = "";
+        }
+
+        function cargarProveedores() {
+
+            fetch("../../usuarios/obtenerProveedores")
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data.success) {
+                        alert("No se pudieron cargar los proveedores");
+                        return;
+                    }
+
+                    let proveedores = data.data;
+                    let selectProveedores = document.getElementById("proveedores");
+
+                    // Limpiar opciones anteriores
+                    selectProveedores.innerHTML = '<option value="">Seleccione un proveedor</option>';
+
+                    proveedores.forEach(proveedor => {
+                        let option = document.createElement("option");
+
+                        // Ajusta estos campos según tu tabla real
+                        option.value = proveedor.id_usuario;
+                        option.textContent = proveedor.nombre;
+
+                        selectProveedores.appendChild(option);
+                    });
+
+                    console.log(proveedores);
+                })
+                .catch(error => {
+                    console.error("Error cargando los proveedores:", error);
+                });
         }
 
         function cargarAreas() {
@@ -477,171 +523,101 @@
                 });
         }
 
-        function cargarProveedores() {
-
-            fetch("../../usuarios/obtenerProveedores")
-                .then(res => res.json())
-                .then(data => {
-
-                    if (!data.success) {
-                        alert("No se pudieron cargar los proveedores");
-                        return;
-                    }
-
-                    let proveedores = data.data;
-                    let selectProveedores = document.getElementById("proveedores");
-
-                    // Limpiar opciones anteriores
-                    selectProveedores.innerHTML = '<option value="">Seleccione un proveedor</option>';
-
-                    proveedores.forEach(proveedor => {
-                        let option = document.createElement("option");
-
-                        // Ajusta estos campos según tu tabla real
-                        option.value = proveedor.id_proveedor;
-                        option.textContent = proveedor.nombre;
-
-                        selectProveedores.appendChild(option);
-                    });
-
-                    console.log(proveedores);
-                })
-                .catch(error => {
-                    console.error("Error cargando los proveedores:", error);
-                });
-        }
-
-function calcularTotales(proveedor) {
-    let subtotal = 0;
-
-    productos.forEach((producto, i) => {
-        let precioInput = document.getElementById(`precio_${proveedor}_${i}`);
-        let precio = precioInput ? parseFloat(precioInput.value || 0) : 0;
-
-        let importe = precio * producto.cantidad;
-        subtotal += importe;
-
-        let importeElemento = document.getElementById(`importe_${proveedor}_${i}`);
-        if (importeElemento) {
-            importeElemento.innerText = "$" + importe.toFixed(2);
-        }
-    });
-
-    let iva = subtotal * 0.16;
-    let total = subtotal + iva;
-
-    let subtotalElemento = document.getElementById(`subtotal_${proveedor}`);
-    let ivaElemento = document.getElementById(`iva_${proveedor}`);
-    let totalElemento = document.getElementById(`total_${proveedor}`);
-
-    if (subtotalElemento) {
-        subtotalElemento.innerText = "$" + subtotal.toFixed(2);
-    }
-
-    if (ivaElemento) {
-        ivaElemento.innerText = "$" + iva.toFixed(2);
-    }
-
-    if (totalElemento) {
-        totalElemento.innerText = "$" + total.toFixed(2);
-    }
-}
 
 
-function guardarEstudioMercado() {
+        function guardarEstudioMercado() {
 
-    let area = document.getElementById("area").value;
-    let nombreEstudio = document.getElementById("nombre_estudio").value;
-    let fecha = document.getElementById("fecha").value;
+            let area = document.getElementById("area").value;
+            let nombreEstudio = document.getElementById("nombre_estudio").value;
+            let fecha = document.getElementById("fecha").value;
 
-    // Validar datos generales
-    if (!area || !nombreEstudio || !fecha) {
-        alert("Complete los datos generales");
-        return;
-    }
-
-    // Validar productos
-    if (productos.length === 0) {
-        alert("Debe agregar al menos una descripción");
-        return;
-    }
-
-    // Objeto principal
-    let data = {
-        area: area,
-        nombre_estudio: nombreEstudio,
-        fecha: fecha,
-        productos: productos,
-        proveedores: []
-    };
-
-    // Obtener tarjetas de proveedores
-    let tarjetasProveedor = document.querySelectorAll("#contenedorCotizaciones .card");
-
-    tarjetasProveedor.forEach((card) => {
-
-        let titulo = card.querySelector("h2").innerText;
-
-        // IMPORTANTE:
-        // aquí debe coincidir exactamente con el texto mostrado
-        let proveedor = titulo.replace("Proveedor: ", "").trim();
-
-        let detalle = [];
-
-        productos.forEach((producto, i) => {
-
-            let precioInput = document.getElementById(`precio_${proveedor}_${i}`);
-            let precio = precioInput ? parseFloat(precioInput.value || 0) : 0;
-
-            detalle.push({
-                descripcion: producto.descripcion,
-                cantidad: producto.cantidad,
-                precio_unitario: precio,
-                importe: precio * producto.cantidad
-            });
-        });
-
-        let subtotal = card.querySelector(`#subtotal_${proveedor}`)?.innerText || "$0.00";
-        let iva = card.querySelector(`#iva_${proveedor}`)?.innerText || "$0.00";
-        let total = card.querySelector(`#total_${proveedor}`)?.innerText || "$0.00";
-
-        data.proveedores.push({
-            proveedor: proveedor,
-            detalle: detalle,
-            subtotal: subtotal,
-            iva: iva,
-            total: total
-        });
-    });
-
-    console.log(data);
-
-    // AJAX a CodeIgniter
-    $.ajax({
-        url: '<?= base_url("portalProcesos/guardarEstudioMercado") ?>',
-        type: 'POST',
-        data: JSON.stringify(data),
-        contentType: 'application/json',
-        dataType: 'json',
-
-        success: function(response) {
-            console.log(response);
-
-            if (response.success) {
-                alert("Guardado correctamente");
-                location.reload();
-            } else {
-                alert(response.message || "Ocurrió un error al guardar");
+            // Validar datos generales
+            if (!area || !nombreEstudio || !fecha) {
+                alert("Complete los datos generales");
+                return;
             }
-        },
 
-        error: function(xhr, status, error) {
-            console.log(xhr.responseText);
-            console.log(error);
-            alert("Error al guardar en la base de datos");
+            // Validar productos
+            if (productos.length === 0) {
+                alert("Debe agregar al menos una descripción");
+                return;
+            }
+
+            // Objeto principal
+            let data = {
+                area: area,
+                nombre_estudio: nombreEstudio,
+                fecha: fecha,
+                productos: productos,
+                proveedores: []
+            };
+
+            // Obtener tarjetas de proveedores
+            let tarjetasProveedor = document.querySelectorAll("#contenedorCotizaciones .card");
+
+            tarjetasProveedor.forEach((card) => {
+                let proveedor = card.querySelector("h2").dataset.proveedor;
+
+                let detalle = [];
+
+                productos.forEach((producto, i) => {
+
+                    let precioInput = document.getElementById(`precio_${proveedor}_${i}`);
+                    let precio = precioInput ? parseFloat(precioInput.value || 0) : 0;
+                    let modeloInput = document.getElementById(`modelo_${proveedor}_${i}`);
+                    let modelo = modeloInput ? modeloInput.value : "";
+
+                    detalle.push({
+                        descripcion: producto.descripcion,
+                        cantidad: producto.cantidad,
+                        precio_unitario: precio,
+                        modelo: modelo,
+                        importe: precio * producto.cantidad
+                    });
+                });
+
+                let subtotal = card.querySelector(`#subtotal_${proveedor}`)?.innerText || "$0.00";
+                let iva = card.querySelector(`#iva_${proveedor}`)?.innerText || "$0.00";
+                let total = card.querySelector(`#total_${proveedor}`)?.innerText || "$0.00";
+
+                data.proveedores.push({
+                    proveedor: proveedor,
+                    detalle: detalle,
+                    subtotal: subtotal,
+                    iva: iva,
+                    total: total
+                });
+            });
+
+            console.log(data);
+
+
+            // AJAX a CodeIgniter
+            $.ajax({
+                url: '<?= base_url("portalProcesos/guardarEstudioMercado") ?>',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                dataType: 'json',
+
+                success: function (response) {
+                    console.log(response);
+
+                    if (response.success) {
+                        alert("Guardado correctamente");
+                        location.reload();
+                    } else {
+                        alert(response.message || "Ocurrió un error al guardar");
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(error);
+                    alert("Error al guardar en la base de datos");
+                }
+            });
         }
-    });
-}
         document.addEventListener("DOMContentLoaded", function () {
 
 
@@ -651,6 +627,42 @@ function guardarEstudioMercado() {
 
 
         });
+
+        function calcularTotales(proveedor) {
+            let subtotal = 0;
+
+            productos.forEach((producto, i) => {
+                let precioInput = document.getElementById(`precio_${proveedor}_${i}`);
+                let precio = precioInput ? parseFloat(precioInput.value || 0) : 0;
+
+                let importe = precio * producto.cantidad;
+                subtotal += importe;
+
+                let importeElemento = document.getElementById(`importe_${proveedor}_${i}`);
+                if (importeElemento) {
+                    importeElemento.innerText = "$" + importe.toFixed(2);
+                }
+            });
+
+            let iva = subtotal * 0.16;
+            let total = subtotal + iva;
+
+            let subtotalElemento = document.getElementById(`subtotal_${proveedor}`);
+            let ivaElemento = document.getElementById(`iva_${proveedor}`);
+            let totalElemento = document.getElementById(`total_${proveedor}`);
+
+            if (subtotalElemento) {
+                subtotalElemento.innerText = "$" + subtotal.toFixed(2);
+            }
+
+            if (ivaElemento) {
+                ivaElemento.innerText = "$" + iva.toFixed(2);
+            }
+
+            if (totalElemento) {
+                totalElemento.innerText = "$" + total.toFixed(2);
+            }
+        }
     </script>
 
 </body>

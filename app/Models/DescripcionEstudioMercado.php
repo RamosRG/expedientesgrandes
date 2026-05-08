@@ -4,19 +4,21 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class DocumentosProcesosModel extends Model
+class DescripcionEstudioMercado extends Model
 {
-    protected $table = 'tbl_documentos_procesos';
-    protected $primaryKey = 'id_documento';
+    protected $table = 'descripcion_estudio_mercado';
+    protected $primaryKey = 'id_descripcion';
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     
     protected $allowedFields = [
-        'nombre_proceso',
-        'fk_proceso',
-        'ruta_documento',
+        'fk_estudio_mercado',
+        'partida',
+        'descripcion',
+        'fk_unidad_medida',
+        'cantidad'
     ];
     
     protected $useTimestamps = true;

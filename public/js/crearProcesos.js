@@ -32,11 +32,11 @@ function cargarProcesos() {
             <td>${doc.tipo_proceso ?? 'Sin tipo'}</td>
             <td>${doc.created_at ?? 'Sin fecha'}</td>
             <td>
-                <button class="w3-btn w3-green w3-round w3-block" onclick="verDocumento(${doc.id_documento})">
+                <button class="btn-ver" onclick="verDocumento(${doc.id_documento})">
                     <i class="fas fa-eye"></i>
                 </button>
 
-                <button class="w3-btn w3-blue w3-round w3-block" onclick="descargarDocumento(${doc.id_documento})">
+                <button class="btn-descargar" onclick="descargarDocumento(${doc.id_documento})">
                     <i class="fas fa-download"></i>
                 </button>
             </td>
@@ -59,7 +59,7 @@ function cargarProcesos() {
 }
             
 function verDocumento(id){
-    window.location.href = "../../procesosInternos/verDocumentosFinalizados/" + id;
+    window.location.href = "../../procesosInternos/crearDocumento/" + id;
 }
 
 function descargarDocumento(id){

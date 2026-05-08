@@ -41,13 +41,16 @@ function cargarProcesos() {
                                     ${escapeHtml(proceso.created_at)}
                                 </span>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body ">
                                 <div class="proceso-descripcion">
                                     ${escapeHtml(proceso.descripcion ?? 'Sin descripción')}
                                 </div>
                                 <div class="card-actions">
-                                    <button onclick="abrirProceso(${proceso.id_proceso})">
-                                        <i class="fas fa-eye"></i> Ver proceso
+                                    <button class="w3-btn w3-blue w3-round" onclick="crearProcesos(${proceso.id_proceso})">
+                                        <i class=" fas fa-eye"></i> Crear proceso
+                                    </button>
+                                    <button class="w3-btn w3-green w3-round" onclick="abrirProceso(${proceso.id_proceso})">
+                                        <i class=" fa fa-book"></i> Ver procesos
                                     </button>
                                 </div>
                             </div>
@@ -85,5 +88,8 @@ function cargarProcesos() {
 
 // ✅ FUERA de la función
 function abrirProceso(id){
-    window.location.href = "../procesosInternos/verProcesos/" + id;
+    window.location.href = "../procesosInternos/verProcesosFinalizados/" + id;
+}
+function crearProcesos(id){
+    window.location.href = "../procesosInternos/crearProcesos/" + id;
 }

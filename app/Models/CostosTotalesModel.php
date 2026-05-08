@@ -4,19 +4,21 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class DocumentosProcesosModel extends Model
+class CostosTotalesModel extends Model
 {
-    protected $table = 'tbl_documentos_procesos';
-    protected $primaryKey = 'id_documento';
+    protected $table = 'tbl_costos_totales';
+    protected $primaryKey = 'id_costos';
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     
     protected $allowedFields = [
-        'nombre_proceso',
-        'fk_proceso',
-        'ruta_documento',
+        'fk_nombre_razon_social',
+        'subtotal',
+        'iva',
+        'costo_total',
+        'cantidad'
     ];
     
     protected $useTimestamps = true;

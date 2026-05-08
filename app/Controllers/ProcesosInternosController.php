@@ -5,6 +5,21 @@ namespace App\Controllers;
 use App\Models\ProcesoModel;
 class ProcesosInternosController extends BaseController
 {
+    public function verDocumentosFinalizados($id)
+    {
+        if($id == 1) {
+            return view("portalProcesos/estudioMercadoFinalizado");
+        } elseif ($id == 2) {
+            return view("portalProcesos/anexoPropuesta");
+        }
+    }
+    public function crearProcesos($id){
+
+         return view("procesosInternos/crearProceso", [
+        'id' => $id
+        
+    ]);
+    }
   
      public function getProcesosById($id = null){
 
@@ -17,7 +32,7 @@ class ProcesosInternosController extends BaseController
        'data' => $data
     ]);
 }
-    public function verProcesos($id)
+    public function verProcesosFinalizados($id)
 {
      return view("procesosInternos/verProceso", [
         'id' => $id
@@ -41,10 +56,13 @@ class ProcesosInternosController extends BaseController
             ]);
 
     }
-
-       public function crearDocumento($id)
-    {
-     return view("portalProcesos/crearDocumento");
+public function crearDocumento($id)
+{
+    if ($id == 1) {
+        return view("portalProcesos/crearDocumento");
+    } elseif ($id == 2) {
+        return view("portalProcesos/anexoPropuesta");
+    }
 }
 
 public function adjudicacionDirecta()

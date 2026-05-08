@@ -44,6 +44,7 @@ $routes->group('unidades', function ($routes) {
 // Portal de Procesos
 $routes->group('portalProcesos', function ($routes) {
     $routes->get('procesos', 'PortalProcesosController::procesos');
+    $routes->get('obtenerEstudiosFinalizados', 'PortalProcesosController::obtenerEstudiosFinalizados');
     $routes->get('obtenerProcesos', 'PortalProcesosController::obtenerProcesos');
     $routes->get('obtenerProceso/(:num)', 'PortalProcesosController::obtenerProceso/$1');
     $routes->get('descargarDocumento/(:num)', 'PortalProcesosController::descargarDocumento/$1');
@@ -53,12 +54,16 @@ $routes->group('portalProcesos', function ($routes) {
     $routes->get('verProcesos/(:num)', 'PortalProcesosController::verProcesos/$1');
     $routes->delete('eliminar/(:num)', 'PortalProcesosController::eliminar/$1');
     $routes->post('cambiarEstado/(:num)', 'PortalProcesosController::cambiarEstado/$1');
+    $routes->get('verEstudioMercado/(:num)', 'PortalProcesosController::verEstudioMercado/$1');
+    $routes->get('obtenerEstudioMercadoPorId/(:num)', 'PortalProcesosController::obtenerEstudioMercadoPorId/$1');
     });
     
     $routes->group('procesosInternos', function ($routes) {
+        $routes->get('crearProcesos/(:num)', 'ProcesosInternosController::crearProcesos/$1');
         $routes->get('getProcesosById/(:num)', 'ProcesosInternosController::getProcesosById/$1');
         $routes->get('procesos', 'ProcesosInternosController::procesos');
-        $routes->get('verProcesos/(:num)', 'ProcesosInternosController::verProcesos/$1');
+        $routes->get('verProcesosFinalizados/(:num)', 'ProcesosInternosController::verProcesosFinalizados/$1');
+        $routes->get('verDocumentosFinalizados/(:num)', 'ProcesosInternosController::verDocumentosFinalizados/$1');
         $routes->get('crearDocumento/(:num)', 'ProcesosInternosController::crearDocumento/$1');
     $routes->get('getProcesos', 'ProcesosInternosController::getProcesos');
     $routes->get('adjudicacionDirecta', 'ProcesosInternosController::adjudicacionDirecta');

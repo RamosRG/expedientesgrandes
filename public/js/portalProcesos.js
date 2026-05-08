@@ -53,7 +53,7 @@ $(document).ready(function() {
                         </div>
                         <div class="card-actions">
                             <button class="btn-ver" onclick="verProcesosPorClave('${clave}')">
-                                <i class="fas fa-eye"></i> Ver procesos (${totalProcesos})
+                                <i class="fas fa-eye "></i> Ver procesos (${totalProcesos})
                             </button>
                         </div>
                     </div>

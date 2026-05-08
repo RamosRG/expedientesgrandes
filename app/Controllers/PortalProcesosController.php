@@ -2,30 +2,185 @@
 
 namespace App\Controllers;
 
+use App\Models\CostosTotalesModel;
+use App\Models\DescripcionEstudioMercado;
+use App\Models\EstudioMercadoModel;
 use App\Models\ProcesoModel;
 use App\Models\DocumentosProcesosModel;
+use App\Models\NombreRazonSocialModel;
 use PhpParser\Builder\Function_;
 use PhpParser\Node\Expr\FuncCall;
 
 class PortalProcesosController extends BaseController
 {
-    public function guardarEstudioMercado(){
 
+ public function verEstudioMercado($idEstudio)
+{
+   return view("portalProcesos/verEstudioMercado");
 }
 
+// CONTROLADOR
+
+public function obtenerEstudioMercadoPorId($id)
+{
+    try {
+
+        $model = new EstudioMercadoModel();
+        $data = $model->getEstudioById($id);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+
+    } catch (\Exception $e) {
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+    }
+}
+public function obtenerEstudiosFinalizados()
+{
+    try {
+
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerEstudiosFinalizados();
+
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $data
+        ]);
+
+    } catch (\Exception $e) {
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+    }
+}
+   public function guardarEstudioMercado()
+{
+    $json = file_get_contents("php://input");
+    $data = json_decode($json, true);
+
+    if (!$data) {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'No llegaron datos'
+        ]);
+    }
+
+    try {
+
+        // =========================
+        // TABLA PRINCIPAL
+        // =========================
+
+        $estudioMercadoModel = new EstudioMercadoModel();
+
+        $estudioMercadoModel->insert([
+            'nombre_estudio' => $data['nombre_estudio'],
+            'fk_area'        => $data['area'],
+            'fecha'          => $data['fecha']
+        ]);
+
+        $idEstudio = $estudioMercadoModel->insertID();
+
+        // =========================
+        // DETALLE DE DESCRIPCIONES
+        // =========================
+
+        $descripcionModel = new DescripcionEstudioMercado();
+        $idsDescripcion = [];
+
+        foreach ($data['productos'] as $index => $producto) {
+
+            $descripcionModel->insert([
+                'fk_estudio_mercado' => $idEstudio,
+                'partida'            => $index + 1,
+                'descripcion'        => $producto['descripcion'],
+                'fk_unidad_medida'   => $producto['unidad'],
+                'cantidad'           => $producto['cantidad']
+            ]);
+
+            $idsDescripcion[$index] = $descripcionModel->insertID();
+        }
+
+        // =========================
+        // TABLA RAZÓN SOCIAL
+        // =========================
+
+        $razonSocialModel = new NombreRazonSocialModel();
+        $costosTotales = new CostosTotalesModel();
+
+        foreach ($data['proveedores'] as $proveedor) {
+
+            $idProveedor = $proveedor['proveedor'];
+            $ultimoIdRazonSocial = null;
+
+            // Guardar detalle de cotización
+            foreach ($proveedor['detalle'] as $index => $detalle) {
+
+                $razonSocialModel->insert([
+                    'fk_descripcion_estudio_mercado' => $idsDescripcion[$index],
+                    'fk_proveedor'                   => $idProveedor,
+                    'precio_unitario'               => $detalle['precio_unitario'],
+                    'precio_total'                  => $detalle['importe'],
+                    'marca_modelo'                  => $detalle['modelo']
+                ]);
+
+                // obtener el último ID insertado
+                $ultimoIdRazonSocial = $razonSocialModel->insertID();
+            }
+
+            // =========================
+            // TABLA COSTOS TOTALES
+            // =========================
+            // subtotal, iva y total vienen dentro de cada proveedor
+
+            $subtotal = str_replace(['$', ','], '', $proveedor['subtotal']);
+            $iva = str_replace(['$', ','], '', $proveedor['iva']);
+            $total = str_replace(['$', ','], '', $proveedor['total']);
+
+            $costosTotales->insert([
+                'fk_nombre_razon_social' => $ultimoIdRazonSocial,
+                'subtotal'               => $subtotal,
+                'iva'                    => $iva,
+                'costo_total'            => $total
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Estudio guardado correctamente'
+        ]);
+
+    } catch (\Exception $e) {
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+    }
+}
 public function descargarDocumento($id_documento)
 {
     $model = new DocumentosProcesosModel();
     $documento = $model->find($id_documento);
 
-    if (!$id_documento) {
+    // ✅ Validar si existe el documento en BD
+    if (!$documento) {
         return $this->response->setJSON([
             'status' => 'error',
             'message' => 'Documento no encontrado'
         ]);
     }
 
-    $rutaArchivo = ROOTPATH . ltrim($id_documento['ruta_documento'], '/');
+    // ✅ Usar $documento, no $id_documento
+    $rutaArchivo = ROOTPATH . ltrim($documento['ruta_documento'], '/');
 
     if (!file_exists($rutaArchivo)) {
         return $this->response->setJSON([
@@ -35,7 +190,6 @@ public function descargarDocumento($id_documento)
         ]);
     }
 
-    // 🔥 AQUÍ ESTÁ LA SOLUCIÓN
     $extension = pathinfo($rutaArchivo, PATHINFO_EXTENSION);
 
     return $this->response->download($rutaArchivo, null)
