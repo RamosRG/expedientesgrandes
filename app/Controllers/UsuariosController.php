@@ -7,6 +7,65 @@ use App\Models\BitacoraModel;
 
 class UsuariosController extends BaseController
 {
+
+public function crearProveedorTemporal()
+{
+    $db = \Config\Database::connect();
+
+    $datos = [
+
+        'nombre' => $this->request->getPost('nombre'),
+        'apellidoP' => $this->request->getPost('apellidoP'),
+        'apellidoM' => $this->request->getPost('apellidoM'),
+        'correo' => $this->request->getPost('correo'),
+
+        'colonia' => $this->request->getPost('colonia'),
+        'calle_numero' => $this->request->getPost('calle_numero'),
+        'ciudad' => $this->request->getPost('ciudad'),
+        'estado' => $this->request->getPost('estado'),
+        'codigo_postal' => $this->request->getPost('codigo_postal'),
+        'pais' => $this->request->getPost('pais'),
+
+        'telefono_principal' => $this->request->getPost('telefono_principal'),
+
+        'rfc' => $this->request->getPost('rfc'),
+        'curp' => $this->request->getPost('curp'),
+
+        'num_credencial_votar' => $this->request->getPost('num_credencial_votar'),
+
+        'nombre_razon_social' => $this->request->getPost('nombre_razon_social'),
+
+        'tipo_persona' => $this->request->getPost('tipo_persona'),
+
+        'fecha_inicio' => $this->request->getPost('fecha_inicio'),
+
+        'fecha_final' => $this->request->getPost('fecha_final'),
+
+        'contrasena_hash' => '',
+
+        'id_rol' => 3,
+
+        'active' => 1
+    ];
+
+    $guardar = $db->table('usuarios')->insert($datos);
+
+    if($guardar){
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Datos guardados correctamente'
+        ]);
+
+    }else{
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error al guardar'
+        ]);
+
+    }
+}
     public function obtenerProveedores()
     {
         $proveedores = new UsuarioModel();

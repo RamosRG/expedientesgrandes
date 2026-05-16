@@ -258,8 +258,94 @@
     </style>
 </head>
 
-<body>
-    <div class="portal-container">
+<body class="w3-light-grey">
+    <!-- TOP -->
+<div class="w3-bar w3-top w3-large"
+    style="background-color:#800020; color:white; z-index:4">
+
+    <button class="w3-bar-item w3-button w3-hide-large"
+        onclick="w3_open();">
+
+        <i class="fa fa-bars"></i> Menu
+    </button>
+
+    <span class="w3-bar-item w3-right">
+        Sistema
+    </span>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left"
+    style="
+        z-index:3;
+        width:300px;
+        position:fixed;
+        top:60px;
+        left:0;
+        height:100%;
+        overflow:auto;
+    "
+    id="mySidebar">
+
+    <br>
+
+    <div class="w3-container w3-row">
+
+        <div class="w3-col s4">
+            <img src="https://www.w3schools.com/w3images/avatar2.png"
+                class="w3-circle w3-margin-right"
+                style="width:46px">
+        </div>
+
+        <div class="w3-col s8 w3-bar">
+            <span>PORTAL PROCESOS PORTAL</span><br>
+
+            <a href="#" class="w3-bar-item w3-button">
+                <i class="fa fa-book"></i>
+            </a>
+        </div>
+    </div>
+
+    <hr>
+
+       <div class="w3-bar-block">
+
+            <a href="../portalProcesos/procesos" class="w3-bar-item w3-button w3-padding w3-blue">
+                <i class="fa fa-address-card fa-fw"></i>
+                Portal de Procesos
+            </a>
+            <a href="../procesosInternos/crearProceso" class="w3-bar-item w3-button w3-padding w3-blue">
+                <i class="fa fa-address-card fa-fw"></i>
+                crear Proceso
+            </a>
+            <a href="#" class="w3-bar-item w3-button w3-padding w3-blue">
+                <i class="fa fa-address-card fa-fw"></i>
+                Listado Proveedores
+            </a>
+
+            <a href="#" class="w3-bar-item w3-button w3-padding">
+                <i class="fa fa-book fa-fw"></i>
+                Catalogo de productos
+            </a>
+
+            <a href="#" class="w3-bar-item w3-button w3-padding">
+                <i class="fa fa-cog fa-fw"></i>
+                Configuración
+            </a>
+
+        </div>
+</nav>
+
+<!-- OVERLAY -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity"
+    onclick="w3_close()"
+    style="cursor:pointer"
+    title="close side menu"
+    id="myOverlay">
+</div>
+
+    <div class="portal-container"
+    style="margin-left:300px; margin-top:80px;">
         <header class="portal-header">
             <div class="portal-title">SISTEMA DE GESTIÓN</div>
         </header>

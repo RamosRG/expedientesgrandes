@@ -4,20 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CostosTotalesModel extends Model
+class CatalogoModel extends Model
 {
-    protected $table = 'tbl_costos_totales';
-    protected $primaryKey = 'id_costos';
+    protected $table = 'catalogo';
+    protected $primaryKey = 'id_catalogo';
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     
     protected $allowedFields = [
-        'fk_nombre_razon_social',
-        'subtotal',
-        'iva',
-        'total',
+        'nombre_catalogo',
     ];
     
     protected $useTimestamps = true;
@@ -26,3 +23,4 @@ class CostosTotalesModel extends Model
     protected $updatedField = 'updated_at';
     
     }
+    

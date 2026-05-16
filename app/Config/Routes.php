@@ -24,6 +24,7 @@ $routes->group('usuarios', function ($routes) {
     $routes->get('obtenerUsuarios', 'UsuariosController::obtenerUsuarios');
     $routes->get('obtenerUsuariosConRol', 'UsuariosController::obtenerUsuariosConRol');
     $routes->post('cambiarEstado/(:num)', 'UsuariosController::cambiarEstado/$1');
+    $routes->post('crearProveedorTemporal', 'UsuariosController::crearProveedorTemporal');
 });
 
 $routes->group('admin', function ($routes) {
@@ -33,12 +34,20 @@ $routes->group('admin', function ($routes) {
 });
 $routes->group('areas', function ($routes) {
     $routes->get('obtenerAreas', 'AreasController::obtenerAreas');
-   
+
 });
 
 $routes->group('unidades', function ($routes) {
     $routes->get('obtenerUnidadesMedida', 'UnidadesController::obtenerUnidadesMedida');
- 
+
+});
+$routes->group('catalogo', function ($routes) { //alias o nombre que recibe el controlador
+    $routes->get('obtenerCatalogo', 'CatalogoController::obtenerCatalogo');
+
+});
+$routes->group('descripcionCatalogo', function ($routes) { //alias o nombre que recibe el controlador
+    $routes->get('obtenerDescripcionCatalogo/(:num)', 'DescripcionCatalogoController::obtenerDescripcionCatalogo/$1');
+
 });
 
 // Portal de Procesos
@@ -54,17 +63,19 @@ $routes->group('portalProcesos', function ($routes) {
     $routes->get('verProcesos/(:num)', 'PortalProcesosController::verProcesos/$1');
     $routes->delete('eliminar/(:num)', 'PortalProcesosController::eliminar/$1');
     $routes->post('cambiarEstado/(:num)', 'PortalProcesosController::cambiarEstado/$1');
+    $routes->post('guardarProceso', 'PortalProcesosController::guardarProceso');
     $routes->get('verEstudioMercado/(:num)', 'PortalProcesosController::verEstudioMercado/$1');
     $routes->get('obtenerEstudioMercadoPorId/(:num)', 'PortalProcesosController::obtenerEstudioMercadoPorId/$1');
-    });
-    
-    $routes->group('procesosInternos', function ($routes) {
-        $routes->get('crearProcesos/(:num)', 'ProcesosInternosController::crearProcesos/$1');
-        $routes->get('getProcesosById/(:num)', 'ProcesosInternosController::getProcesosById/$1');
-        $routes->get('procesos', 'ProcesosInternosController::procesos');
-        $routes->get('verProcesosFinalizados/(:num)', 'ProcesosInternosController::verProcesosFinalizados/$1');
-        $routes->get('verDocumentosFinalizados/(:num)', 'ProcesosInternosController::verDocumentosFinalizados/$1');
-        $routes->get('crearDocumento/(:num)', 'ProcesosInternosController::crearDocumento/$1');
+});
+
+$routes->group('procesosInternos', function ($routes) {
+    $routes->get('crearProcesos/(:num)', 'ProcesosInternosController::crearProcesos/$1');
+    $routes->get('getProcesosById/(:num)', 'ProcesosInternosController::getProcesosById/$1');
+    $routes->get('procesos', 'ProcesosInternosController::procesos');
+    $routes->get('crearProceso', 'ProcesosInternosController::crearProceso');
+    $routes->get('verProcesosFinalizados/(:num)', 'ProcesosInternosController::verProcesosFinalizados/$1');
+    $routes->get('verDocumentosFinalizados/(:num)', 'ProcesosInternosController::verDocumentosFinalizados/$1');
+    $routes->get('crearDocumento/(:num)', 'ProcesosInternosController::crearDocumento/$1');
     $routes->get('getProcesos', 'ProcesosInternosController::getProcesos');
     $routes->get('adjudicacionDirecta', 'ProcesosInternosController::adjudicacionDirecta');
     $routes->get('licitacionPublica', 'ProcesosInternosController::licitacionPublica');

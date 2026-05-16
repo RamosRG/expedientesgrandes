@@ -268,11 +268,7 @@
                 </tbody>
             </table>
             <!-- RESUMEN -->
-            <div class="resumen">
-                <div><span>Subtotal:</span> <span id="subtotal">$0.00</span></div>
-                <div><span>IVA:</span> <span id="iva">$0.00</span></div>
-                <div class="total"><span>Total:</span> <span id="total">$0.00</span></div>
-            </div>
+          <div class="resumen" id="resumenProveedores"></div>
 
         </div>
 

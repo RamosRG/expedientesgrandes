@@ -21,6 +21,7 @@ class UsuarioModel extends Model
         'active',
         'rfc',
         'curp',
+        'num_credencial_votar',
         'nombre_razon_social',
         'tipo_persona',
         'telefono_principal',

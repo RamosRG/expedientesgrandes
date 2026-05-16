@@ -35,39 +35,52 @@ public function getEstudioById($id_estudio)
             em.nombre_estudio,
             a.area,
             em.created_at,
-            dem.id_descripcion,
+
+            dc.producto_servicio,
+            dc.unidad_medida,
+
             dem.partida,
-            dem.descripcion,
-            um.nombre AS unidad_medida,
             dem.cantidad,
 
-            u.id_usuario,
             u.nombre,
             u.apellidoP,
             u.apellidoM,
-            r.nombre AS rol_usuario,
 
-            nrs.id_razon_social,
             nrs.precio_unitario,
             nrs.precio_total,
             nrs.marca_modelo,
 
             tct.subtotal,
             tct.iva,
-            tct.costo_total
+            tct.total
         ')
-        ->join('descripcion_estudio_mercado dem', 'dem.fk_estudio_mercado = em.id_estudio')
         ->join('area a', 'a.id_area = em.fk_area')
-        ->join('unidades_medida um', 'um.id_unidad = dem.fk_unidad_medida')
+        
+        ->join('descripcion_estudio_mercado dem', 
+            'dem.fk_estudio_mercado = em.id_estudio'
+        )
 
-        ->join('nombre_razon_social nrs', 'nrs.fk_descripcion_estudio_mercado = dem.id_descripcion', 'left')
-        ->join('usuarios u', 'u.id_usuario = nrs.fk_proveedor', 'left')
-        ->join('roles r', 'r.id_rol = u.id_rol', 'left')
+        ->join('descripcion_catalogo dc', 
+            'dc.id_descripcion_catalogo = dem.fk_descripcion_catalogo'
+        )
 
-        ->join('tbl_costos_totales tct', 'tct.fk_nombre_razon_social = nrs.id_razon_social', 'left')
+        ->join('nombre_razon_social nrs', 
+            'nrs.fk_descripcion_estudio_mercado = dem.id_descripcion'
+        )
+
+        ->join('usuarios u', 
+            'u.id_usuario = nrs.fk_proveedor'
+        )
+
+        ->join('tbl_costos_totales tct', 
+            'tct.fk_nombre_razon_social = nrs.id_razon_social',
+            'left'
+        )
 
         ->where('em.id_estudio', $id_estudio)
+
         ->orderBy('dem.partida', 'ASC')
+
         ->get()
         ->getResultArray();
 }

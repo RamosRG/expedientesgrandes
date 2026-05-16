@@ -17,7 +17,7 @@ class DescripcionEstudioMercado extends Model
         'fk_estudio_mercado',
         'partida',
         'descripcion',
-        'fk_unidad_medida',
+        'fk_descripcion_catalogo',
         'cantidad'
     ];
     
