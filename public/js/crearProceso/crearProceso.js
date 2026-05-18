@@ -690,12 +690,16 @@ proveedores.forEach(p => {
     })
         .then(res => res.json())
         .then(data => {
-            if (data.status === 'success') {
-                alert('Proceso guardado correctamente');
-            } else {
-                alert('Error al guardar');
-            }
-        })
+
+    console.log("RESPUESTA:", data);
+
+    if (data.success) {
+        alert(data.message);
+    } else {
+        alert('Error al guardar');
+    }
+
+})
         .catch(error => {
             console.error(error);
         });
