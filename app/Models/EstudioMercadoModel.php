@@ -27,63 +27,63 @@ class EstudioMercadoModel extends Model
 
     // MODELO
 
-public function getEstudioById($id_estudio)
-{
-    return $this->db->table('estudio_mercado em')
-        ->select('
-            em.id_estudio,
-            em.nombre_estudio,
-            a.area,
-            em.created_at,
-
-            dc.producto_servicio,
-            dc.unidad_medida,
-
-            dem.partida,
-            dem.cantidad,
-
-            u.nombre,
-            u.apellidoP,
-            u.apellidoM,
-
-            nrs.precio_unitario,
-            nrs.precio_total,
-            nrs.marca_modelo,
-
-            tct.subtotal,
-            tct.iva,
-            tct.total
-        ')
-        ->join('area a', 'a.id_area = em.fk_area')
-        
-        ->join('descripcion_estudio_mercado dem', 
-            'dem.fk_estudio_mercado = em.id_estudio'
-        )
-
-        ->join('descripcion_catalogo dc', 
-            'dc.id_descripcion_catalogo = dem.fk_descripcion_catalogo'
-        )
-
-        ->join('nombre_razon_social nrs', 
-            'nrs.fk_descripcion_estudio_mercado = dem.id_descripcion'
-        )
-
-        ->join('usuarios u', 
-            'u.id_usuario = nrs.fk_proveedor'
-        )
-
-        ->join('tbl_costos_totales tct', 
-            'tct.fk_nombre_razon_social = nrs.id_razon_social',
-            'left'
-        )
-
-        ->where('em.id_estudio', $id_estudio)
-
-        ->orderBy('dem.partida', 'ASC')
-
-        ->get()
-        ->getResultArray();
-}
+ public function getEstudioById(int $id_estudio): array
+    {
+        return $this->db->table('estudio_mercado em')
+            ->select('
+                em.id_estudio,
+                em.nombre_estudio,
+                em.created_at,
+ 
+                a.area,
+ 
+                dem.id_descripcion,
+                dem.partida,
+                dem.cantidad,
+ 
+                dc.producto_servicio,
+                dc.unidad_medida,
+ 
+                u.id_usuario,
+                u.nombre,
+                u.apellidoP,
+                u.apellidoM,
+ 
+                dpp.id_razon_social,
+                dpp.precio_unitario,
+                dpp.precio_total,         
+                dpp.marca_modelo,
+ 
+                tct.subtotal,
+                tct.iva,
+                tct.total
+            ')
+ 
+            /* ── Joins ─────────────────────────────────────────────── */
+            ->join('area a',
+                   'a.id_area = em.fk_area')
+ 
+            ->join('descripcion_estudio_mercado dem',
+                   'dem.fk_estudio_mercado = em.id_estudio')
+ 
+            ->join('descripcion_catalogo dc',
+                   'dc.id_descripcion_catalogo = dem.fk_descripcion_catalogo')
+ 
+            ->join('detalle_proveedor_producto dpp',
+                   'dpp.fk_descripcion_estudio_mercado = dem.id_descripcion', 'left')
+ 
+            ->join('usuarios u',
+                   'u.id_usuario = dpp.fk_proveedor', 'left')
+ 
+            ->join('tbl_costos_totales tct',
+                   'tct.fk_estudio_mercado = em.id_estudio
+                    AND tct.fk_proveedor = dpp.fk_proveedor', 'left')
+ 
+            ->where('em.id_estudio', $id_estudio)
+            ->orderBy('dem.partida', 'ASC')
+            ->get()
+            ->getResultArray();
+    }
 
 public function obtenerEstudiosFinalizados()
 {

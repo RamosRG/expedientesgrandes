@@ -59,6 +59,7 @@ $routes->group('portalProcesos', function ($routes) {
     $routes->get('descargarDocumento/(:num)', 'PortalProcesosController::descargarDocumento/$1');
     $routes->post('guardar', 'PortalProcesosController::guardar');
     $routes->post('actualizar/(:num)', 'PortalProcesosController::actualizar/$1');
+    $routes->post('documentosProcedimiento', 'PortalProcesosController::documentosProcedimiento');
     $routes->post('guardarEstudioMercado', 'PortalProcesosController::guardarEstudioMercado');
     $routes->get('verProcesos/(:num)', 'PortalProcesosController::verProcesos/$1');
     $routes->delete('eliminar/(:num)', 'PortalProcesosController::eliminar/$1');
@@ -66,6 +67,7 @@ $routes->group('portalProcesos', function ($routes) {
     $routes->post('guardarProceso', 'PortalProcesosController::guardarProceso');
     $routes->get('verEstudioMercado/(:num)', 'PortalProcesosController::verEstudioMercado/$1');
     $routes->get('obtenerEstudioMercadoPorId/(:num)', 'PortalProcesosController::obtenerEstudioMercadoPorId/$1');
+    $routes->get('exportarEstudioMercado/(:num)', 'PortalProcesosController::exportarEstudioMercado/$1');
 });
 
 $routes->group('procesosInternos', function ($routes) {
@@ -74,7 +76,7 @@ $routes->group('procesosInternos', function ($routes) {
     $routes->get('procesos', 'ProcesosInternosController::procesos');
     $routes->get('crearProceso', 'ProcesosInternosController::crearProceso');
     $routes->get('verProcesosFinalizados/(:num)', 'ProcesosInternosController::verProcesosFinalizados/$1');
-    $routes->get('verDocumentosFinalizados/(:num)', 'ProcesosInternosController::verDocumentosFinalizados/$1');
+    $routes->get('verDocumentosFinalizados', 'ProcesosInternosController::verDocumentosFinalizados');
     $routes->get('crearDocumento/(:num)', 'ProcesosInternosController::crearDocumento/$1');
     $routes->get('getProcesos', 'ProcesosInternosController::getProcesos');
     $routes->get('adjudicacionDirecta', 'ProcesosInternosController::adjudicacionDirecta');

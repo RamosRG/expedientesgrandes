@@ -314,11 +314,11 @@
                 <i class="fa fa-address-card fa-fw"></i>
                 Portal de Procesos
             </a>
-            <a href="../procesosInternos/crearProceso" class="w3-bar-item w3-button w3-padding w3-blue">
+            <a href="../procesosInternos/crearProceso" class="w3-bar-item w3-button w3-padding ">
                 <i class="fa fa-address-card fa-fw"></i>
                 crear Proceso
             </a>
-            <a href="#" class="w3-bar-item w3-button w3-padding w3-blue">
+            <a href="#" class="w3-bar-item w3-button w3-padding ">
                 <i class="fa fa-address-card fa-fw"></i>
                 Listado Proveedores
             </a>
@@ -384,7 +384,7 @@
         </main>
 
         <footer class="portal-footer">
-            <p>Sistema de Gestión de Procesos &copy; <?= date('Y') ?> - Todos los derechos reservados</p>
+            <p>Sistema de Gestión de Procesos &copy; <?= date('Y-M') ?> - Todos los derechos reservados</p>
             <p><a href="http://www.temascalcingo.gob.mx" class="footer-link">www.temascalcingo.gob.mx</a></p>
         </footer>
     </div>

@@ -14,7 +14,8 @@ class CostosTotalesModel extends Model
     protected $protectFields = true;
     
     protected $allowedFields = [
-        'fk_nombre_razon_social',
+        'fk_estudio_mercado',
+        'fk_proveedor',
         'subtotal',
         'iva',
         'total',

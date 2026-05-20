@@ -168,62 +168,80 @@ document.getElementById("catalogo").addEventListener("change", function () {
 
 function obtenerDescripcionCatalogo(idCatalogo) {
 
-    fetch(`../descripcionCatalogo/obtenerDescripcionCatalogo/${idCatalogo}`)
+    let tablaDisponibles = document.getElementById("tablaProductosDisponibles");
 
-        .then(res => res.json())
+    if (tablaDisponibles) {
+        tablaDisponibles.innerHTML = `
+            <tr>
+                <td colspan="3">
+                    <select id="productosSelect" multiple style="width:100%"></select>
+                </td>
+            </tr>
+        `;
+    }
 
-        .then(data => {
+    // destruir si ya existe
+    if ($('#productosSelect').hasClass("select2-hidden-accessible")) {
+        $('#productosSelect').select2('destroy');
+    }
 
-            if (!data.success) {
+    $('#productosSelect').select2({
+        placeholder: "Buscar productos...",
+        minimumInputLength: 2,
+        width: '100%',
+        multiple: true, // PERMITE MULTISELECCIÓN
+        closeOnSelect: false, // no cierra al seleccionar
 
-                alert("No se encontraron registros");
-                return;
+        ajax: {
+            url: `../descripcionCatalogo/obtenerDescripcionCatalogo/${idCatalogo}`,
+            dataType: 'json',
+            delay: 300,
 
-            }
+            data: function (params) {
+                return {
+                    search: params.term || '',
+                    page: params.page || 1
+                };
+            },
 
-            let tablaDisponibles = document.getElementById("tablaProductosDisponibles");
+            processResults: function (data, params) {
+                params.page = params.page || 1;
 
-            tablaDisponibles.innerHTML = "";
+                return {
+                    results: data.data.map(item => ({
+                        id: item.id_descripcion_catalogo,
+                        text: item.producto_servicio,
+                        unidad: item.unidad_medida
+                    })),
+                    pagination: {
+                        more: data.more
+                    }
+                };
+            },
 
-            data.data.forEach(item => {
+            cache: true
+        }
+    });
 
-                tablaDisponibles.innerHTML += `
+    // cuando selecciona un producto
+    $('#productosSelect').off('select2:select').on('select2:select', function (e) {
 
-                    <tr>
+        let item = e.params.data;
 
-                        <td class="w3-center">
+        // reutiliza tu función actual
+        agregarProductoSeleccionado(
+            item.id,
+            item.text
+        );
+    });
 
-                            <input
-                                type="checkbox"
-                                class="w3-check checkProducto"
-                                data-id="${item.id_descripcion_catalogo}"
-                                data-nombre="${item.producto_servicio}">
-                               
+    // opcional: eliminar de tabla cuando quite selección
+    $('#productosSelect').off('select2:unselect').on('select2:unselect', function (e) {
 
-                        </td>
+        let item = e.params.data;
 
-                        <td>
-                            ${item.producto_servicio}
-                        </td>
-                        
-                        <td>
-                            ${item.unidad_medida}
-                        </td>
-
-                    </tr>
-
-                `;
-
-            });
-
-            activarEventosCheckbox();
-
-        })
-
-        .catch(error => {
-            console.error(error);
-        });
-
+        eliminarProductoSeleccionado(item.id);
+    });
 }
 
 
@@ -646,36 +664,34 @@ function guardarProceso() {
     // OBJETO FINAL
     // =====================
 
-let totalesProveedores = [];
+    let totalesProveedores = [];
 
-proveedores.forEach(p => {
+    proveedores.forEach(p => {
 
-    totalesProveedores.push({
+        totalesProveedores.push({
 
-        proveedor: p.id,
+            proveedor: p.id,
 
-        subtotal: document.getElementById(`subtotal_${p.id}`)?.innerText || 0,
+            subtotal: document.getElementById(`subtotal_${p.id}`)?.innerText || 0,
 
-        iva: document.getElementById(`iva_${p.id}`)?.innerText || 0,
+            iva: document.getElementById(`iva_${p.id}`)?.innerText || 0,
 
-        total: document.getElementById(`total_${p.id}`)?.innerText || 0
+            total: document.getElementById(`total_${p.id}`)?.innerText || 0
+
+        });
 
     });
 
-});
-    
     let datos = {
 
-          proveedor: proveedor,
-    catalogo: catalogo,
-    proveedores: proveedores,
-    totales: totalesProveedores,
-    puntos: puntos,
-    productos: productos,
-    id_area: id_area,
-    nomb_procedimiento: nomb_procedimiento,
-    
-
+        proveedor: proveedor,
+        catalogo: catalogo,
+        proveedores: proveedores,
+        totales: totalesProveedores,
+        puntos: puntos,
+        productos: productos,
+        id_area: id_area,
+        nomb_procedimiento: nomb_procedimiento,
 
     };
 
@@ -691,15 +707,15 @@ proveedores.forEach(p => {
         .then(res => res.json())
         .then(data => {
 
-    console.log("RESPUESTA:", data);
+            console.log("RESPUESTA:", data);
 
-    if (data.success) {
-        alert(data.message);
-    } else {
-        alert('Error al guardar');
-    }
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert('Error al guardar');
+            }
 
-})
+        })
         .catch(error => {
             console.error(error);
         });

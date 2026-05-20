@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ProcesoModel;
+
 class ProcesosInternosController extends BaseController
 {
 
@@ -11,21 +12,17 @@ class ProcesosInternosController extends BaseController
         return view("procesosInternos/crearProceso");
     }
 
-    public function verDocumentosFinalizados($id)
+    public function verDocumentosFinalizados()
     {
-        if ($id == 1) {
-            return view("portalProcesos/estudioMercadoFinalizado");
-        } elseif ($id == 2) {
-            return view("portalProcesos/anexoPropuesta");
-        }
+        return view("portalProcesos/estudioMercadoFinalizado");
     }
     public function crearProcesos($id)
     {
-
-        return view("procesosInternos/crearProceso", [
-            'id' => $id
-
-        ]);
+        if ($id == 1) {
+            return view("procesosInternos/crearProceso");
+        } elseif ($id == 2) {
+            return view("portalProcesos/anexoPropuesta");
+        }
     }
 
     public function getProcesosById($id = null)
@@ -46,7 +43,6 @@ class ProcesosInternosController extends BaseController
             'id' => $id
 
         ]);
-
     }
     // Vista principal del portal de procesos (tarjetas)
     public function procesos()
@@ -62,7 +58,6 @@ class ProcesosInternosController extends BaseController
             'status' => 'success',
             'data' => $procesos
         ]);
-
     }
     public function crearDocumento($id)
     {
@@ -73,18 +68,10 @@ class ProcesosInternosController extends BaseController
         }
     }
 
-    public function adjudicacionDirecta()
-    {
+    public function adjudicacionDirecta() {}
 
-    }
-
-    public function licitacionPublica()
-    {
-    }
+    public function licitacionPublica() {}
 
 
-    public function invitacionRestringida()
-    {
-
-    }
+    public function invitacionRestringida() {}
 }

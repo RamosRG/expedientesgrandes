@@ -9,10 +9,10 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
-    
+
 
 
     <style>
@@ -181,29 +181,71 @@
         </nav>
         <!-- DATOS GENERALES -->
         <div class="card">
-          <h2>Estudios de Mercado Finalizados</h2>
-                                      <div class="table-container">
-                                <table class="tabla-finalizados">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre del Archivo</th>
-                                            <th>Tipo</th>
-                                            <th>Ultima Modificacion</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-        </div>
+            <h2>Estudios de Mercado Finalizados</h2>
+            <div class="table-container">
+                <table class="tabla-finalizados">
+                    <thead>
+                        <tr>
+                            <th>Nombre del Archivo</th>
+                            <th>Tipo</th>
+                            <th>Ultima Modificacion</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+<div id="modalVistas" class="w3-modal">
+
+    <div class="w3-modal-content w3-round-large w3-card-4" style="width:400px;">
+
+        <header class="w3-container w3-blue">
+            <span 
+                onclick="cerrarModalVista()" 
+                class="w3-button w3-display-topright"
+            >
+                &times;
+            </span>
+
+            <h4>Seleccionar Vista</h4>
+        </header>
+
+        <div class="w3-container w3-padding">
+
+            <input type="hidden" id="idEstudioSeleccionado">
+
+            <button 
+                class="w3-btn w3-purple w3-block w3-margin-bottom"
+                onclick="enviarVista('1')"
+            >
+                Acta de Presentacion
+            </button>
+
+            <button 
+                class="w3-btn w3-green w3-block w3-margin-bottom"
+                onclick="enviarVista('2')"
+            >
+                Vista 2
+            </button>
+
+            <button 
+                class="w3-btn w3-orange w3-block"
+                onclick="enviarVista('3')"
+            >
+                Vista 3
+            </button>
+
+        </div>
+    </div>
+</div>
 
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>   
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="http://localhost/expedientesGrandes.temascalcingo.gob.mx/public/js/admin/estudioMercadoFinalizado.js"></script>
 
 

@@ -28,7 +28,7 @@ class Database extends Config
         'DSN'          => '',
         'hostname'     => 'localhost',
         'username'     => 'root',
-        'password'     => '277290DEN',
+        'password'     => '',
         'database'     => 'db_sistemaadquisiciones2',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',

@@ -2,21 +2,593 @@
 
 namespace App\Controllers;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+
 use App\Models\CostosTotalesModel;
 use App\Models\DescripcionEstudioMercado;
 use App\Models\EstudioMercadoModel;
+use App\Models\EmpresaModel;
 use App\Models\ProcesoModel;
 use App\Models\DocumentosProcesosModel;
-use App\Models\NombreRazonSocialModel;
-use PhpParser\Builder\Function_;
-use PhpParser\Node\Expr\FuncCall;
+use App\Models\DetalleProveedorProductolModel;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 class PortalProcesosController extends BaseController
 {
+
+  public function documentosProcedimiento()
+{
+    $idEstudio = $this->request->getPost('id_estudio');
+
+    $vista = (int)$this->request->getPost('vista');
+
+    $empresaModel = new EmpresaModel();
+
+    $empresas = $empresaModel->getEmpresasByEstudio($idEstudio);
+
+    $data = [
+        'id_estudio' => $idEstudio,
+        'empresas'   => $empresas
+    ];
+
+    switch ($vista) {
+
+        case 1:
+            return view("portalProcesos/actaApertura", $data);
+
+        case 2:
+            return view("portalProcesos/cuadroComparativo", $data);
+
+        case 3:
+            return view("portalProcesos/falloProcedimiento", $data);
+
+        default:
+            return redirect()->back()->with(
+                'error',
+                'Vista no válida'
+            );
+    }
+}
+    private const VINO_OSC = 'FF4A0B1C';
+    private const VINO_MED = 'FF8B1A3A';
+    private const VINO_PAL = 'FFF3E8EC';
+    private const AMARILLO = 'FFFFFF00';
+    private const GRIS     = 'FFD9D9D9';
+    private const BLANCO   = 'FFFFFFFF';
+    private const ROSA_PAL = 'FFFDF5F7';
+    public function exportarEstudioMercado(int $id)
+    {
+        $model = new EstudioMercadoModel();
+        $datos = $model->getEstudioById($id);
+
+        if (empty($datos)) {
+            return redirect()->back()->with('error', 'Sin datos para exportar.');
+        }
+
+        $primer      = $datos[0];
+        $proveedores = [];
+
+        foreach ($datos as $d) {
+            $uid = $d['id_usuario'];
+            if ($uid && !isset($proveedores[$uid])) {
+                $proveedores[$uid] = strtoupper(trim(
+                    $d['nombre'] . ' ' . $d['apellidoP'] . ' ' . $d['apellidoM']
+                ));
+            }
+        }
+
+        $provIds = array_keys($proveedores);
+        $nProv   = count($provIds);
+
+        $productos = [];
+        foreach ($datos as $d) {
+            $idd = $d['id_descripcion'];
+            if (!isset($productos[$idd])) {
+                $productos[$idd] = [
+                    'partida'     => $d['partida'],
+                    'descripcion' => $d['producto_servicio'],
+                    'unidad'      => $d['unidad_medida'],
+                    'cantidad'    => (float) $d['cantidad'],
+                    'proveedores' => [],
+                ];
+            }
+            $uid = $d['id_usuario'];
+            if ($uid) {
+                $productos[$idd]['proveedores'][$uid] = [
+                    'precio' => (float) ($d['precio_unitario'] ?? 0),
+                    'total'  => (float) ($d['precio_total']   ?? 0),
+                    'marca'  => $d['marca_modelo'] ?? '—',
+                ];
+            }
+        }
+
+        $colProvStart = 5;
+        $colTotal     = $colProvStart + $nProv * 3;
+        $colRef1      = $colTotal + 1;
+        $colRef2      = $colTotal + 2;
+        $colRef3      = $colTotal + 3;
+        $lastCol      = $colRef3;
+
+        $spreadsheet = new Spreadsheet();
+        $ws          = $spreadsheet->getActiveSheet();
+        $ws->setTitle('Estudio de Mercado');
+
+        $ws->getColumnDimension('A')->setWidth(9);
+        $ws->getColumnDimension('B')->setWidth(35);
+        $ws->getColumnDimension('C')->setWidth(12);
+        $ws->getColumnDimension('D')->setWidth(9);
+
+        for ($i = 0; $i < $nProv; $i++) {
+            $b = $colProvStart + $i * 3;
+            $ws->getColumnDimension(Coordinate::stringFromColumnIndex($b))->setWidth(13);
+            $ws->getColumnDimension(Coordinate::stringFromColumnIndex($b + 1))->setWidth(14);
+            $ws->getColumnDimension(Coordinate::stringFromColumnIndex($b + 2))->setWidth(18);
+        }
+        $ws->getColumnDimension(Coordinate::stringFromColumnIndex($colTotal))->setWidth(14);
+        $ws->getColumnDimension(Coordinate::stringFromColumnIndex($colRef1))->setWidth(13);
+        $ws->getColumnDimension(Coordinate::stringFromColumnIndex($colRef2))->setWidth(13);
+        $ws->getColumnDimension(Coordinate::stringFromColumnIndex($colRef3))->setWidth(13);
+
+        // ── FILA 1 ÁREA ──────────────────────────────────────────────
+        $ws->getRowDimension(1)->setRowHeight(20);
+        $ws->mergeCells($this->rango(1, 1, 1, $lastCol));
+        $this->celda(
+            $ws,
+            'A1',
+            'ÁREA USUARIA / SOLICITANTE: ' . $primer['area'],
+            self::AMARILLO,
+            '000000',
+            true,
+            10,
+            'left'
+        );
+
+        // ── FILA 2 FECHA ─────────────────────────────────────────────
+        $ws->getRowDimension(2)->setRowHeight(18);
+        $ws->mergeCells($this->rango(2, 1, 2, $lastCol));
+        $this->celda(
+            $ws,
+            'A2',
+            'FECHA: ' . $this->formatFecha($primer['created_at']),
+            self::AMARILLO,
+            '000000',
+            true,
+            10,
+            'left'
+        );
+
+        $ws->getRowDimension(3)->setRowHeight(8);
+
+        // ── FILA 4 PARTIDA PRESUPUESTAL ──────────────────────────────
+        $ws->getRowDimension(4)->setRowHeight(22);
+        $ws->mergeCells($this->rango(4, 1, 4, 4));
+        $this->celda($ws, 'A4', 'PARTIDA PRESUPUESTAL', self::GRIS, '000000', true, 10);
+        $ws->mergeCells($this->rango(4, 5, 4, $lastCol));
+        $this->celda($ws, $this->coord(4, 5), $primer['nombre_estudio'], self::GRIS, '000000', true, 10);
+
+        // ── FILA 5 ENCABEZADO PROVEEDORES ────────────────────────────
+        $ws->getRowDimension(5)->setRowHeight(22);
+
+        foreach ([1 => 'PARTIDA', 2 => 'DESCRIPCIÓN', 3 => 'UNIDAD DE MEDIDA', 4 => 'CANTIDAD'] as $c => $txt) {
+            $ws->mergeCells($this->rango(5, $c, 6, $c));
+            $this->celda($ws, $this->coord(5, $c), $txt, self::VINO_MED, 'FFFFFF', true, 9);
+        }
+
+        foreach (array_values($provIds) as $i => $uid) {
+            $b = $colProvStart + $i * 3;
+            $ws->mergeCells($this->rango(5, $b, 5, $b + 2));
+            $this->celda($ws, $this->coord(5, $b), $proveedores[$uid], self::VINO_MED, 'FFFFFF', true, 9);
+        }
+
+        $ws->mergeCells($this->rango(5, $colTotal, 6, $colTotal));
+        $this->celda($ws, $this->coord(5, $colTotal), 'TOTAL', self::VINO_MED, 'FFFFFF', true, 9);
+
+        $ws->mergeCells($this->rango(5, $colRef1, 5, $colRef3));
+        $this->celda($ws, $this->coord(5, $colRef1), 'PRECIO DE REFERENCIA', self::VINO_MED, 'FFFFFF', true, 9);
+
+        // ── FILA 6 SUB-ENCABEZADO ─────────────────────────────────────
+        $ws->getRowDimension(6)->setRowHeight(30);
+
+        foreach (array_values($provIds) as $i => $uid) {
+            $b = $colProvStart + $i * 3;
+            $ws->mergeCells($this->rango(6, $b, 6, $b + 1));
+            $this->celda($ws, $this->coord(6, $b),     'PRECIOS',          self::VINO_OSC, 'FFFFFF', true, 9);
+            $this->celda($ws, $this->coord(6, $b + 2), 'MARCA Y/O MODELO', self::VINO_OSC, 'FFFFFF', true, 8);
+        }
+
+        foreach ([$colRef1 => 'PARTIDAS 1, 2 Y 3', $colRef2 => 'PARTIDAS 4', $colRef3 => 'PARTIDA 5 Y 6'] as $c => $txt) {
+            $this->celda($ws, $this->coord(6, $c), $txt, self::GRIS, '000000', true, 8);
+        }
+
+        // ── FILA 7 UNITARIO / TOTAL ───────────────────────────────────
+        $ws->getRowDimension(7)->setRowHeight(28);
+
+        foreach (array_values($provIds) as $i => $uid) {
+            $b = $colProvStart + $i * 3;
+            $this->celda($ws, $this->coord(7, $b),     'UNITARIO', self::VINO_OSC, 'FFFFFF', true, 8);
+            $this->celda($ws, $this->coord(7, $b + 1), 'TOTAL',    self::VINO_OSC, 'FFFFFF', true, 8);
+            $this->celda($ws, $this->coord(7, $b + 2), '',         self::VINO_OSC, 'FFFFFF', true, 8);
+        }
+        foreach ([$colTotal, $colRef1, $colRef2, $colRef3] as $c) {
+            $this->soloBorde($ws, $this->coord(7, $c));
+        }
+
+        // ── FILAS DE DATOS ────────────────────────────────────────────
+        $filaInicio = 8;
+        $fila       = $filaInicio;
+
+        foreach ($productos as $prod) {
+            $ws->getRowDimension($fila)->setRowHeight(18);
+
+            $this->celda($ws, "A{$fila}", $prod['partida'],     self::BLANCO, '000000', false, 9, 'center');
+            $this->celda($ws, "B{$fila}", $prod['descripcion'], self::BLANCO, '000000', false, 9, 'left');
+            $this->celda($ws, "C{$fila}", $prod['unidad'],      self::BLANCO, '000000', false, 9, 'center');
+            $this->celda($ws, "D{$fila}", $prod['cantidad'],    self::BLANCO, '000000', false, 9, 'center');
+
+            $totalRefsEnFila = [];
+
+            foreach (array_values($provIds) as $i => $uid) {
+                $b    = $colProvStart + $i * 3;
+                $ltrU = Coordinate::stringFromColumnIndex($b);
+                $ltrT = Coordinate::stringFromColumnIndex($b + 1);
+                $cU   = "{$ltrU}{$fila}";
+                $cT   = "{$ltrT}{$fila}";
+                $cM   = Coordinate::stringFromColumnIndex($b + 2) . $fila;
+
+                $pdata = $prod['proveedores'][$uid] ?? null;
+
+                if ($pdata) {
+                    $this->celda($ws, $cU, $pdata['precio'],        self::BLANCO, '000000', false, 9, 'center', '$#,##0.00');
+                    $this->celda($ws, $cT, "={$ltrU}{$fila}*D{$fila}", self::BLANCO, '000000', false, 9, 'center', '$#,##0.00');
+                    $this->celda($ws, $cM, $pdata['marca'],         self::BLANCO, '000000', false, 9, 'center');
+                    $totalRefsEnFila[] = $cT;
+                } else {
+                    $this->celda($ws, $cU, '—', self::BLANCO, '000000', false, 9, 'center');
+                    $this->celda($ws, $cT, '—', self::BLANCO, '000000', false, 9, 'center');
+                    $this->celda($ws, $cM, '—', self::BLANCO, '000000', false, 9, 'center');
+                }
+            }
+
+            $refs = implode(',', $totalRefsEnFila);
+            $this->celda(
+                $ws,
+                $this->coord($fila, $colTotal),
+                $refs ? "=IFERROR(AVERAGE({$refs}),0)" : 0,
+                self::BLANCO,
+                '000000',
+                true,
+                9,
+                'center',
+                '$#,##0.00'
+            );
+
+            foreach ([$colRef1, $colRef2, $colRef3] as $c) {
+                $this->soloBorde($ws, $this->coord($fila, $c));
+            }
+
+            $fila++;
+        }
+
+        $filaFin = $fila - 1;
+
+        // ── SUBTOTAL ──────────────────────────────────────────────────
+        $ws->getRowDimension($fila)->setRowHeight(18);
+        $ws->mergeCells($this->rango($fila, 1, $fila, 4));
+        $this->celda($ws, "A{$fila}", 'SUBTOTAL', self::VINO_MED, 'FFFFFF', true, 10);
+
+        $subtotalCells = [];
+        $subRefs       = [];
+
+        foreach (array_values($provIds) as $i => $uid) {
+            $b    = $colProvStart + $i * 3;
+            $ltrT = Coordinate::stringFromColumnIndex($b + 1);
+            $this->celda($ws, $this->coord($fila, $b),     '', self::VINO_PAL, '000000', false, 9);
+            $this->celda(
+                $ws,
+                $this->coord($fila, $b + 1),
+                "=SUM({$ltrT}{$filaInicio}:{$ltrT}{$filaFin})",
+                self::VINO_PAL,
+                '000000',
+                true,
+                9,
+                'center',
+                '$#,##0.00'
+            );
+            $this->celda($ws, $this->coord($fila, $b + 2), '', self::VINO_PAL, '000000', false, 9);
+            $subtotalCells[$uid] = "{$ltrT}{$fila}";
+            $subRefs[]           = "{$ltrT}{$fila}";
+        }
+
+        $this->celda(
+            $ws,
+            $this->coord($fila, $colTotal),
+            '=IFERROR(AVERAGE(' . implode(',', $subRefs) . '),0)',
+            self::VINO_PAL,
+            '000000',
+            true,
+            9,
+            'center',
+            '$#,##0.00'
+        );
+        foreach ([$colRef1, $colRef2, $colRef3] as $c) {
+            $this->soloBorde($ws, $this->coord($fila, $c));
+        }
+        $fila++;
+
+        // ── IVA ───────────────────────────────────────────────────────
+        $ws->getRowDimension($fila)->setRowHeight(18);
+        $ws->mergeCells($this->rango($fila, 1, $fila, 4));
+        $this->celda($ws, "A{$fila}", 'IVA (16%)', self::VINO_MED, 'FFFFFF', true, 10);
+
+        $ivaRefs = [];
+
+        foreach (array_values($provIds) as $i => $uid) {
+            $b    = $colProvStart + $i * 3;
+            $ltrT = Coordinate::stringFromColumnIndex($b + 1);
+            $this->celda($ws, $this->coord($fila, $b),     '', self::ROSA_PAL, '000000', false, 9);
+            $this->celda(
+                $ws,
+                $this->coord($fila, $b + 1),
+                "={$subtotalCells[$uid]}*0.16",
+                self::ROSA_PAL,
+                '000000',
+                true,
+                9,
+                'center',
+                '$#,##0.00'
+            );
+            $this->celda($ws, $this->coord($fila, $b + 2), '', self::ROSA_PAL, '000000', false, 9);
+            $ivaRefs[] = "{$ltrT}{$fila}";
+        }
+
+        $this->celda(
+            $ws,
+            $this->coord($fila, $colTotal),
+            '=IFERROR(AVERAGE(' . implode(',', $ivaRefs) . '),0)',
+            self::ROSA_PAL,
+            '000000',
+            true,
+            9,
+            'center',
+            '$#,##0.00'
+        );
+        foreach ([$colRef1, $colRef2, $colRef3] as $c) {
+            $this->soloBorde($ws, $this->coord($fila, $c));
+        }
+        $fila++;
+
+        // ── TOTAL ─────────────────────────────────────────────────────
+        $ws->getRowDimension($fila)->setRowHeight(22);
+        $ws->mergeCells($this->rango($fila, 1, $fila, 4));
+        $this->celda($ws, "A{$fila}", 'TOTAL', self::VINO_OSC, 'FFFFFF', true, 11);
+
+        $totRefs = [];
+
+        foreach (array_values($provIds) as $i => $uid) {
+            $b    = $colProvStart + $i * 3;
+            $ltrT = Coordinate::stringFromColumnIndex($b + 1);
+            $this->celda($ws, $this->coord($fila, $b),     '', self::VINO_OSC, 'FFFFFF', true, 9);
+            $this->celda(
+                $ws,
+                $this->coord($fila, $b + 1),
+                "={$subtotalCells[$uid]}*1.16",
+                self::VINO_OSC,
+                'FFFFFF',
+                true,
+                9,
+                'center',
+                '$#,##0.00'
+            );
+            $this->celda($ws, $this->coord($fila, $b + 2), '', self::VINO_OSC, 'FFFFFF', true, 9);
+            $totRefs[] = "{$ltrT}{$fila}";
+        }
+
+        $this->celda(
+            $ws,
+            $this->coord($fila, $colTotal),
+            '=IFERROR(AVERAGE(' . implode(',', $totRefs) . '),0)',
+            self::VINO_OSC,
+            'FFFFFF',
+            true,
+            9,
+            'center',
+            '$#,##0.00'
+        );
+
+        foreach ([$colRef1, $colRef2, $colRef3] as $c) {
+            $coord = $this->coord($fila, $c);
+            $ws->getStyle($coord)->getFill()->setFillType(Fill::FILL_SOLID)
+                ->getStartColor()->setARGB(self::VINO_OSC);
+            $this->soloBorde($ws, $coord);
+        }
+
+        // ── Congelar paneles y descargar ──────────────────────────────
+        $ws->freezePane('E8');
+
+        $writer   = new Xlsx($spreadsheet);
+        $filename = 'EstudioMercado_' . $id . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    }
+ 
+    // ── Helpers ───────────────────────────────────────────────────────────
+
+    /** "B5" desde fila y columna (1-based) */
+    private function coord(int $fila, int $col): string
+    {
+        return Coordinate::stringFromColumnIndex($col) . $fila;
+    }
+
+    /** "A1:C3" desde fila/col inicio y fin (1-based) */
+    private function rango(int $r1, int $c1, int $r2, int $c2): string
+    {
+        return Coordinate::stringFromColumnIndex($c1) . $r1
+            . ':'
+            . Coordinate::stringFromColumnIndex($c2) . $r2;
+    }
+
+    /**
+     * Escribe valor y aplica estilos. Usa solo getCell() y getStyle()
+     * con coordenada string: compatible con PhpSpreadsheet v1 y v2.
+     */
+    private function celda(
+        $ws,
+        string $coord,
+        $valor,
+        string $bgARGB   = 'FFFFFFFF',
+        string $fontColor = '000000',
+        bool   $bold      = false,
+        int    $fontSize  = 9,
+        string $halign    = 'center',
+        string $numFmt    = ''
+    ): void {
+        $ws->getCell($coord)->setValue($valor);
+
+        $style = $ws->getStyle($coord);
+
+        $style->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getStartColor()->setARGB($bgARGB);
+
+        $style->getFont()
+            ->setBold($bold)
+            ->setSize($fontSize)
+            ->setName('Arial')
+            ->getColor()->setARGB('FF' . ltrim($fontColor, '#'));
+
+        $style->getAlignment()
+            ->setHorizontal(
+                $halign === 'left'
+                    ? Alignment::HORIZONTAL_LEFT
+                    : Alignment::HORIZONTAL_CENTER
+            )
+            ->setVertical(Alignment::VERTICAL_CENTER)
+            ->setWrapText(true);
+
+        $style->getBorders()->applyFromArray([
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN,
+                'color'       => ['argb' => 'FF000000'],
+            ],
+        ]);
+
+        if ($numFmt !== '') {
+            $style->getNumberFormat()->setFormatCode($numFmt);
+        }
+    }
+
+    /** Solo aplica borde sin tocar fill/font */
+    private function soloBorde($ws, string $coord): void
+    {
+        $ws->getStyle($coord)->getBorders()->applyFromArray([
+            'allBorders' => [
+                'borderStyle' => Border::BORDER_THIN,
+                'color'       => ['argb' => 'FF000000'],
+            ],
+        ]);
+    }
+ 
+
+
+    // ══════════════════════════════════════════════════════════════════
+    // Helpers privados
+    // ══════════════════════════════════════════════════════════════════
+
+    /**
+     * Escribe un valor en una celda y aplica estilos.
+     */
+    private function writeCell(
+        $sheet,
+        int    $row,
+        int    $col,
+        $value,
+        string $bgARGB    = 'FFFFFFFF',
+        string $fontColor = '000000',
+        bool   $bold      = false,
+        int    $fontSize  = 9,
+        string $halign    = 'center',
+        string $numFmt    = ''
+    ): void {
+        $cell = $sheet->getCellByColumnAndRow($col, $row);
+        $cell->setValue($value);
+
+        $style = $sheet->getStyleByColumnAndRow($col, $row);
+
+        $style->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getStartColor()->setARGB($bgARGB);
+
+        $style->getFont()
+            ->setBold($bold)
+            ->setSize($fontSize)
+            ->setName('Arial')
+            ->getColor()->setARGB('FF' . ltrim($fontColor, '#'));
+
+        $style->getAlignment()
+            ->setHorizontal($halign === 'left'
+                ? Alignment::HORIZONTAL_LEFT
+                : Alignment::HORIZONTAL_CENTER)
+            ->setVertical(Alignment::VERTICAL_CENTER)
+            ->setWrapText(true);
+
+        $thin = [
+            'borderStyle' => Border::BORDER_THIN,
+            'color'       => ['argb' => 'FF000000'],
+        ];
+        $style->getBorders()->applyFromArray([
+            'allBorders' => $thin,
+        ]);
+
+        if ($numFmt) {
+            $style->getNumberFormat()->setFormatCode($numFmt);
+        }
+    }
+
+    /** Aplica solo borde a una celda (sin cambiar fill/font). */
+    private function applyBorder($sheet, int $row, int $col): void
+    {
+        $sheet->getStyleByColumnAndRow($col, $row)
+            ->getBorders()
+            ->applyFromArray([
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color'       => ['argb' => 'FF000000'],
+                ],
+            ]);
+    }
+
+    /** Merge usando índices de columna (1-based). */
+    private function mergeCellsByCol($sheet, int $r1, int $c1, int $r2, int $c2): void
+    {
+        $a1 = Coordinate::stringFromColumnIndex($c1) . $r1;
+        $a2 = Coordinate::stringFromColumnIndex($c2) . $r2;
+        $sheet->mergeCells("{$a1}:{$a2}");
+    }
+
+    /** Formatea fecha de BD a dd/mm/yyyy. */
+    private function formatFecha(string $fecha): string
+    {
+        try {
+            $dt = new \DateTime($fecha);
+            return $dt->format('d/m/Y');
+        } catch (\Exception $e) {
+            return $fecha;
+        }
+    }
+
     public function guardarProceso()
     {
         try {
-
             $db = \Config\Database::connect();
             $data = $this->request->getJSON(true);
             var_dump($data);
@@ -28,9 +600,7 @@ class PortalProcesosController extends BaseController
                 ]);
             }
 
-            // =========================
             // VALIDACIONES BÁSICAS
-            // =========================
             if (empty($data['id_area']) || empty($data['catalogo']) || empty($data['nomb_procedimiento'])) {
                 return $this->response->setJSON([
                     'status' => 'error',
@@ -38,14 +608,10 @@ class PortalProcesosController extends BaseController
                 ]);
             }
 
-            // =========================
             // INICIAR TRANSACCIÓN
-            // =========================
             $db->transBegin();
 
-            // =========================
-            // 1. GUARDAR PROCESO
-            // =========================
+            // 1. GUARDAR PROCESO (SOLO UNA VEZ)
             $proceso = [
                 'nombre_estudio' => $data['nomb_procedimiento'],
                 'fk_area' => $data['id_area'],
@@ -58,44 +624,22 @@ class PortalProcesosController extends BaseController
             if (!$id_proceso) {
                 throw new \Exception('No se pudo crear el proceso');
             }
-            $nombre_razon = [
-                'fk_descripcion_estudio_mercado' => $data['id_estudio'],
-                'fk_proveedor' => $data['proveedor'],
-                'precio_unitario' => $data['precio'],
-                'created_at' => date('Y-m-d H:i:s')
-            ];
 
-            $db->table('estudio_mercado')->insert($proceso);
-            $id_proceso = $db->insertID();
-
-            if (!$id_proceso) {
-                throw new \Exception('No se pudo crear el proceso');
-            }
-
-            // =========================
             // 2. GUARDAR PUNTOS
-            // =========================
             if (!empty($data['puntos'])) {
                 foreach ($data['puntos'] as $punto) {
-
-                    if (trim($punto) === '')
-                        continue;
-
-                    $db->table('puntos')->insert([
-                        'id_proceso' => $id_proceso,
-                        'descripcion' => $punto
-                    ]);
+                    if (trim($punto) !== '') {
+                        $db->table('puntos')->insert([
+                            'id_proceso' => $id_proceso,
+                            'descripcion' => $punto
+                        ]);
+                    }
                 }
             }
 
-            // =========================
             // 3. PRODUCTOS
-            // =========================
             if (!empty($data['productos'])) {
-
                 foreach ($data['productos'] as $producto) {
-
-                    // Validación básica
                     if (empty($producto['id_producto']))
                         continue;
 
@@ -105,14 +649,9 @@ class PortalProcesosController extends BaseController
                         'cantidad' => $producto['cantidad'] ?? 0
                     ]);
 
-                    // =========================
                     // 4. PRECIOS POR PROVEEDOR
-                    // =========================
                     if (!empty($producto['precios'])) {
-
                         foreach ($producto['precios'] as $precio) {
-
-                            // Evitar precios vacíos
                             if (empty($precio['precio']))
                                 continue;
 
@@ -127,12 +666,9 @@ class PortalProcesosController extends BaseController
                 }
             }
 
-            // =========================
             // FINALIZAR TRANSACCIÓN
-            // =========================
             if ($db->transStatus() === false) {
                 $db->transRollback();
-
                 return $this->response->setJSON([
                     'status' => 'error',
                     'msg' => 'Error en la transacción'
@@ -145,9 +681,7 @@ class PortalProcesosController extends BaseController
                 'status' => 'success',
                 'id_proceso' => $id_proceso
             ]);
-
         } catch (\Throwable $e) {
-
             if (isset($db)) {
                 $db->transRollback();
             }
@@ -158,13 +692,10 @@ class PortalProcesosController extends BaseController
             ]);
         }
     }
-
     public function verEstudioMercado($idEstudio)
     {
         return view("portalProcesos/verEstudioMercado");
     }
-
-    // CONTROLADOR
 
     public function obtenerEstudioMercadoPorId($id)
     {
@@ -177,7 +708,6 @@ class PortalProcesosController extends BaseController
                 'success' => true,
                 'data' => $data
             ]);
-
         } catch (\Exception $e) {
 
             return $this->response->setJSON([
@@ -197,7 +727,6 @@ class PortalProcesosController extends BaseController
                 'success' => true,
                 'data' => $data
             ]);
-
         } catch (\Exception $e) {
 
             return $this->response->setJSON([
@@ -210,6 +739,7 @@ class PortalProcesosController extends BaseController
     {
         $json = file_get_contents("php://input");
         $data = json_decode($json, true);
+        $db = \Config\Database::connect();
 
         if (!$data) {
             return $this->response->setJSON([
@@ -218,59 +748,69 @@ class PortalProcesosController extends BaseController
             ]);
         }
 
+        // VALIDACIONES
+        if (empty($data['productos'])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay productos'
+            ]);
+        }
+
+        if (empty($data['proveedores'])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay proveedores'
+            ]);
+        }
+
+        // MODELOS
+        $estudioMercadoModel = new EstudioMercadoModel();
+        $descripcionModel = new DescripcionEstudioMercado();
+        $razonSocialModel = new DetalleProveedorProductolModel();
+        $costosTotalesModel = new CostosTotalesModel();
+
+
+        $db->transStart();
+
         try {
 
             // =========================
-            // TABLA PRINCIPAL
+            // ESTUDIO MERCADO
             // =========================
-
-            $estudioMercadoModel = new EstudioMercadoModel();
 
             $estudioMercadoModel->insert([
 
                 'nombre_estudio' => $data['nomb_procedimiento'],
 
-                'fk_area' => $data['id_area'],
+                'fk_area' => $data['id_area']
 
-                'fecha' => date('Y-m-d')
-
+                // created_at automático
             ]);
 
             $idEstudio = $estudioMercadoModel->insertID();
 
             // =========================
-            // DETALLE DE DESCRIPCIONES
+            // PRODUCTOS
             // =========================
-
-            $descripcionModel = new DescripcionEstudioMercado();
-            $idsDescripcion = [];
 
             foreach ($data['productos'] as $index => $producto) {
 
                 $descripcionModel->insert([
+
                     'fk_estudio_mercado' => $idEstudio,
+
                     'partida' => $index + 1,
-                    'cantidad' =>  $producto['cantidad'],
+
+                    'cantidad' => $producto['cantidad'],
+
                     'fk_descripcion_catalogo' => $producto['id_producto']
                 ]);
 
-                $idsDescripcion[$index] = $descripcionModel->insertID();
-            }
+                $idDescripcion = $descripcionModel->insertID();
 
-            // =========================
-            // TABLA RAZÓN SOCIAL
-            // =========================
-
-            $razonSocialModel = new NombreRazonSocialModel();
-            $costosTotales = new CostosTotalesModel();
-
-            $idsRazonSocial = [];
-
-            $razonSocialModel = new NombreRazonSocialModel();
-
-            foreach ($data['productos'] as $index => $producto) {
-
-                $idDescripcion = $idsDescripcion[$index];
+                // =========================
+                // PRECIOS POR PROVEEDOR
+                // =========================
 
                 foreach ($producto['precios'] as $detalle) {
 
@@ -285,21 +825,13 @@ class PortalProcesosController extends BaseController
                         'precio_total' => $detalle['total_producto'],
 
                         'marca_modelo' => $detalle['marca_modelo']
-
                     ]);
-
-                    $idRazonSocial = $razonSocialModel->insertID();
-
-                    // GUARDAR ID POR PROVEEDOR
-                    $idsRazonSocial[$detalle['proveedor']] = $idRazonSocial;
-
                 }
             }
-            // =========================
-// TABLA COSTOS TOTALES
-// =========================
 
-            $costosTotales = new CostosTotalesModel();
+            // =========================
+            // TOTALES
+            // =========================
 
             foreach ($data['totales'] as $totalProveedor) {
 
@@ -309,26 +841,34 @@ class PortalProcesosController extends BaseController
 
                 $total = str_replace(['$', ','], '', $totalProveedor['total']);
 
-                $costosTotales->insert([
+                $costosTotalesModel->insert([
 
-                    'fk_nombre_razon_social' =>
-                        $idsRazonSocial[$totalProveedor['proveedor']],
+                    'fk_estudio_mercado' => $idEstudio,
+
+                    'fk_proveedor' => $totalProveedor['proveedor'],
 
                     'subtotal' => $subtotal,
 
                     'iva' => $iva,
 
                     'total' => $total
-
                 ]);
+            }
+
+            // FINALIZAR TRANSACCIÓN
+            $db->transComplete();
+
+            if ($db->transStatus() === false) {
+                throw new \Exception('Error al guardar');
             }
 
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Estudio guardado correctamente'
             ]);
-
         } catch (\Exception $e) {
+
+            $db->transRollback();
 
             return $this->response->setJSON([
                 'success' => false,
@@ -409,7 +949,6 @@ class PortalProcesosController extends BaseController
         return view('procesosInternos/verProcesos', [
             'procesos' => $proceso
         ]);
-
     }
     public function procesos()
     {
