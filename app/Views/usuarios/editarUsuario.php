@@ -136,7 +136,7 @@
             <div class="content-container">
                 <div class="form-card">
                     <div class="form-header">
-                        <h2>Editar Usuario: <?= esc($usuario['nombre'] . ' ' . $usuario['apellidoP']) ?></h2>
+                        <h2>Editar Usuario: <?= esc($usuario['nombre'] . ' ' . $usuario['apellido_paterno']) ?></h2>
                     </div>
 
                     <div class="form-body">
@@ -172,9 +172,9 @@
                                                value="<?= esc($usuario['nombre']) ?>" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="apellidoP">Apellido Paterno <span class="required">*</span></label>
-                                        <input type="text" class="form-control" id="apellidoP" name="apellidoP" 
-                                               value="<?= esc($usuario['apellidoP']) ?>" required>
+                                        <label for="apellido_paterno">Apellido Paterno <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno" 
+                                               value="<?= esc($usuario['apellido_paterno']) ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-row">

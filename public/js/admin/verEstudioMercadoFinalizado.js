@@ -56,7 +56,7 @@ function cargarEstudio(id) {
             /* ── Helper: normalizar nombre de proveedor ──────────────── */
             const normalizarProveedor = (item) => {
                 if (!item.nombre) return null;
-                return `${item.nombre} ${item.apellidoP ?? ""} ${item.apellidoM ?? ""}`
+                return `${item.nombre} ${item.apellido_paterno ?? ""} ${item.apellidoM ?? ""}`
                     .trim()
                     .toUpperCase()
                     .replace(/\s+/g, " ");
@@ -76,7 +76,7 @@ function cargarEstudio(id) {
                 if (!agrupado[idDesc]) {
                     agrupado[idDesc] = {
                         partida:     item.partida,
-                        descripcion: item.producto_servicio,
+                        descripcion: item.descripcion,
                         unidad:      item.unidad_medida,
                         cantidad:    parseFloat(item.cantidad) || 0,
                         proveedores: {}

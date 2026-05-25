@@ -14,7 +14,7 @@ class DescripcionCatalogoModel extends Model
     protected $protectFields = true;
 
     protected $allowedFields = [
-        'producto_servicio',
+        'descripcion',
         'fk_catalogo',
         'unidad_medida'
     ];
@@ -30,7 +30,7 @@ class DescripcionCatalogoModel extends Model
         return $this->db->table('descripcion_catalogo')
             ->select('*')
             ->where('fk_catalogo', $id_catalogo)
-            ->orderBy('producto_servicio', 'ASC')
+            ->orderBy('descripcion', 'ASC')
             ->get()
             ->getResultArray();
     }

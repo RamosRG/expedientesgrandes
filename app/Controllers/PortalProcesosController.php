@@ -77,7 +77,7 @@ class PortalProcesosController extends BaseController
             $uid = $d['id_usuario'];
             if ($uid && !isset($proveedores[$uid])) {
                 $proveedores[$uid] = strtoupper(trim(
-                    $d['nombre'] . ' ' . $d['apellidoP'] . ' ' . $d['apellidoM']
+                    $d['nombre'] . ' ' . $d['apellido_paterno'] . ' ' . $d['apellidoM']
                 ));
             }
         }

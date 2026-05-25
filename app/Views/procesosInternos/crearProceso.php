@@ -471,7 +471,7 @@
                                 <div style="flex:1;">
                                     <label><b>Apellido Paterno</b></label>
                                     <input class="w3-input w3-border" type="text" placeholder="Apellido Paterno"
-                                        name="apellidoP" required>
+                                        name="apellido_paterno" required>
                                 </div>
 
                                 <div style="flex:1;">

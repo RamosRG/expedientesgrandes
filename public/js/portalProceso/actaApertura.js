@@ -79,8 +79,8 @@ function generarParticipantes() {
         // NOMBRE REPRESENTANTE
         let representante = `
                 ${item.nombre} 
-                ${item.apellidoP} 
-                ${item.apellidoM}
+                ${item.apellido_paterno} 
+                ${item.apellido_materno}
             `.trim();
 
         // =====================================================

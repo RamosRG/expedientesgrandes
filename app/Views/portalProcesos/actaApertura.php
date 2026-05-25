@@ -358,7 +358,7 @@
 
             <button class="btn btn-guardar" id="btnGuardar">
                 <i class="fas fa-save"></i>
-                Guardar Acta
+                Imprimir Acta
             </button>
 
         </div>

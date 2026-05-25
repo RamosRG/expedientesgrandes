@@ -29,8 +29,8 @@ class EmpresaModel extends Model
             te.domicilio_fiscal,
 
             u.nombre,
-            u.apellidoP,
-            u.apellidoM,
+            u.apellido_paterno,
+            u.apellido_materno,
 
             em.id_estudio,
             em.nombre_estudio,
@@ -41,7 +41,7 @@ class EmpresaModel extends Model
             // USUARIOS
             ->join(
                 'usuarios u',
-                'u.fk_empresa = te.id_empresa'
+                'u.id_usuario = te.fk_proveedor'
             )
 
             // DETALLE PROVEEDOR PRODUCTO

@@ -12,19 +12,15 @@ class UsuarioModel extends Model
     protected $useSoftDeletes = false;
     protected $protectFields = true;
     protected $allowedFields = [
-        'id_rol',
         'nombre',
-        'apellidoP',
-        'apellidoM',
+        'apellido_paterno',
+        'apellido_materno',
         'correo',
         'contrasena_hash',
-        'active',
-        'rfc',
-        'curp',
-        'num_credencial_votar',
-        'nombre_razon_social',
-        'tipo_persona',
         'telefono_principal',
+        'active',
+        'id_rol',
+        'fk_tipo_persona',
         'calle_numero',
         'colonia',
         'ciudad',
@@ -62,7 +58,7 @@ class UsuarioModel extends Model
 
     public function getUsuariosConRol()
 {
-    return $this->select("CONCAT(usuarios.nombre, ' ', usuarios.apellidoP, ' ', usuarios.apellidoM) AS nombre_completo, usuarios.correo, usuarios.active, roles.nombre AS rol")
+    return $this->select("CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno) AS nombre_completo, usuarios.correo, usuarios.active, roles.nombre AS rol")
         ->join('roles', 'roles.id_rol = usuarios.id_rol')
         ->findAll();
 }

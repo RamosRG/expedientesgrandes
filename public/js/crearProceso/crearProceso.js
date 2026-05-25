@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     //obtenerDescripcionCatalogo(idCatalogo);
     activarEventosCheckbox();
     generarTablaCostos();
-    agregarProductoSeleccionado(id, nombre);
+    //agregarProductoSeleccionado(id, nombre);
 
     // OPCIONAL: limpiar tabla
     document.getElementById("tablaProductosSeleccionados").innerHTML = `
@@ -210,7 +210,7 @@ function obtenerDescripcionCatalogo(idCatalogo) {
                 return {
                     results: data.data.map(item => ({
                         id: item.id_descripcion_catalogo,
-                        text: item.producto_servicio,
+                        text: item.descripcion,
                         unidad: item.unidad_medida
                     })),
                     pagination: {

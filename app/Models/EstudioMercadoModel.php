@@ -12,22 +12,22 @@ class EstudioMercadoModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    
+
     protected $allowedFields = [
         'fk_area',
         'nombre_estudio'
     ];
-    
+
     protected $useTimestamps = true;
     protected $dateFormat = 'datetime';
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
-    
-    
+
+
 
     // MODELO
 
- public function getEstudioById(int $id_estudio): array
+    public function getEstudioById(int $id_estudio): array
     {
         return $this->db->table('estudio_mercado em')
             ->select('
@@ -41,61 +41,73 @@ class EstudioMercadoModel extends Model
                 dem.partida,
                 dem.cantidad,
  
-                dc.producto_servicio,
+                dc.descripcion,
                 dc.unidad_medida,
  
                 u.id_usuario,
                 u.nombre,
-                u.apellidoP,
-                u.apellidoM,
+                u.apellido_paterno,
+                u.apellido_materno,
  
-                dpp.id_razon_social,
-                dpp.precio_unitario,
-                dpp.precio_total,         
+                dpp.id_detalle,
+                dpp.precio_unitario,        
                 dpp.marca_modelo,
- 
+                (dem.cantidad * dpp.precio_unitario) AS precio_total,
                 tct.subtotal,
                 tct.iva,
                 tct.total
             ')
- 
+
             /* ── Joins ─────────────────────────────────────────────── */
-            ->join('area a',
-                   'a.id_area = em.fk_area')
- 
-            ->join('descripcion_estudio_mercado dem',
-                   'dem.fk_estudio_mercado = em.id_estudio')
- 
-            ->join('descripcion_catalogo dc',
-                   'dc.id_descripcion_catalogo = dem.fk_descripcion_catalogo')
- 
-            ->join('detalle_proveedor_producto dpp',
-                   'dpp.fk_descripcion_estudio_mercado = dem.id_descripcion', 'left')
- 
-            ->join('usuarios u',
-                   'u.id_usuario = dpp.fk_proveedor', 'left')
- 
-            ->join('tbl_costos_totales tct',
-                   'tct.fk_estudio_mercado = em.id_estudio
-                    AND tct.fk_proveedor = dpp.fk_proveedor', 'left')
- 
+            ->join(
+                'area a',
+                'a.id_area = em.fk_area'
+            )
+
+            ->join(
+                'descripcion_estudio_mercado dem',
+                'dem.fk_estudio_mercado = em.id_estudio'
+            )
+
+            ->join(
+                'descripcion_catalogo dc',
+                'dc.id_descripcion_catalogo = dem.fk_descripcion_catalogo'
+            )
+
+            ->join(
+                'detalle_proveedor_producto dpp',
+                'dpp.fk_descripcion_estudio_mercado = dem.id_descripcion',
+                'left'
+            )
+
+            ->join(
+                'usuarios u',
+                'u.id_usuario = dpp.fk_proveedor',
+                'left'
+            )
+
+            ->join(
+                'tbl_costos_totales tct',
+                'tct.fk_estudio_mercado = em.id_estudio
+                    AND tct.fk_proveedor = dpp.fk_proveedor',
+                'left'
+            )
+
             ->where('em.id_estudio', $id_estudio)
             ->orderBy('dem.partida', 'ASC')
             ->get()
             ->getResultArray();
     }
 
-public function obtenerEstudiosFinalizados()
-{
-    return $this->select('
+    public function obtenerEstudiosFinalizados()
+    {
+        return $this->select('
             estudio_mercado.id_estudio,
             estudio_mercado.nombre_estudio,
             area.area,
             estudio_mercado.created_at
         ')
-        ->join('area', 'area.id_area = estudio_mercado.fk_area')
-        ->findAll();
-}
-
+            ->join('area', 'area.id_area = estudio_mercado.fk_area')
+            ->findAll();
     }
-
+}

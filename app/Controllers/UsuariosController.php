@@ -15,7 +15,7 @@ public function crearProveedorTemporal()
     $datos = [
 
         'nombre' => $this->request->getPost('nombre'),
-        'apellidoP' => $this->request->getPost('apellidoP'),
+        'apellido_paterno' => $this->request->getPost('apellido_paterno'),
         'apellidoM' => $this->request->getPost('apellidoM'),
         'correo' => $this->request->getPost('correo'),
 
@@ -154,7 +154,7 @@ public function crearProveedorTemporal()
             foreach ($usuarios as $usuario) {
                 $data[] = [
                     'id_usuario' => $usuario['id_usuario'],
-                    'nombre_completo' => trim($usuario['nombre'] . ' ' . ($usuario['apellidoP'] ?? '') . ' ' . ($usuario['apellidoM'] ?? '')),
+                    'nombre_completo' => trim($usuario['nombre'] . ' ' . ($usuario['apellido_paterno'] ?? '') . ' ' . ($usuario['apellidoM'] ?? '')),
                     'correo' => $usuario['correo'],
                     'rol' => $usuario['nombre_rol'],
                     'telefono_principal' => $usuario['telefono_principal'] ?? 'No especificado',
@@ -242,7 +242,7 @@ public function crearProveedorTemporal()
             $usuario = [
                 'id_rol' => $data['id_rol'],
                 'nombre' => $data['nombre'],
-                'apellidoP' => $data['apellidoP'],
+                'apellido_paterno' => $data['apellido_paterno'],
                 'apellidoM' => $data['apellidoM'],
                 'correo' => $data['correo'],
                 'active' => isset($data['active']) ? 1 : 0,

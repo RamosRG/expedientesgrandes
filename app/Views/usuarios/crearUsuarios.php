@@ -1,12 +1,11 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <title>Crear Usuario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../public/css/styles.css">
     <style>
@@ -15,7 +14,7 @@
             pointer-events: none;
             position: relative;
         }
-        
+
         .disabled-section::after {
             content: "⚠️ No aplica para este rol";
             position: absolute;
@@ -28,43 +27,43 @@
             font-size: 12px;
             font-weight: 500;
         }
-        
+
         .form-section {
             transition: all 0.3s ease;
             margin-bottom: 30px;
             padding: 20px;
             border-radius: 12px;
             background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             position: relative;
         }
-        
+
         .form-section h3 {
             margin-top: 0;
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid var(--vino-palido);
         }
-        
+
         .form-row {
             display: flex;
             gap: 20px;
             margin-bottom: 15px;
             flex-wrap: wrap;
         }
-        
+
         .form-group {
             flex: 1;
             min-width: 200px;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: 500;
             color: var(--texto-oscuro);
         }
-        
+
         .form-control {
             width: 100%;
             padding: 10px 12px;
@@ -72,26 +71,27 @@
             border-radius: 8px;
             font-family: 'Montserrat', sans-serif;
             transition: border-color 0.2s;
+            box-sizing: border-box;
         }
-        
+
         .form-control:focus {
             outline: none;
             border-color: var(--vino-medio);
             box-shadow: 0 0 0 2px rgba(128, 0, 32, 0.1);
         }
-        
+
         .checkbox-group {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-top: 8px;
         }
-        
+
         .checkbox-group input {
             width: 18px;
             height: 18px;
         }
-        
+
         .form-actions {
             display: flex;
             gap: 15px;
@@ -100,7 +100,7 @@
             padding-top: 20px;
             border-top: 1px solid var(--vino-palido);
         }
-        
+
         .btn {
             padding: 10px 24px;
             border: none;
@@ -112,31 +112,32 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
         }
-        
+
         .btn-primary {
             background: linear-gradient(135deg, var(--vino-medio) 0%, var(--vino-oscuro) 100%);
             color: white;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(128, 0, 32, 0.3);
         }
-        
+
         .btn-secondary {
             background: #6c757d;
             color: white;
         }
-        
+
         .btn-secondary:hover {
             background: #5a6268;
         }
-        
+
         .required {
             color: red;
         }
-        
+
         .info-message {
             background: #e7f3ff;
             border-left: 4px solid var(--vino-medio);
@@ -181,8 +182,13 @@
                         </div>
 
                         <form method="POST" id="form-usuario">
-                            <h3 style="color: var(--vino-oscuro); margin-bottom: 20px;">Selecciona primeramente el tipo de Rol</h3>
 
+                            <!-- ===========================
+                                 SELECTOR DE ROL
+                            ============================ -->
+                            <h3 style="color: var(--vino-oscuro); margin-bottom: 20px;">
+                                Selecciona primeramente el tipo de Rol
+                            </h3>
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="id_rol">Rol <span class="required">*</span></label>
@@ -195,9 +201,12 @@
                                 </div>
                             </div>
 
-                            <!-- Sección: Datos Personales (SIEMPRE VISIBLE pero con campos condicionales) -->
+                            <!-- ===========================
+                                 DATOS PERSONALES
+                            ============================ -->
                             <div id="seccion-datos-personales" class="form-section">
                                 <h3 style="color: var(--vino-oscuro);">Datos Personales</h3>
+
                                 <div class="form-row">
                                     <div class="form-group" id="campo-nombre">
                                         <label for="nombre">Nombre <span class="required">*</span></label>
@@ -205,18 +214,24 @@
                                             value="<?= old('nombre') ?>" placeholder="Ingrese el nombre">
                                     </div>
 
-                                    <div class="form-group" id="campo-apellidoP">
-                                        <label for="apellidoP">Apellido Paterno <span class="required" id="req-apellidoP">*</span></label>
-                                        <input type="text" class="form-control" id="apellidoP" name="apellidoP"
-                                            value="<?= old('apellidoP') ?>" placeholder="Ingrese el apellido paterno">
+                                    <div class="form-group" id="campo-apellido_paterno">
+                                        <label for="apellido_paterno">
+                                            Apellido Paterno
+                                            <span class="required" id="req-apellido_paterno">*</span>
+                                        </label>
+                                        <input type="text" class="form-control" id="apellido_paterno"
+                                            name="apellido_paterno" value="<?= old('apellido_paterno') ?>"
+                                            placeholder="Ingrese el apellido paterno">
                                     </div>
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="form-group" id="campo-apellidoM">
-                                        <label for="apellidoM">Apellido Materno</label>
-                                        <input type="text" class="form-control" id="apellidoM" name="apellidoM"
-                                            value="<?= old('apellidoM') ?>" placeholder="Ingrese el apellido materno (opcional)">
+                                    <!-- CORREGIDO: id unificado a campo-apellido_materno -->
+                                    <div class="form-group" id="campo-apellido_materno">
+                                        <label for="apellido_materno">Apellido Materno</label>
+                                        <input type="text" class="form-control" id="apellido_materno"
+                                            name="apellido_materno" value="<?= old('apellido_materno') ?>"
+                                            placeholder="Ingrese el apellido materno (opcional)">
                                     </div>
 
                                     <div class="form-group">
@@ -250,76 +265,204 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div><!-- /seccion-datos-personales -->
 
-                            <!-- Sección: Datos Fiscales (CONDICIONAL) -->
-                            <div id="seccion-datos-fiscales" class="form-section">
+                            <!-- ===========================
+                                 DATOS FISCALES (CONDICIONAL)
+                                 CORREGIDO: tipo_persona y ambas
+                                 sub-secciones están DENTRO de aquí
+                            ============================ -->
+                            <div id="seccion-datos-fiscales" class="form-section" style="display:none;">
                                 <h3 style="color: var(--vino-oscuro);">Datos Fiscales</h3>
-                                
-                                <!-- Campos para ADMINISTRADOR y PROVEEDOR (compartidos) -->
-                                <div class="form-row">
-                                    <div class="form-group" id="campo-rfc">
-                                        <label for="rfc">RFC</label>
-                                        <input type="text" class="form-control" id="rfc" name="rfc"
-                                            value="<?= old('rfc') ?>" placeholder="Ej: XAXX010101000" maxlength="13">
-                                    </div>
 
+                                <!-- Teléfono (visible para Admin y Proveedor) -->
+                                <div class="form-row">
                                     <div class="form-group" id="campo-telefono-principal">
-                                        <label for="telefono_principal">Teléfono Principal</label>
-                                        <input type="tel" class="form-control" id="telefono_principal" name="telefono_principal"
-                                            value="<?= old('telefono_principal') ?>" placeholder="Ej: 7221234567">
+                                        <label for="telefono_principal">
+                                            Teléfono Principal
+                                            <span class="required" id="req-telefono_principal"></span>
+                                        </label>
+                                        <input type="text" class="form-control" id="telefono_principal"
+                                            name="telefono_principal" value="<?= old('telefono_principal') ?>"
+                                            placeholder="Ej: 7221234567" maxlength="15">
                                     </div>
                                 </div>
 
-                                <!-- Campos exclusivos para PROVEEDOR -->
-                                <div id="campos-proveedor">
+                                <!-- Campos exclusivos de PROVEEDOR -->
+                                <div id="campos-proveedor" style="display:none;">
+
+                                    <!-- Selector tipo persona (CORREGIDO: dentro de sección fiscal) -->
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="curp">CURP</label>
-                                            <input type="text" class="form-control" id="curp" name="curp"
-                                                value="<?= old('curp') ?>" placeholder="Ej: XAXX010101HXXX" maxlength="18">
+                                            <label for="tipo_persona">
+                                                Tipo de Persona
+                                                <span class="required" id="req-tipo_persona"></span>
+                                            </label>
+                                            <select class="form-control" id="tipo_persona" name="tipo_persona">
+                                                <option value="">Seleccionar tipo</option>
+                                                <option value="1" <?= old('tipo_persona') == '1' ? 'selected' : '' ?>>FÍSICA</option>
+                                                <option value="2" <?= old('tipo_persona') == '2' ? 'selected' : '' ?>>MORAL</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- RFC visible siempre que sea proveedor -->
+                                        <div class="form-group" id="campo-rfc">
+                                            <label for="rfc">
+                                                RFC
+                                                <span class="required" id="req-rfc"></span>
+                                            </label>
+                                            <input type="text" class="form-control" id="rfc" name="rfc"
+                                                value="<?= old('rfc') ?>" placeholder="Ej: XAXX010101000"
+                                                maxlength="13">
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="nombre_razon_social">Nombre o Razón Social</label>
-                                        <input type="text" class="form-control" id="nombre_razon_social"
-                                            name="nombre_razon_social" value="<?= old('nombre_razon_social') ?>"
-                                            placeholder="Nombre comercial o razón social">
-                                    </div>
+                                    <!-- ===========================
+                                         PERSONA FÍSICA
+                                    ============================ -->
+                                    <div id="campos-persona-fisica" style="display:none;">
+                                        <h4 style="color: var(--vino-oscuro); margin-bottom: 15px;">
+                                            Datos Persona Física
+                                        </h4>
 
-                                    <div class="form-group">
-                                        <label for="tipo_persona">Tipo de Persona</label>
-                                        <select class="form-control" id="tipo_persona" name="tipo_persona">
-                                            <option value="">Seleccionar tipo</option>
-                                            <option value="1">FISICA</option>
-                                            <option value="2">MORAL</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="curp">
+                                                    CURP
+                                                    <span class="required" id="req-curp"></span>
+                                                </label>
+                                                <input type="text" class="form-control" id="curp" name="curp"
+                                                    value="<?= old('curp') ?>" maxlength="18"
+                                                    placeholder="Ej: XAXX010101HDFXXX00">
+                                            </div>
 
-                            <!-- Sección: Dirección (CONDICIONAL para ADMINISTRADOR y PROVEEDOR) -->
-                            <div id="seccion-direccion" class="form-section">
+                                            <div class="form-group">
+                                                <label for="num_credencial_votar">Número Credencial de Elector</label>
+                                                <input type="text" class="form-control" id="num_credencial_votar"
+                                                    name="num_credencial_votar"
+                                                    value="<?= old('num_credencial_votar') ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="num_acta_nacimiento">Número Acta de Nacimiento</label>
+                                                <input type="text" class="form-control" id="num_acta_nacimiento"
+                                                    name="num_acta_nacimiento"
+                                                    value="<?= old('num_acta_nacimiento') ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="num_libro">Número Libro</label>
+                                                <input type="text" class="form-control" id="num_libro"
+                                                    name="num_libro" value="<?= old('num_libro') ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="num_oficialia">Número Oficialía</label>
+                                                <input type="text" class="form-control" id="num_oficialia"
+                                                    name="num_oficialia" value="<?= old('num_oficialia') ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="lugar_nacimiento">Lugar de Nacimiento</label>
+                                                <input type="text" class="form-control" id="lugar_nacimiento"
+                                                    name="lugar_nacimiento"
+                                                    value="<?= old('lugar_nacimiento') ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="fecha_nacimiento_registro">Fecha Nacimiento Registro</label>
+                                                <input type="date" class="form-control"
+                                                    id="fecha_nacimiento_registro"
+                                                    name="fecha_nacimiento_registro"
+                                                    value="<?= old('fecha_nacimiento_registro') ?>">
+                                            </div>
+                                        </div>
+                                    </div><!-- /campos-persona-fisica -->
+
+                                    <!-- ===========================
+                                         PERSONA MORAL
+                                         CORREGIDO: ahora es HERMANO
+                                         de campos-persona-fisica,
+                                         no hijo
+                                    ============================ -->
+                                    <div id="campos-persona-moral" style="display:none;">
+                                        <h4 style="color: var(--vino-oscuro); margin-bottom: 15px;">
+                                            Datos Persona Moral
+                                        </h4>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="razon_social">
+                                                    Razón Social
+                                                    <span class="required" id="req-razon_social"></span>
+                                                </label>
+                                                <input type="text" class="form-control" id="razon_social"
+                                                    name="razon_social" value="<?= old('razon_social') ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="representante_legal">Representante Legal</label>
+                                                <input type="text" class="form-control" id="representante_legal"
+                                                    name="representante_legal"
+                                                    value="<?= old('representante_legal') ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="giro_economico">Giro Económico</label>
+                                                <input type="text" class="form-control" id="giro_economico"
+                                                    name="giro_economico" value="<?= old('giro_economico') ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="registro_publico">Registro Público</label>
+                                                <input type="text" class="form-control" id="registro_publico"
+                                                    name="registro_publico"
+                                                    value="<?= old('registro_publico') ?>">
+                                            </div>
+                                        </div>
+                                    </div><!-- /campos-persona-moral -->
+
+                                </div><!-- /campos-proveedor -->
+
+                            </div><!-- /seccion-datos-fiscales -->
+
+                            <!-- ===========================
+                                 DIRECCIÓN (CONDICIONAL)
+                            ============================ -->
+                            <div id="seccion-direccion" class="form-section" style="display:none;">
                                 <h3 style="color: var(--vino-oscuro);">Dirección</h3>
 
-                                <div class="form-group">
-                                    <label for="calle_numero">Calle y Número</label>
-                                    <input type="text" class="form-control" id="calle_numero" name="calle_numero"
-                                     placeholder="Calle, número exterior, número interior">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="calle">Calle</label>
+                                        <input type="text" class="form-control" id="calle" name="calle"
+                                            value="<?= old('calle') ?>" placeholder="Nombre de la calle">
+                                    </div>
+
+                                   
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="colonia">Colonia</label>
-                                        <input type="text" class="form-control" id="colonia" name="colonia"
-                                             placeholder="Colonia">
+                                        <input type="text" class="form-control" id="colonia"
+                                            name="colonia" value="<?= old('colonia') ?>">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="ciudad">Ciudad</label>
                                         <input type="text" class="form-control" id="ciudad" name="ciudad"
-                                            placeholder="Ciudad">
+                                            value="<?= old('ciudad') ?>">
                                     </div>
                                 </div>
 
@@ -327,25 +470,31 @@
                                     <div class="form-group">
                                         <label for="estado">Estado</label>
                                         <input type="text" class="form-control" id="estado" name="estado"
-                                            placeholder="Estado">
+                                            value="<?= old('estado') ?>">
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="codigo_postal">Código Postal</label>
+                                        <label for="codigo_postal">Codigo Postal</label>
                                         <input type="text" class="form-control" id="codigo_postal" name="codigo_postal"
-                                            placeholder="C.P." maxlength="5">
+                                            value="<?= old('codigo_postal') ?>">
                                     </div>
                                 </div>
 
-                        
-
-                                <div class="form-group">
-                                    <label for="pais">País</label>
-                                    <input type="text" class="form-control" id="pais" name="pais" 
-                                        placeholder="País">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="pais">Pais</label>
+                                        <input type="text" class="form-control" id="pais"
+                                            name="pais" value="<?= old('pais') ?>"
+                                            maxlength="5">
+                                    </div>
                                 </div>
-                            </div>
+                            </div><!-- /seccion-direccion -->
 
+                            <!-- ===========================
+                                 ACCIONES
+                                 CORREGIDO: fuera de todas las
+                                 secciones condicionales
+                            ============================ -->
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary" id="btnGuardar">
                                     <i class="fas fa-save"></i> Guardar Usuario
@@ -354,6 +503,7 @@
                                     <i class="fas fa-times"></i> Cancelar
                                 </a>
                             </div>
+
                         </form>
                     </div>
                 </div>
@@ -362,39 +512,14 @@
 
         <footer class="portal-footer">
             <p>Sistema de Gestión de Procesos &copy; <?= date('Y') ?> - Todos los derechos reservados</p>
-            <p><a href="http://www.temascalcingo.gob.mx" class="footer-link">www.temascalcingo.gob.mx</a></p>
+            <p>
+                <a href="http://www.temascalcingo.gob.mx" class="footer-link">www.temascalcingo.gob.mx</a>
+            </p>
         </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script src="../public/js/CrearUsuario.js"></script>
-    <script>
-        // Funciones de validación de campos
-        document.getElementById('confirm_password').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirm = this.value;
-            if (password && confirm) {
-                this.style.borderColor = password !== confirm ? '#dc3545' : '#28a745';
-            }
-        });
-
-        document.getElementById('rfc').addEventListener('input', function() {
-            let rfc = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (rfc.length > 13) rfc = rfc.slice(0, 13);
-            this.value = rfc;
-        });
-
-        document.getElementById('curp').addEventListener('input', function() {
-            let curp = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (curp.length > 18) curp = curp.slice(0, 18);
-            this.value = curp;
-        });
-
-        document.getElementById('telefono_principal').addEventListener('input', function() {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-    </script>
 </body>
 
 </html>

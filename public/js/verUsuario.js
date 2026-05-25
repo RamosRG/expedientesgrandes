@@ -25,7 +25,7 @@ function cargarUsuario(id){
         let usuario = data.data; // 👈 AQUÍ ESTÁ LA CLAVE
         console.log(usuario)
         $("#nombre").val(usuario.nombre || "No hay Nombre");
-        $("#apellidoP").val(usuario.apellidoP || "No hay apellido P");
+        $("#apellido_paterno").val(usuario.apellido_paterno || "No hay apellido P");
         $("#apellidoM").val(usuario.apellidoM || "No hay Apellido M");
         $("#correo").val(usuario.correo || "No hay Correo");
         $("#rfc").val(usuario.rfc || "No hay RFC");
