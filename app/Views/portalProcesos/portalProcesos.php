@@ -393,6 +393,35 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
+    <script>
+        
+// SIDEBAR
+var mySidebar = document.getElementById("mySidebar");
+var overlayBg = document.getElementById("myOverlay");
+
+function w3_open() {
+
+    if (mySidebar.style.display === 'block') {
+
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+
+    } else {
+
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+
+    }
+}
+
+function w3_close() {
+
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
+
+}
+
+    </script>
 </body>
 
 </html>
