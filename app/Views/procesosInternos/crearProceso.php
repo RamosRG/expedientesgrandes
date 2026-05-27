@@ -165,11 +165,11 @@
                 <i class="fa fa-address-card fa-fw"></i>
                 Portal de Procesos
             </a>
-            <a href="../procesosInternos/crearProceso" class="w3-bar-item w3-button w3-padding w3-blue">
+            <a href="../procesosInternos/crearProceso" class="w3-bar-item w3-button w3-padding">
                 <i class="fa fa-address-card fa-fw"></i>
                 crear Proceso
             </a>
-            <a href="#" class="w3-bar-item w3-button w3-padding w3-blue">
+            <a href="#" class="w3-bar-item w3-button w3-padding ">
                 <i class="fa fa-address-card fa-fw"></i>
                 Listado Proveedores
             </a>

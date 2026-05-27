@@ -228,7 +228,8 @@
                 class="w3-btn w3-green w3-block w3-margin-bottom"
                 onclick="enviarVista('2')"
             >
-                Vista 2
+                Contrato en apertura
+                
             </button>
 
             <button 

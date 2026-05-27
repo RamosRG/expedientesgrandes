@@ -42,7 +42,7 @@ class PortalProcesosController extends BaseController
             return view("portalProcesos/actaApertura", $data);
 
         case 2:
-            return view("portalProcesos/cuadroComparativo", $data);
+            return view("portalProcesos/contratoApertura", $data);
 
         case 3:
             return view("portalProcesos/falloProcedimiento", $data);
