@@ -11,7 +11,7 @@ class EmpresaModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $allowedFields = ['nombre_empresa', 'giro_comercial', 'domicilio_fiscal'];
+    protected $allowedFields = ['nombre_empresa', 'giro_comercial', 'domicilio_fiscal', 'registro_publico'];
 
     protected $useTimestamps = true;
     protected $createdField = 'created_at';

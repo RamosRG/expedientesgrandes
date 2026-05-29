@@ -15,6 +15,7 @@ use App\Models\EmpresaModel;
 use App\Models\ProcesoModel;
 use App\Models\DocumentosProcesosModel;
 use App\Models\DetalleProveedorProductolModel;
+use App\Models\ContratoAperturaModel;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
@@ -29,11 +30,20 @@ class PortalProcesosController extends BaseController
 
     $empresaModel = new EmpresaModel();
 
+    //llamaras al modelo de EstudioMercadoModel();
+     $contratoAperturaModel = new ContratoAperturaModel();
+
     $empresas = $empresaModel->getEmpresasByEstudio($idEstudio);
+    //Mandaras a llamar la funcion del EstudioMercadoModel() donde se llamara $contratoApertura
+    $contratoApertura = $contratoAperturaModel->getContratoAperturaById($idEstudio);
+    //var_dump($contratoApertura);
 
     $data = [
         'id_estudio' => $idEstudio,
-        'empresas'   => $empresas
+        'empresas'   => $empresas,
+
+        //finalizas pasando la variable antes llamada $contratoApertura;
+        'contratoApertura' => $contratoApertura,
     ];
 
     switch ($vista) {

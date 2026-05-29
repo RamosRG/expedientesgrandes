@@ -25,6 +25,43 @@ class EstudioMercadoModel extends Model
 
 
 
+    //Generaras una funcion donde obtendras los datos de tu bd la funcion se llamara 
+    //getContratoAperturaById(); si usas IA recuerda ponerle que es para Codeigniter 4
+    public function getContratoAperturaById($id_estudio)
+    {
+        $builder = $this->db->table('estudio_mercado');
+
+        $builder->select('*');
+
+        $builder->join(
+            'descripcion_estudio_mercado',
+            'descripcion_estudio_mercado.fk_estudio_mercado = estudio_mercado.id_estudio'
+        );
+
+        $builder->join(
+            'detalle_proveedor_producto',
+            'detalle_proveedor_producto.fk_descripcion_estudio_mercado = descripcion_estudio_mercado.id_descripcion'
+        );
+
+        $builder->join(
+            'tbl_costos_totales',
+            'tbl_costos_totales.fk_estudio_mercado = estudio_mercado.id_estudio'
+        );
+
+        $builder->where('estudio_mercado.id_estudio', $id_estudio);
+
+        $builder->where("
+        tbl_costos_totales.total = (
+            SELECT MIN(ct.total)
+            FROM tbl_costos_totales ct
+            WHERE ct.fk_estudio_mercado = estudio_mercado.id_estudio
+        )
+    ");
+
+        $query = $builder->get();
+
+        return $query->getResult();
+    }
     // MODELO
 
     public function getEstudioById(int $id_estudio): array
