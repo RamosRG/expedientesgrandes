@@ -1,34 +1,47 @@
-
 if (contratoApertura.length > 0) {
 
-    // =========================
-    // PRIMER PROVEEDOR (GANADOR)
-    // =========================
+    const ganador = contratoApertura[0]; // ✅ Solo aquí, una vez
 
-    const ganador = contratoApertura[0];
+    const diez_porciento = parseFloat(ganador.subtotal ?? 0) * 0.10;
+    const cinco_porciento = parseFloat(ganador.subtotal ?? 0) * 0.05; // ✅ Era 0.5
 
     const nombre_completo =
-        (ganador.nombre ?? '') + ' ' +
-        (ganador.apellido_paterno ?? '') + ' ' +
-        (ganador.apellido_materno ?? '');
+        (ganador.nombre_proveedor ?? '') + ' ' +
+        (ganador.apellido_paterno_proveedor ?? '') + ' ' +
+        (ganador.apellido_materno_proveedor ?? '');
 
-    document.getElementById("nombre_estudio").innerText =
-        ganador.nombre_estudio ?? '';
+    const nombre_completo_coordinado =
+        (ganador.coordinador_nombre ?? '') + ' ' +
+        (ganador.coordinador_apellido_paterno ?? '') + ' ' +
+        (ganador.coordinador_apellido_materno ?? '');
 
-    document.getElementById("no_licitacion").innerText =
-        ganador.no_licitacion ?? '';
+    const campos = {
+        nombre_estudio: ganador.nombre_estudio,
+        nombre_estudio_ganador: ganador.nombre_estudio,
+        nombre_estudio_siguiente: ganador.nombre_estudio,
+        estudio_nombre: ganador.nombre_estudio,
+        estudio_nombre1: ganador.nombre_estudio,
+        no_licitacion: ganador.no_licitacion,
+        nombre_empresa: ganador.nombre_empresa,
+        representante_legal: ganador.representante_legal,
+        registro_publico: ganador.registro_publico,
+        nombre_usuario: nombre_completo,
+        nombre_proveedor: nombre_completo,
+        num_credencial_repre: ganador.num_credencial_representante,
+        numero_rfc: ganador.rfc_moral,
+        precio_total: ganador.subtotal,
+        precio_total_bueno: ganador.total,
+        subtotal_al_diez: diez_porciento,
+        subtotal_al_cinco: cinco_porciento,
+        nombre_completo_coordinado: nombre_completo_coordinado,
+    };
 
-    document.getElementById("nombre_empresa").innerText =
-        ganador.nombre_empresa ?? '';
-
-    document.getElementById("representante_legal").innerText =
-        ganador.representante_legal ?? '';
-
-    document.getElementById("registro_publico").innerText =
-        ganador.registro_publico ?? '';
-
-    document.getElementById("nombre_usuario").innerText =
-        nombre_completo;
+    Object.entries(campos).forEach(([id, valor]) => {
+        const elemento = document.getElementById(id);
+        if (elemento) {
+            elemento.innerText = valor ?? '';
+        }
+    });
 
     // =========================
     // DATOS PERSONA MORAL
@@ -41,227 +54,229 @@ if (contratoApertura.length > 0) {
         ganador.giro_economico,
         ganador.registro_publico
     ]
-    .filter(valor => valor && valor.trim() !== '')
-    .join(' ');
+        .filter(valor => valor && valor.trim() !== '')
+        .join(' ');
 
-    document.getElementById("datos_persona_moral").innerText =
-        datosPersonaMoral;
-
-    document.getElementById("notario").innerText =
-        ganador.notario ?? '';
-
-    document.getElementById("titular").innerText =
-        ganador.titular ?? '';
+    document.getElementById("datos_persona_moral").innerText = datosPersonaMoral;
+    document.getElementById("notario").innerText = ganador.notario ?? '';
+    document.getElementById("titular").innerText = ganador.titular ?? '';
 
     // =========================
-    // DATOS REPRESENTANTE
+    // NÚMERO A LETRAS ✅ Solo una definición
     // =========================
 
-// =========================
-// DATOS REPRESENTANTE
-// =========================
+   function numeroALetras(numero) {
 
-function numeroALetras(numero) {
-
-    numero = parseInt(numero);
+    numero = Number(numero);
 
     const unidades = [
-        '', 'UNO', 'DOS', 'TRES', 'CUATRO',
-        'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE'
+        '', 'uno', 'dos', 'tres', 'cuatro',
+        'cinco', 'seis', 'siete', 'ocho', 'nueve'
     ];
 
     const especiales = [
-        'DIEZ', 'ONCE', 'DOCE', 'TRECE', 'CATORCE',
-        'QUINCE', 'DIECISÉIS', 'DIECISIETE',
-        'DIECIOCHO', 'DIECINUEVE'
+        'diez', 'once', 'doce', 'trece', 'catorce',
+        'quince', 'dieciséis', 'diecisiete',
+        'dieciocho', 'diecinueve'
     ];
 
     const decenas = [
-        '', '', 'VEINTE', 'TREINTA', 'CUARENTA',
-        'CINCUENTA', 'SESENTA', 'SETENTA',
-        'OCHENTA', 'NOVENTA'
+        '', '', 'veinte', 'treinta', 'cuarenta',
+        'cincuenta', 'sesenta', 'setenta',
+        'ochenta', 'noventa'
     ];
 
     const centenas = [
-        '', 'CIENTO', 'DOSCIENTOS', 'TRESCIENTOS',
-        'CUATROCIENTOS', 'QUINIENTOS',
-        'SEISCIENTOS', 'SETECIENTOS',
-        'OCHOCIENTOS', 'NOVECIENTOS'
+        '', 'ciento', 'doscientos', 'trescientos',
+        'cuatrocientos', 'quinientos',
+        'seiscientos', 'setecientos',
+        'ochocientos', 'novecientos'
     ];
 
-    if (isNaN(numero) || numero === 0) {
-        return '';
-    }
+    function convertir(n) {
 
-    if (numero === 100) {
-        return 'CIEN';
-    }
+        if (n === 0) return 'cero';
 
-    if (numero < 10) {
-        return unidades[numero];
-    }
+        if (n === 100) return 'cien';
 
-    if (numero >= 10 && numero < 20) {
-        return especiales[numero - 10];
-    }
-
-    if (numero >= 20 && numero < 30) {
-
-        if (numero === 20) {
-            return 'VEINTE';
+        if (n < 10) {
+            return unidades[n];
         }
 
-        return 'VEINTI' + unidades[numero - 20].toLowerCase();
-    }
-
-    if (numero < 100) {
-
-        const unidad = numero % 10;
-        const decena = Math.floor(numero / 10);
-
-        if (unidad === 0) {
-            return decenas[decena];
+        if (n >= 10 && n < 20) {
+            return especiales[n - 10];
         }
 
-        return decenas[decena] + ' Y ' + unidades[unidad];
-    }
+        if (n >= 20 && n < 30) {
 
-    if (numero < 1000) {
+            if (n === 20) {
+                return 'veinte';
+            }
 
-        const centena = Math.floor(numero / 100);
-        const resto = numero % 100;
-
-        return centenas[centena] + ' ' + numeroALetras(resto);
-    }
-
-    if (numero < 1000000) {
-
-        const miles = Math.floor(numero / 1000);
-        const resto = numero % 1000;
-
-        let textoMiles = '';
-
-        if (miles === 1) {
-            textoMiles = 'MIL';
-        } else {
-            textoMiles = numeroALetras(miles) + ' MIL';
+            return 'veinti' + unidades[n - 20];
         }
 
-        return textoMiles + ' ' + numeroALetras(resto);
+        if (n < 100) {
+
+            const decena = Math.floor(n / 10);
+            const unidad = n % 10;
+
+            return unidad === 0
+                ? decenas[decena]
+                : `${decenas[decena]} y ${unidades[unidad]}`;
+        }
+
+        if (n < 1000) {
+
+            const centena = Math.floor(n / 100);
+            const resto = n % 100;
+
+            return resto === 0
+                ? centenas[centena]
+                : `${centenas[centena]} ${convertir(resto)}`;
+        }
+
+        if (n < 1000000) {
+
+            const miles = Math.floor(n / 1000);
+            const resto = n % 1000;
+
+            let milesTexto = '';
+
+            if (miles === 1) {
+                milesTexto = 'mil';
+            } else {
+                milesTexto = `${convertir(miles)} mil`;
+            }
+
+            return resto === 0
+                ? milesTexto
+                : `${milesTexto} ${convertir(resto)}`;
+        }
+
+        return n.toString();
     }
 
-    return numero.toString();
+    const entero = Math.floor(numero);
+
+    const decimal = Math.round((numero - entero) * 100);
+
+    return `${convertir(entero).toUpperCase()} PESOS ${decimal.toString().padStart(2, '0')}/100 M.N.`;
 }
+    // =========================
+    // TOTAL EN TEXTO
+    // =========================
 
+    const total = parseFloat(ganador.total ?? 0);
+    const subtotal = parseFloat(ganador.subtotal ?? 0);
+    const subtotal_aldiez = parseFloat(diez_porciento ?? 0);
+    const subtotal_alcinco = parseFloat(cinco_porciento ?? 0);
 
-// =========================
-// CONVERTIR A TEXTO
-// =========================
+    document.getElementById("precio_subtotal_letras").innerText = numeroALetras(subtotal);
+    document.getElementById("precio_subtotal_al_diez").innerText = numeroALetras(subtotal_aldiez);
+    document.getElementById("precio_subtotal_al_cinco").innerText = numeroALetras(subtotal_alcinco);
 
-const instrumentoTexto =
-    numeroALetras(ganador.instrumento_re);
+    // =========================
+    // INSTRUMENTO / VOLUMEN / FOLIO
+    // =========================
 
-const volumenTexto =
-    numeroALetras(ganador.volumen_re);
+    const instrumentoTexto = numeroALetras(ganador.instrumento_re);
+    const volumenTexto = numeroALetras(ganador.volumen_re);
+    const folioTexto = numeroALetras(ganador.folio_re);
 
-const folioTexto =
-    numeroALetras(ganador.folio_re);
+    const datosRepresentante = [instrumentoTexto, volumenTexto, folioTexto]
+        .filter(valor => valor && valor.trim() !== '')
+        .join(' ');
 
+    const instrumentoRe = document.getElementById("instrumento_re");
+    if (instrumentoRe) instrumentoRe.innerText = instrumentoTexto;
 
-// =========================
-// CONCATENAR DATOS
-// =========================
+    const volumenRe = document.getElementById("volumen_re");
+    if (volumenRe) volumenRe.innerText = volumenTexto;
 
-const datosRepresentante = [
-    instrumentoTexto,
-    volumenTexto,
-    folioTexto
-]
-.filter(valor => valor && valor.trim() !== '')
-.join(' ');
+    const folioRe = document.getElementById("folio_re");
+    if (folioRe) folioRe.innerText = folioTexto;
 
-
-// =========================
-// instrumento_re
-// =========================
-
-const instrumentoRe =
-    document.getElementById("instrumento_re");
-
-if (instrumentoRe) {
-
-    instrumentoRe.innerText =
-        instrumentoTexto;
-}
-
-
-// =========================
-// volumen_re
-// =========================
-
-const volumenRe =
-    document.getElementById("volumen_re");
-
-if (volumenRe) {
-
-    volumenRe.innerText =
-        volumenTexto;
-}
-
-
-// =========================
-// folio_re
-// =========================
-
-const folioRe =
-    document.getElementById("folio_re");
-
-if (folioRe) {
-
-    folioRe.innerText =
-        folioTexto;
-}
-
-
-// =========================
-// datosRepresentante
-// =========================
-
-const datosRepresentanteElement =
-    document.getElementById("datosRepresentante");
-
-if (datosRepresentanteElement) {
-
-    datosRepresentanteElement.innerText =
-        datosRepresentante;
-}
+    const datosRepresentanteElement = document.getElementById("datosRepresentante");
+    if (datosRepresentanteElement) datosRepresentanteElement.innerText = datosRepresentante;
 
     // =========================
     // SEGUNDO PROVEEDOR
     // =========================
 
     if (contratoApertura.length > 1) {
-
         const otroProveedor = contratoApertura[1];
 
-        const nombre_completo1 =
-            (otroProveedor.nombre ?? '') + ' ' +
-            (otroProveedor.apellido_paterno ?? '') + ' ' +
-            (otroProveedor.apellido_materno ?? '');
-
-        document.getElementById("nombre_empresa1").innerText =
-            otroProveedor.nombre_empresa ?? '';
-
-        document.getElementById("estudio_mercado1").innerText =
-            otroProveedor.nombre_estudio ?? '';
-
-        document.getElementById("no_licitacion1").innerText =
-            otroProveedor.no_licitacion ?? '';
-
-            const ganador = contratoApertura[0];
-                    
-            
-
+        document.getElementById("nombre_empresa1").innerText = otroProveedor.nombre_empresa ?? '';
+        document.getElementById("estudio_mercado1").innerText = otroProveedor.nombre_estudio ?? '';
+        document.getElementById("no_licitacion1").innerText = otroProveedor.no_licitacion ?? '';
+        // ✅ Se eliminó el const ganador redundante que no hacía nada
     }
 
+    function fechaEnTexto(fechaString) {
+
+    const fecha = new Date(fechaString);
+
+    const dia = fecha.getDate();
+    const mes = fecha.toLocaleString('es-MX', {
+        month: 'long'
+    });
+
+    const anio = fecha.getFullYear();
+
+    return `a los ${numeroALetras(dia)} días del mes de ${mes} del año ${numeroALetras(anio)}`;
 }
+
+// =========================
+// USAR
+// =========================
+
+const fechaTexto = fechaEnTexto(ganador.created_at);
+
+document.getElementById("fecha_texto").innerText =
+    fechaTexto;
+
+    // =========================
+    // TABLA PRODUCTOS ✅ ganador accesible aquí dentro del mismo if
+    // =========================
+
+    if (productos.length > 0) {
+        const tbody = document.getElementById("tabla_productos_body");
+        tbody.innerHTML = ""; // limpiar
+
+        let filas = ''; // ✅ Acumular en string, no += innerHTML en loop
+
+        productos.forEach(producto => {
+            filas += `
+                <tr>
+                    <td class="celda-editable" contenteditable="true">
+                        ${producto.partida ?? ''}
+                    </td>
+                    <td class="celda-editable" contenteditable="true">
+                        ${ganador.nombre_estudio ?? ''}
+                        <br><br>
+                        CARACTERÍSTICAS MÍNIMAS DE LA UNIDAD
+                        <br><br>
+                        ${producto.descripcion ?? ''}
+                        <br><br>
+                        CARACTERÍSTICAS DEL PRODUCTO
+                        <br>
+                        ${producto.descripcion ?? ''}
+                    </td>
+                    <td class="celda-editable" contenteditable="true">
+                        ${producto.marca_modelo ?? ''}
+                    </td>
+                    <td class="celda-editable" contenteditable="true">
+                        ${producto.unidad_medida ?? ''}
+                    </td>
+                    <td class="celda-editable" contenteditable="true">
+                        ${producto.cantidad ?? ''}
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = filas;
+    }
+
+} // ← cierre del if principal

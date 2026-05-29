@@ -34,16 +34,15 @@ class PortalProcesosController extends BaseController
      $contratoAperturaModel = new ContratoAperturaModel();
 
     $empresas = $empresaModel->getEmpresasByEstudio($idEstudio);
-    //Mandaras a llamar la funcion del EstudioMercadoModel() donde se llamara $contratoApertura
     $contratoApertura = $contratoAperturaModel->getContratoAperturaById($idEstudio);
+    $descripcionProductos = $contratoAperturaModel->obtenerDescripcionEstudio($idEstudio);
     //var_dump($contratoApertura);
 
     $data = [
         'id_estudio' => $idEstudio,
         'empresas'   => $empresas,
-
-        //finalizas pasando la variable antes llamada $contratoApertura;
         'contratoApertura' => $contratoApertura,
+        'productos' => $descripcionProductos,
     ];
 
     switch ($vista) {

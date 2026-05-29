@@ -1,11 +1,4 @@
 
-// DATOS QUE VIENEN DE CODEIGNITER
-
-
-// =========================================================
-// LICITACIÓN
-// =========================================================
-
 if (empresas.length > 0) {
 
     document.getElementById("no_licitacion").innerText =

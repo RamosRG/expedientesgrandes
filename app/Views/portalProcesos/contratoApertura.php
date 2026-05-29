@@ -371,7 +371,8 @@
                             ARTÍCULOS 3, 26, 28, 29, 30 FRACCIÓN I, 32, 33, 35, 36 Y 37 DE LA LEY DE CONTRATACIÓN
                             PÚBLICA DEL ESTADO DE MÉXICO Y MUNICIPIOS, 61 Y67 FRACCIÓN IX DE SU RESPECTIVO REGLAMENTO;
                             ASÍ COMO EN LO ESTABLECIDO EN EL PUNTO 3.1 DE LAS BASES QUE SE EMITIERON PARA EL
-                            PROCEDIMIENTO EN MENCIÓN.</div>
+                            PROCEDIMIENTO EN MENCIÓN.
+                        </div>
 
                         <div class="numero-pagina">1 DE 8</div>
                     </div>
@@ -390,7 +391,7 @@
                         <div class="texto">2. QUE EL <span id="representante_legal" class="campo campo-largo" contenteditable="true"></span>, EN SU CARÁCTER DE REPRESENTANTE LEGAL, COMO LO ACREDITA CON
                             <span id="datosRepresentante" class="campo campo-largo" contenteditable="true"></span>, ANTE LA FE DEL <span id="notario" class="campo campo-largo"
                                 contenteditable="true"></span>, NOTARIO PÚBLICO AUXILIAR DE LA NOTARÍA
-                                PUBLICA NÚMERO TRECE TITULAR, DE LAS QUE ESTÁ EN EJERCICIO EN EL DISTRITO
+                            PUBLICA NÚMERO TRECE TITULAR, DE LAS QUE ESTÁ EN EJERCICIO EN EL DISTRITO
                             JUDICIAL DE PUEBLA, CUYO TITULAR LO ES EL <span id="titular" class="campo campo-largo"
                                 contenteditable="true"></span> ACTUANDO EN SU PROTOCOLO Y CON SU
                             SELLO DE AUTORIZAR, EN EL ESTADO DE LA HEROICA PUEBLA DE ZARAGOZA, ESTADO DE PUEBLA, PUEBLA
@@ -398,13 +399,14 @@
                             OBLIGAR A SU REPRESENTADA EN TÉRMINOS DEL PRESENTE CONTRATO, MISMAS QUE A LA FECHA NO LE HAN
                             SIDO LIMITADAS, MODIFICADAS O REVOCADAS, Y EN CASO CONTRARIO, ESTÁ ANUENTE EN QUEDAR
                             OBLIGADO A TÍTULO PERSONAL DE LOS COMPROMISOS CONTRAÍDOS POR SU REPRESENTADA Y SE IDENTIFICA
-                            CON CREDENCIAL PARA VOTAR CON NÚMERO <span class="campo campo-mediano"
-                                contenteditable="true">num_credencial_votar</span> EXPEDIDA POR EL INSTITUTO NACIONAL
-                            ELECTORAL (CREDENCIAL PARA VOTAR)</div>
+                            CON CREDENCIAL PARA VOTAR CON NÚMERO <span id="num_credencial_repre" class="campo campo-mediano"
+                                contenteditable="true"></span> EXPEDIDA POR EL INSTITUTO NACIONAL
+                            ELECTORAL (CREDENCIAL PARA VOTAR)
+                        </div>
                         <div class="texto">3. QUE SU REGISTRO FEDERAL DE CONTRIBUYENTES ES <span
-                                class="campo campo-mediano" contenteditable="true">rfc</span>.</div>
+                                id="numero_rfc" class="campo campo-mediano" contenteditable="true">rfc</span>.</div>
                         <div class="texto">4. QUE CONOCE LAS ESPECIFICACIONES DEL PROCEDIMIENTO DE LICITACIÓN PÚBLICA
-                            NACIONAL PRESENCIAL REFERENTE A LA <span id="nombre_estudio" class="campo campo-largo"
+                            NACIONAL PRESENCIAL REFERENTE A LA <span id="nombre_estudio_ganador" class="campo campo-largo"
                                 contenteditable="true"></span> QUE LLEVA A CABO EL MUNICIPIO DE
                             TEMASCALCINGO Y DEMÁS DOCUMENTOS QUE SE ENCUENTRAN INTEGRADOS AL EXPEDIENTE QUE SE FORMÓ CON
                             MOTIVO DEL PROCEDIMIENTO DE ADQUISICIÓN ANTES REFERIDO.</div>
@@ -430,8 +432,8 @@
                         <div class="subtitulo">CLÁUSULAS</div>
 
                         <div class="texto"><strong>PRIMERA. - OBJETO.</strong> “EL MUNICIPIO” ENCOMIENDA A “EL
-                            PROVEEDOR” LLEVAR A CABO EL SUMINISTRO DE <span class="campo campo-largo"
-                                contenteditable="true">nombre_estudio</span>.</div>
+                            PROVEEDOR” LLEVAR A CABO EL SUMINISTRO DE <span id="estudio_nombre" class="campo campo-largo"
+                                contenteditable="true"></span>.</div>
 
                         <table>
                             <thead>
@@ -443,18 +445,9 @@
                                     <th>CANTIDAD</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="celda-editable" contenteditable="true">ÚNICA</td>
-                                    <td class="celda-editable" contenteditable="true">
-                                        nombre_estudio<br><br>CARACTERÍSTICAS MÍNIMAS DE LA
-                                        UNIDAD<br><br>descripcion<br><br>CARACTERISTICAS
-                                        descripcion:<br>descripcion<br><br>CARACTERÍSTICAS DEL
-                                        producto_servicio<br>descripcion</td>
-                                    <td class="celda-editable" contenteditable="true">marca_modelo</td>
-                                    <td class="celda-editable" contenteditable="true">unidad_medida</td>
-                                    <td class="celda-editable" contenteditable="true">cantidad</td>
-                                </tr>
+
+                            <tbody id="tabla_productos_body">
+                                <!-- FILAS DINÁMICAS -->
                             </tbody>
                         </table>
 
@@ -466,16 +459,14 @@
                 <div class="hoja">
                     <div class="contenido-hoja">
                         <div class="texto"><strong>SEGUNDA. -- IMPORTE.</strong> LA CANTIDAD TOTAL A PAGAR POR PARTE DE
-                            “EL MUNICIPIO” SERÁ DE <strong>$<span class="campo campo-mediano"
-                                    contenteditable="true">precio_total</span> (<span class="campo campo-largo"
-                                    contenteditable="true">precio_total en texto 92/100 M.N.</span>) INCLUIDO EL
+                            “EL MUNICIPIO” SERÁ DE <strong>$<span id="precio_total">precio_total</span> (<span id="precio_subtotal_letras">precio_total en texto 92/100 M.N.</span>) INCLUIDO EL
                                 IMPUESTO AL VALOR AGREGADO I.V.A.</strong> PAGADO EN UNA SOLA EXHIBICIÓN.</div>
                         <div class="texto"><strong>TERCERA. - ANTICIPO.</strong> “EL MUNICIPIO” NO OTORGARÁ A “EL
                             PROVEEDOR” ANTICIPO ALGUNO, MOTIVO DEL PRESENTE CONTRATO.</div>
                         <div class="texto"><strong>CUARTA. - “LAS PARTES”</strong> CONVIENEN QUE LOS PRECIOS OFERTADOS
                             SERÁN FIJOS Y POR NINGÚN MOTIVO PODRÁN MODIFICARSE.</div>
                         <div class="texto"><strong>QUINTA:</strong> “LAS PARTES” ACUERDAN QUE EL PAGO POR LA <span
-                                class="campo campo-largo" contenteditable="true">nombre_estudio</span> OBJETO DEL
+                                id="nombre_estudio_siguiente"></span> OBJETO DEL
                             PRESENTE CONTRATO, SE CUBRIRÁ DE LA MANERA SIGUIENTE:</div>
                         <div class="texto">I. “EL PROVEEDOR” ENTREGARÁ SU FACTURA A MÁS TARDAR A LOS DIEZ DÍAS HÁBILES
                             POSTERIORES A LA ENTREGA TOTAL DE LOS BIENES CON SU RESPECTIVO XML PARA TRÁMITE DE PAGO EN
@@ -494,8 +485,7 @@
                             DE LA CLÁUSULA PRIMERA DE ESTE INSTRUMENTO.</div>
                         <div class="texto">II. INFORMAR A “EL MUNICIPIO” DE CUALQUIER ANOMALÍA QUE SE PRESENTE DURANTE
                             LA EJECUCIÓN DEL PRESENTE CONTRATO, EN CUANTO IMPIDA O DIFICULTE LLEVAR A CABO EL SUMINISTRO
-                            DEL PROCEDIMIENTO REFERENTE A LA <span class="campo campo-largo"
-                                contenteditable="true">nombre_estudio</span> COMUNICAR POR ESCRITO OPORTUNAMENTE A “EL
+                            DEL PROCEDIMIENTO REFERENTE A LA <span id="estudio_nombre1"></span> COMUNICAR POR ESCRITO OPORTUNAMENTE A “EL
                             MUNICIPIO” CUALQUIER CAMBIO DE DOMICILIO.</div>
                         <div class="texto">III. CUMPLIR CON LAS DEMÁS OBLIGACIONES QUE DERIVEN DEL PRESENTE CONTRATO.
                         </div>
@@ -516,15 +506,11 @@
                         <div class="texto">I. <strong>CUMPLIMIENTO DE CONTRATO:</strong> SE CONSTITUIRÁ POR EL 10% DEL
                             IMPORTE DEL SUBTOTAL DEL CONTRATO (SIN INCLUIR EL IMPUESTO AL VALOR AGREGADO), DENTRO DE LOS
                             DIEZ DÍAS HÁBILES POSTERIORES A LA FIRMA DE CONTRATO EN CASO DE APLAZAR LA ENTREGA DE LOS
-                            BIENES, POR LA CANTIDAD DE <strong>$<span class="campo campo-mediano"
-                                    contenteditable="true">precio_total</span> (<span class="campo campo-largo"
-                                    contenteditable="true">precio_total en texto 20/100 M.N</span>)</strong> Y ESTARÁ
+                            BIENES, POR LA CANTIDAD DE <strong>$<span id="subtotal_al_diez"></span> (<span id="precio_subtotal_al_diez"></span>)</strong> Y ESTARÁ
                             VIGENTE HASTA EL CUMPLIMIENTO DEL PRESENTE CONTRATO.</div>
                         <div class="texto">II. <strong>VICIOS OCULTOS:</strong> SE CONSTITUIRÁ POR EL 5% DEL IMPORTE DEL
                             SUBTOTAL DEL CONTRATO (SIN INCLUIR EL IMPUESTO AL VALOR AGREGADO), DENTRO DE LOS CINCO DÍAS
-                            HÁBILES POSTERIORES A LA ENTREGA TOTAL DE LOS BIENES, POR LA CANTIDAD DE <strong>$<span
-                                    class="campo campo-mediano" contenteditable="true">precio_total</span> (<span
-                                    class="campo campo-largo" contenteditable="true">precio_total en texto 60/100
+                            HÁBILES POSTERIORES A LA ENTREGA TOTAL DE LOS BIENES, POR LA CANTIDAD DE <strong>$<span id="subtotal_al_cinco"></span> (<span id="precio_subtotal_al_cinco">
                                     M.N.</span>)</strong> Y ESTARÁ VIGENTE DURANTE UN AÑO.</div>
                         <div class="texto">III. LA FIANZA DEBERÁ CONTENER LAS SIGUIENTES DECLARACIONES EXPRESAS DE LA
                             AFIANZADORA: QUE LA FIANZA SE OTORGA EN LOS TÉRMINOS DEL PRESENTE CONTRATO.<br>
@@ -601,7 +587,7 @@
                         <div class="texto">UNA VEZ LEÍDO EL PRESENTE CONTRATO Y CONFORMES CON SU CONTENIDO, PROCEDEN A
                             RATIFICAR EN TODAS Y CADA UNA DE SUS PARTES FIRMÁNDOLO POR TRIPLICADO, AL CALCE Y AL MARGEN
                             PARA DEBIDA CONSTANCIA LEGAL, EN EL MUNICIPIO DE TEMASCALCINGO, MÉXICO, A LOS <span
-                                class="campo campo-largo" contenteditable="true">VEINTIDÓS DÍAS DEL MES DE AGOSTO DEL
+                                id="fecha_texto">VEINTIDÓS DÍAS DEL MES DE AGOSTO DEL
                                 AÑO DOS MIL VEINTICINCO</span>.</div>
 
                         <div class="subtitulo">POR “EL MUNICIPIO”</div>
@@ -614,16 +600,14 @@
                         <div style="clear:both;"></div>
 
                         <div class="firma-completa">
-                            <div class="linea"><span class="campo campo-largo"
-                                    contenteditable="true">fk_coordinador</span><br><span class="campo campo-mediano"
+                            <div class="linea"><span id="nombre_completo_coordinado"></span><br><span class="campo campo-mediano"
                                     contenteditable="true">COORDINADOR MUNICIPAL DE PROTECCIÓN CIVIL Y BOMBEROS</span>
                             </div>
                         </div>
 
                         <div class="subtitulo" style="margin-top:50px;">POR “EL PROVEEDOR”</div>
                         <div class="firma-completa">
-                            <div class="linea"><span class="campo campo-largo"
-                                    contenteditable="true">fk_proveedor</span><br>REPRESENTANTE LEGAL DE <span
+                            <div class="linea"><span id="nombre_proveedor"></span><br>REPRESENTANTE LEGAL DE <span
                                     class="campo campo-mediano nombre_empresa" contenteditable="true"> </span></div>
                         </div>
 
@@ -651,11 +635,11 @@
 
     Debes mandar a llamar al JS
     <script>
-
         const contratoApertura = <?= json_encode($contratoApertura) ?>;
+        const productos = <?= json_encode($productos) ?>;
 
-        console.log("tengo", contratoApertura);
-
+        console.log("tengo del contrato", contratoApertura);
+        console.log("tengo", productos);
     </script>
 
     <script>
