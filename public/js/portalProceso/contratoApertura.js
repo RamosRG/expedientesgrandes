@@ -34,6 +34,7 @@ if (contratoApertura.length > 0) {
         subtotal_al_diez: diez_porciento,
         subtotal_al_cinco: cinco_porciento,
         nombre_completo_coordinado: nombre_completo_coordinado,
+        area: ganador.area,
     };
 
     Object.entries(campos).forEach(([id, valor]) => {
