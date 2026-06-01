@@ -319,7 +319,7 @@
                         </div>
 
                         <div class="titulo">
-                           
+
                             <span id="no_licitacion">Numero de Licitacion </span>
                         </div>
 
@@ -362,7 +362,7 @@
                         <div class="texto">6. CONFORME A CONTROL PRESUPUESTAL AUTORIZADO POR LA TESORERÍA MUNICIPAL.
                         </div>
                         <div class="texto">QUE LA ADJUDICACIÓN DEL CONTRATO SE REALIZÓ MEDIANTE PROCEDIMIENTO POR
-                            <strong>LICITACIÓN PÚBLICA NACIONAL PRESENCIAL LPNP <span id="no_licitacion1" ></span></strong>, DE CONFORMIDAD CON LOS
+                            <strong>LICITACIÓN PÚBLICA NACIONAL PRESENCIAL LPNP <span id="no_licitacion1"></span></strong>, DE CONFORMIDAD CON LOS
                             ARTÍCULOS 3, 26, 28, 29, 30 FRACCIÓN I, 32, 33, 35, 36 Y 37 DE LA LEY DE CONTRATACIÓN
                             PÚBLICA DEL ESTADO DE MÉXICO Y MUNICIPIOS, 61 Y67 FRACCIÓN IX DE SU RESPECTIVO REGLAMENTO;
                             ASÍ COMO EN LO ESTABLECIDO EN EL PUNTO 3.1 DE LAS BASES QUE SE EMITIERON PARA EL
@@ -380,11 +380,9 @@
                                 DECLARA:</strong></div>
                         <div class="texto">1. QUE ES UNA EMPRESA CONSTITUIDA LEGALMENTE DE ACUERDO CON LAS LEYES DE
                             NUESTRO PAÍS, QUE, CON LA SUSCRIPCIÓN DEL PRESENTE CONTRATO, CUMPLE CON UNO DE LOS FINES
-                            ESTABLECIDOS DENTRO DE SU OBJETO SOCIAL, SEGÚN LO ACREDITA CON <span id="datos_persona_moral"
-                                 ></span>, QUE SU MISMA QUE CUENTA CON EL REGISTRO PÚBLICO DE COMERCIO NÚMERO <span id="registro_publico"
-                                 ></span></div>DE FECHA 07 DE JUNIO DE 2019.
+                            ESTABLECIDOS DENTRO DE SU OBJETO SOCIAL, SEGÚN LO ACREDITA CON <strong> <span id="datos_persona_re"></span></strong>, QUE SU MISMA QUE CUENTA CON EL REGISTRO PÚBLICO DE COMERCIO NÚMERO <span id="registro_publico" ></span></div>CON FECHA <span id="fecha_texto1"></span>
                         <div class="texto">2. QUE EL <strong><span id="representante_legal"></strong></span>, EN SU CARÁCTER DE REPRESENTANTE LEGAL, COMO LO ACREDITA CON
-                            <strong><span id="datosRepresentante"></strong></span>, ANTE LA FE DEL <span id="notario"></span>, NOTARIO PÚBLICO AUXILIAR DE LA NOTARÍA
+                            <strong><span id="datos_persona_moral"></span></strong>, ANTE LA FE DEL <span id="notario"></span>, NOTARIO PÚBLICO AUXILIAR DE LA NOTARÍA
                             PUBLICA NÚMERO TRECE TITULAR, DE LAS QUE ESTÁ EN EJERCICIO EN EL DISTRITO
                             JUDICIAL DE PUEBLA, CUYO TITULAR LO ES EL <span id="titular"></span> ACTUANDO EN SU PROTOCOLO Y CON SU
                             SELLO DE AUTORIZAR, EN EL ESTADO DE LA HEROICA PUEBLA DE ZARAGOZA, ESTADO DE PUEBLA, PUEBLA
@@ -392,13 +390,13 @@
                             OBLIGAR A SU REPRESENTADA EN TÉRMINOS DEL PRESENTE CONTRATO, MISMAS QUE A LA FECHA NO LE HAN
                             SIDO LIMITADAS, MODIFICADAS O REVOCADAS, Y EN CASO CONTRARIO, ESTÁ ANUENTE EN QUEDAR
                             OBLIGADO A TÍTULO PERSONAL DE LOS COMPROMISOS CONTRAÍDOS POR SU REPRESENTADA Y SE IDENTIFICA
-                            CON CREDENCIAL PARA VOTAR CON NÚMERO <span id="num_credencial_repre" ></span> EXPEDIDA POR EL INSTITUTO NACIONAL
+                            CON CREDENCIAL PARA VOTAR CON NÚMERO <span id="num_credencial_repre"></span> EXPEDIDA POR EL INSTITUTO NACIONAL
                             ELECTORAL (CREDENCIAL PARA VOTAR)
                         </div>
                         <div class="texto">3. QUE SU REGISTRO FEDERAL DE CONTRIBUYENTES ES <span
                                 id="numero_rfc">rfc</span>.</div>
                         <div class="texto">4. QUE CONOCE LAS ESPECIFICACIONES DEL PROCEDIMIENTO DE LICITACIÓN PÚBLICA
-                            NACIONAL PRESENCIAL REFERENTE A LA <span id="nombre_estudio_ganador" ></span> QUE LLEVA A CABO EL MUNICIPIO DE
+                            NACIONAL PRESENCIAL REFERENTE A LA <span id="nombre_estudio_ganador"></span> QUE LLEVA A CABO EL MUNICIPIO DE
                             TEMASCALCINGO Y DEMÁS DOCUMENTOS QUE SE ENCUENTRAN INTEGRADOS AL EXPEDIENTE QUE SE FORMÓ CON
                             MOTIVO DEL PROCEDIMIENTO DE ADQUISICIÓN ANTES REFERIDO.</div>
                         <div class="texto">5. QUE CONOCE PLENAMENTE LAS DISPOSICIONES, QUE PARA EL CASO DE LA
@@ -423,7 +421,7 @@
                         <div class="subtitulo">CLÁUSULAS</div>
 
                         <div class="texto"><strong>PRIMERA. - OBJETO.</strong> “EL MUNICIPIO” ENCOMIENDA A “EL
-                            PROVEEDOR” LLEVAR A CABO EL SUMINISTRO DE <span id="estudio_nombre" ></span>.</div>
+                            PROVEEDOR” LLEVAR A CABO EL SUMINISTRO DE <span id="estudio_nombre"></span>.</div>
 
                         <table>
                             <thead>
@@ -597,7 +595,7 @@
                         <div class="subtitulo" style="margin-top:50px;">POR “EL PROVEEDOR”</div>
                         <div class="firma-completa">
                             <div class="linea"><span id="nombre_proveedor"></span><br>REPRESENTANTE LEGAL DE <span
-                                    class="campo campo-mediano nombre_empresa" > </span></div>
+                                    id="nombre_empresa3"> </span></div>
                         </div>
 
                         <div class="numero-pagina">6 DE 8</div>
