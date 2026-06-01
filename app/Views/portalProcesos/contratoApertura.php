@@ -390,13 +390,13 @@
                             OBLIGAR A SU REPRESENTADA EN TÉRMINOS DEL PRESENTE CONTRATO, MISMAS QUE A LA FECHA NO LE HAN
                             SIDO LIMITADAS, MODIFICADAS O REVOCADAS, Y EN CASO CONTRARIO, ESTÁ ANUENTE EN QUEDAR
                             OBLIGADO A TÍTULO PERSONAL DE LOS COMPROMISOS CONTRAÍDOS POR SU REPRESENTADA Y SE IDENTIFICA
-                            CON CREDENCIAL PARA VOTAR CON NÚMERO <span id="num_credencial_repre"></span> EXPEDIDA POR EL INSTITUTO NACIONAL
-                            ELECTORAL (CREDENCIAL PARA VOTAR)
+                            CON CREDENCIAL PARA VOTAR CON NÚMERO <strong><span id="num_credencial_repre"></span></strong> EXPEDIDA POR EL INSTITUTO NACIONAL
+                            ELECTORAL 
                         </div>
-                        <div class="texto">3. QUE SU REGISTRO FEDERAL DE CONTRIBUYENTES ES <span
-                                id="numero_rfc">rfc</span>.</div>
+                        <div class="texto">3. QUE SU REGISTRO FEDERAL DE CONTRIBUYENTES ES <strong><span
+                                id="numero_rfc"></span></strong>.</div>
                         <div class="texto">4. QUE CONOCE LAS ESPECIFICACIONES DEL PROCEDIMIENTO DE LICITACIÓN PÚBLICA
-                            NACIONAL PRESENCIAL REFERENTE A LA <span id="nombre_estudio_ganador"></span> QUE LLEVA A CABO EL MUNICIPIO DE
+                            NACIONAL PRESENCIAL REFERENTE A LA <strong><span id="nombre_estudio_ganador"></span></strong> QUE LLEVA A CABO EL MUNICIPIO DE
                             TEMASCALCINGO Y DEMÁS DOCUMENTOS QUE SE ENCUENTRAN INTEGRADOS AL EXPEDIENTE QUE SE FORMÓ CON
                             MOTIVO DEL PROCEDIMIENTO DE ADQUISICIÓN ANTES REFERIDO.</div>
                         <div class="texto">5. QUE CONOCE PLENAMENTE LAS DISPOSICIONES, QUE PARA EL CASO DE LA
@@ -421,7 +421,7 @@
                         <div class="subtitulo">CLÁUSULAS</div>
 
                         <div class="texto"><strong>PRIMERA. - OBJETO.</strong> “EL MUNICIPIO” ENCOMIENDA A “EL
-                            PROVEEDOR” LLEVAR A CABO EL SUMINISTRO DE <span id="estudio_nombre"></span>.</div>
+                            PROVEEDOR” LLEVAR A CABO EL SUMINISTRO DE <strong><span id="estudio_nombre"></span></strong>.</div>
 
                         <table>
                             <thead>
@@ -453,8 +453,8 @@
                             PROVEEDOR” ANTICIPO ALGUNO, MOTIVO DEL PRESENTE CONTRATO.</div>
                         <div class="texto"><strong>CUARTA. - “LAS PARTES”</strong> CONVIENEN QUE LOS PRECIOS OFERTADOS
                             SERÁN FIJOS Y POR NINGÚN MOTIVO PODRÁN MODIFICARSE.</div>
-                        <div class="texto"><strong>QUINTA:</strong> “LAS PARTES” ACUERDAN QUE EL PAGO POR LA <span
-                                id="nombre_estudio_siguiente"></span> OBJETO DEL
+                        <div class="texto"><strong>QUINTA:</strong> “LAS PARTES” ACUERDAN QUE EL PAGO POR LA <strong><span
+                                id="nombre_estudio_siguiente"></span></strong> OBJETO DEL
                             PRESENTE CONTRATO, SE CUBRIRÁ DE LA MANERA SIGUIENTE:</div>
                         <div class="texto">I. “EL PROVEEDOR” ENTREGARÁ SU FACTURA A MÁS TARDAR A LOS DIEZ DÍAS HÁBILES
                             POSTERIORES A LA ENTREGA TOTAL DE LOS BIENES CON SU RESPECTIVO XML PARA TRÁMITE DE PAGO EN
@@ -473,7 +473,7 @@
                             DE LA CLÁUSULA PRIMERA DE ESTE INSTRUMENTO.</div>
                         <div class="texto">II. INFORMAR A “EL MUNICIPIO” DE CUALQUIER ANOMALÍA QUE SE PRESENTE DURANTE
                             LA EJECUCIÓN DEL PRESENTE CONTRATO, EN CUANTO IMPIDA O DIFICULTE LLEVAR A CABO EL SUMINISTRO
-                            DEL PROCEDIMIENTO REFERENTE A LA <span id="estudio_nombre1"></span> COMUNICAR POR ESCRITO OPORTUNAMENTE A “EL
+                            DEL PROCEDIMIENTO REFERENTE A LA <strong><span id="estudio_nombre1"></span></strong> COMUNICAR POR ESCRITO OPORTUNAMENTE A “EL
                             MUNICIPIO” CUALQUIER CAMBIO DE DOMICILIO.</div>
                         <div class="texto">III. CUMPLIR CON LAS DEMÁS OBLIGACIONES QUE DERIVEN DEL PRESENTE CONTRATO.
                         </div>
@@ -574,9 +574,9 @@
                             INSTANCIA DEL DISTRITO JUDICIAL DE EL ORO, ESTADO DE MÉXICO.</div>
                         <div class="texto">UNA VEZ LEÍDO EL PRESENTE CONTRATO Y CONFORMES CON SU CONTENIDO, PROCEDEN A
                             RATIFICAR EN TODAS Y CADA UNA DE SUS PARTES FIRMÁNDOLO POR TRIPLICADO, AL CALCE Y AL MARGEN
-                            PARA DEBIDA CONSTANCIA LEGAL, EN EL MUNICIPIO DE TEMASCALCINGO, MÉXICO, A LOS <span
+                            PARA DEBIDA CONSTANCIA LEGAL, EN EL MUNICIPIO DE TEMASCALCINGO, MÉXICO, A LOS <strong><span
                                 id="fecha_texto">VEINTIDÓS DÍAS DEL MES DE AGOSTO DEL
-                                AÑO DOS MIL VEINTICINCO</span>.</div>
+                                AÑO DOS MIL VEINTICINCO</span></strong>.</div>
 
                         <div class="subtitulo">POR “EL MUNICIPIO”</div>
                         <div class="firma">
