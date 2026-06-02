@@ -82,4 +82,7 @@ $routes->group('procesosInternos', function ($routes) {
     $routes->get('adjudicacionDirecta', 'ProcesosInternosController::adjudicacionDirecta');
     $routes->get('licitacionPublica', 'ProcesosInternosController::licitacionPublica');
     $routes->get('invitacionRestringida', 'ProcesosInternosController::invitacionRestringida');
+    $routes->get('verUsuarios', 'UsuariosController::listar');
+    $routes->get('obtenerUsuarios', 'UsuariosController::obtenerUsuarios');
+
 });

@@ -15,7 +15,8 @@ class EstudioMercadoModel extends Model
 
     protected $allowedFields = [
         'fk_area',
-        'nombre_estudio'
+        'nombre_estudio',
+        'no_licitacion'
     ];
 
     protected $useTimestamps = true;

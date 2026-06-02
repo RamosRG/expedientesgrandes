@@ -104,7 +104,8 @@ class ContratoAperturaModel extends Model
         coordinador.nombre AS coordinador_nombre,
         coordinador.apellido_paterno AS coordinador_apellido_paterno,
         coordinador.apellido_materno AS coordinador_apellido_materno,
-        area.area
+        area.area,
+        tbl_empresa.domicilio_fiscal
     ');
 
         // JOINs básicos

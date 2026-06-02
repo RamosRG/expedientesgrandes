@@ -34,10 +34,17 @@ if (contratoApertura.length > 0) {
         (ganador.coordinador_apellido_paterno ?? '') + ' ' +
         (ganador.coordinador_apellido_materno ?? '');
 
-        
+
+    const cargoArea = obtenerCargo(ganador.area);
+
+    console.log(cargoArea);
+
     const campos = {
+        area_modificada: cargoArea,
         nombre_estudio: ganador.nombre_estudio,
+        domicilio_fiscal: ganador.domicilio_fiscal,
         nombre_estudio_ganador: ganador.nombre_estudio,
+        nombre_proveedor: nombre_completo,
         nombre_estudio_siguiente: ganador.nombre_estudio,
         estudio_nombre: ganador.nombre_estudio,
         estudio_nombre1: ganador.nombre_estudio,
@@ -45,7 +52,6 @@ if (contratoApertura.length > 0) {
         nombre_empresa: ganador.nombre_empresa,
         representante_legal: ganador.representante_legal,
         nombre_usuario: nombre_completo,
-        nombre_proveedor: nombre_completo,
         num_credencial_repre: ganador.num_credencial_representante,
         numero_rfc: ganador.rfc_moral,
         precio_total: ganador.subtotal,
@@ -80,7 +86,16 @@ if (contratoApertura.length > 0) {
     // =========================
 
 
-    
+    function obtenerCargo(area) {
+
+        if (!area) return '';
+
+        return area
+            .replace(/^DIRECCION/i, 'DIRECTOR')
+            .replace(/^COORDINACION/i, 'COORDINADOR')
+            .replace(/^Subdirección/i, 'Subdirector')
+            .replace(/^Jefatura/i, 'Jefe');
+    }
     function numeroALetras(numero, moneda = true) {
 
         numero = Number(numero);

@@ -54,7 +54,7 @@ class PortalProcesosController extends BaseController
             return view("portalProcesos/contratoApertura", $data);
 
         case 3:
-            return view("portalProcesos/falloProcedimiento", $data);
+            return view("portalProcesos/contratoAdministrativo", $data);
 
         default:
             return redirect()->back()->with(
@@ -86,7 +86,7 @@ class PortalProcesosController extends BaseController
             $uid = $d['id_usuario'];
             if ($uid && !isset($proveedores[$uid])) {
                 $proveedores[$uid] = strtoupper(trim(
-                    $d['nombre'] . ' ' . $d['apellido_paterno'] . ' ' . $d['apellidoM']
+                    $d['nombre'] . ' ' . $d['apellido_paterno'] . ' ' . $d['apellido_materno']
                 ));
             }
         }
@@ -100,7 +100,7 @@ class PortalProcesosController extends BaseController
             if (!isset($productos[$idd])) {
                 $productos[$idd] = [
                     'partida'     => $d['partida'],
-                    'descripcion' => $d['producto_servicio'],
+                    'descripcion' => $d['descripcion'],
                     'unidad'      => $d['unidad_medida'],
                     'cantidad'    => (float) $d['cantidad'],
                     'proveedores' => [],

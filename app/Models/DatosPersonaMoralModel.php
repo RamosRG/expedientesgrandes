@@ -6,12 +6,27 @@ use CodeIgniter\Model;
 
 class DatosPersonaMoralModel extends Model
 {
-    protected $table            = 'estudio_mercado';
-    protected $primaryKey       = 'id_estudio';
+    protected $table            = 'datos_persona_moral';
+    protected $primaryKey       = 'id_datos';
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
 
-    protected $allowedFields = [];
+    protected $allowedFields = [
+        'fk_usuario',
+        'razon_social',
+        'rfc',
+        'representante_legal',
+        'giro_economico',
+        'registro_publico',
+        'num_credencial_representante',
+        'instrumento_re',
+        'volumen_re',
+        'folio_re',
+        'notario',
+        'titular',
+        'nci',
+    ];
+            
 
     protected $useTimestamps = false;
 
