@@ -320,7 +320,7 @@
             </a>
             <a href="../procesosInternos/verUsuarios" class="w3-bar-item w3-button w3-padding ">
                 <i class="fa fa-address-card fa-fw"></i>
-                Listado Proveedores
+                Listado Usuarios
             </a>
 
             <a href="#" class="w3-bar-item w3-button w3-padding">

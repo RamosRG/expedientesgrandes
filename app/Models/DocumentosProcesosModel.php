@@ -24,4 +24,13 @@ class DocumentosProcesosModel extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     
+
+    public function getDocumentosByProceso($idProceso)
+{
+    return $this->db->table('tbl_documentos_procesos')
+        ->join('tbl_procesos', 'tbl_procesos.id_proceso = tbl_documentos_procesos.fk_proceso')
+        ->where('fk_proceso', $idProceso)
+        ->get()
+        ->getResultArray();
+}
     }

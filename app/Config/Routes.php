@@ -71,18 +71,23 @@ $routes->group('portalProcesos', function ($routes) {
 });
 
 $routes->group('procesosInternos', function ($routes) {
+    $routes->get('obtenerEstudiosFinalizados','ProcesosInternosController::obtenerEstudiosFinalizados');
     $routes->get('crearProcesos/(:num)', 'ProcesosInternosController::crearProcesos/$1');
+    $routes->get('verDocumentoById/(:num)', 'ProcesosInternosController::verDocumentoById/$1');
     $routes->get('getProcesosById/(:num)', 'ProcesosInternosController::getProcesosById/$1');
     $routes->get('procesos', 'ProcesosInternosController::procesos');
     $routes->get('crearProceso', 'ProcesosInternosController::crearProceso');
     $routes->get('verProcesosFinalizados/(:num)', 'ProcesosInternosController::verProcesosFinalizados/$1');
-    $routes->get('verDocumentosFinalizados', 'ProcesosInternosController::verDocumentosFinalizados');
+    $routes->get('verDocumentosFinalizados/(:num)', 'ProcesosInternosController::verDocumentosFinalizados/$1');
     $routes->get('crearDocumento/(:num)', 'ProcesosInternosController::crearDocumento/$1');
     $routes->get('getProcesos', 'ProcesosInternosController::getProcesos');
     $routes->get('adjudicacionDirecta', 'ProcesosInternosController::adjudicacionDirecta');
     $routes->get('licitacionPublica', 'ProcesosInternosController::licitacionPublica');
     $routes->get('invitacionRestringida', 'ProcesosInternosController::invitacionRestringida');
+    $routes->get('verDocumentos', 'ProcesosInternosController::verDocumentos');
+    $routes->get('verDocumentos/(:num)','ProcesosInternosController::verDocumentos/$1');
     $routes->get('verUsuarios', 'UsuariosController::listar');
     $routes->get('obtenerUsuarios', 'UsuariosController::obtenerUsuarios');
+    
 
 });

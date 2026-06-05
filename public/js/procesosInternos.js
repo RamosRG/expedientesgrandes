@@ -88,7 +88,8 @@ function cargarProcesos() {
 
 // ✅ FUERA de la función
 function abrirProceso(id){
-    window.location.href = "../procesosInternos/verDocumentosFinalizados";
+    const url = "../procesosInternos/verDocumentos/" + id;
+    window.location.href = url;
 }
 function crearProcesos(id){
     window.location.href = "../procesosInternos/crearProceso";

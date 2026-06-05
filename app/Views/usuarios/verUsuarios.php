@@ -209,6 +209,9 @@
             <a href="../usuarios/crearUsuarios" class="btn btn-primary">
                 <i class="fas fa-user-plus"></i> Nuevo Usuario
             </a>
+                        <a href="<?= '../portalProcesos/procesos' ?>" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
         </nav>
 
         <main class="portal-content">
