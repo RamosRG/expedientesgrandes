@@ -17,18 +17,6 @@ documentos.forEach(doc => {
                         <i class="fas fa-eye"></i>
                     </button>
 
-                    <button class="w3-btn w3-green w3-round"
-                        onclick="descargarDocumento('${doc.id_documento}')"
-                        title="Descargar">
-                        <i class="fas fa-download"></i>
-                    </button>
-
-                    <button class="w3-btn w3-amber w3-round"
-                        onclick="editarDocumento('${doc.id_documento}')"
-                        title="Editar">
-                        <i class="fas fa-edit"></i>
-                    </button>
-
                     <button class="w3-btn w3-red w3-round"
                         onclick="eliminarDocumento('${doc.id_documento}')"
                         title="Eliminar">

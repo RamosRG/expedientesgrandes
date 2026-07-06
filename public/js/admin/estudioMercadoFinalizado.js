@@ -159,5 +159,5 @@ function verDocumento(id) {
 }
 
 function descargarDocumento(id) {
-    window.location.href = "../portalProcesos/exportarEstudioMercado/" + id;
+    window.location.href = "../portalProcesos/exportarEstudioMercados/" + id;
 }

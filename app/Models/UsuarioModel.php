@@ -37,6 +37,16 @@ class UsuarioModel extends Model
     protected $updatedField = 'updated_at';
     
 
+    public function obtenerCoordinadorRol4()
+{
+    return $this->db->table('usuarios')
+        ->select('usuarios.*, roles.*, roles.nombre AS "rol", area.*')
+        ->join('roles', 'roles.id_rol = usuarios.id_rol')
+        ->join('area', 'usuarios.fk_area = area.id_area')
+        ->where('usuarios.id_rol', 4)
+        ->get()
+        ->getResult();
+}
  public function getProveedores()
 {
     return $this->select('usuarios.*, roles.nombre AS nombre_rol')

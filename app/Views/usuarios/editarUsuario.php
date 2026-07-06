@@ -110,6 +110,9 @@
             font-size: 14px;
             color: var(--texto-medio);
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 
@@ -179,9 +182,9 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="apellidoM">Apellido Materno</label>
-                                        <input type="text" class="form-control" id="apellidoM" name="apellidoM" 
-                                               value="<?= esc($usuario['apellidoM']) ?>">
+                                        <label for="apellido_materno">Apellido Materno</label>
+                                        <input type="text" class="form-control" id="apellido_materno" name="apellido_materno" 
+                                               value="<?= esc($usuario['apellido_materno'] ?? $usuario['apellidoM'] ?? '') ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="correo">Correo Electrónico <span class="required">*</span></label>
@@ -208,7 +211,7 @@
                                     <div class="form-group">
                                         <label for="rfc">RFC</label>
                                         <input type="text" class="form-control" id="rfc" name="rfc" 
-                                               value="<?= esc($usuario['rfc']) ?>" maxlength="13">
+                                               value="<?= esc($usuario['rfc'] ?? $datos_fisica['rfc'] ?? $datos_moral['rfc'] ?? '') ?>" maxlength="13">
                                     </div>
                                     <div class="form-group">
                                         <label for="telefono_principal">Teléfono Principal</label>
@@ -223,21 +226,129 @@
                                         <div class="form-group">
                                             <label for="curp">CURP</label>
                                             <input type="text" class="form-control" id="curp" name="curp" 
-                                                   value="<?= esc($usuario['curp']) ?>" maxlength="18">
+                                                   value="<?= esc($datos_fisica['curp'] ?? '') ?>" maxlength="18">
                                         </div>
                                     </div>
+                                    
+                                    <!-- Tipo de Persona (campo corregido) -->
                                     <div class="form-group">
-                                        <label for="nombre_razon_social">Nombre o Razón Social</label>
-                                        <input type="text" class="form-control" id="nombre_razon_social" name="nombre_razon_social" 
-                                               value="<?= esc($usuario['nombre_razon_social']) ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tipo_persona">Tipo de Persona</label>
-                                        <select class="form-control" id="tipo_persona" name="tipo_persona">
+                                        <label for="tipo_persona">Tipo de Persona <span class="required">*</span></label>
+                                        <select class="form-control" id="tipo_persona" name="tipo_persona" required>
                                             <option value="">Seleccionar tipo</option>
-                                            <option value="1" <?= $usuario['tipo_persona'] == 1 ? 'selected' : '' ?>>FISICA</option>
-                                            <option value="2" <?= $usuario['tipo_persona'] == 2 ? 'selected' : '' ?>>MORAL</option>
+                                            <option value="1" <?= ($usuario['fk_tipo_persona'] ?? '') == 1 ? 'selected' : '' ?>>FÍSICA</option>
+                                            <option value="2" <?= ($usuario['fk_tipo_persona'] ?? '') == 2 ? 'selected' : '' ?>>MORAL</option>
                                         </select>
+                                    </div>
+
+                                    <!-- Datos de Persona Física (se muestran cuando tipo_persona = 1) -->
+                                    <div id="datos-fisica" class="hidden">
+                                        <h4>Datos de Persona Física</h4>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="num_credencial_votar">Número de Credencial para Votar</label>
+                                                <input type="text" class="form-control" id="num_credencial_votar" name="num_credencial_votar" 
+                                                       value="<?= esc($datos_fisica['num_credencial_votar'] ?? '') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="num_acta_nacimiento">Número de Acta de Nacimiento</label>
+                                                <input type="text" class="form-control" id="num_acta_nacimiento" name="num_acta_nacimiento" 
+                                                       value="<?= esc($datos_fisica['num_acta_nacimiento'] ?? '') ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="num_libro">Número de Libro</label>
+                                                <input type="text" class="form-control" id="num_libro" name="num_libro" 
+                                                       value="<?= esc($datos_fisica['num_libro'] ?? '') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="num_oficilia">Número de Oficialía</label>
+                                                <input type="text" class="form-control" id="num_oficilia" name="num_oficilia" 
+                                                       value="<?= esc($datos_fisica['num_oficilia'] ?? '') ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="lugar_nacimiento">Lugar de Nacimiento</label>
+                                                <input type="text" class="form-control" id="lugar_nacimiento" name="lugar_nacimiento" 
+                                                       value="<?= esc($datos_fisica['lugar_nacimiento'] ?? '') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="fecha_nacimiento_registro">Fecha de Nacimiento</label>
+                                                <input type="date" class="form-control" id="fecha_nacimiento_registro" name="fecha_nacimiento_registro" 
+                                                       value="<?= esc($datos_fisica['fecha_nacimiento_registro'] ?? '') ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Datos de Persona Moral (se muestran cuando tipo_persona = 2) -->
+                                    <div id="datos-moral" class="hidden">
+                                        <h4>Datos de Persona Moral</h4>
+                                        <div class="form-group">
+                                            <label for="razon_social">Razón Social</label>
+                                            <input type="text" class="form-control" id="razon_social" name="razon_social" 
+                                                   value="<?= esc($datos_moral['razon_social'] ?? '') ?>">
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="representante_legal">Representante Legal</label>
+                                                <input type="text" class="form-control" id="representante_legal" name="representante_legal" 
+                                                       value="<?= esc($datos_moral['representante_legal'] ?? '') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="num_credencial_representante">Número Credencial Representante</label>
+                                                <input type="text" class="form-control" id="num_credencial_representante" name="num_credencial_representante" 
+                                                       value="<?= esc($datos_moral['num_credencial_representante'] ?? '') ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="giro_economico">Giro Económico</label>
+                                                <input type="text" class="form-control" id="giro_economico" name="giro_economico" 
+                                                       value="<?= esc($datos_moral['giro_economico'] ?? '') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="registro_publico">Registro Público</label>
+                                                <input type="text" class="form-control" id="registro_publico" name="registro_publico" 
+                                                       value="<?= esc($datos_moral['registro_publico'] ?? '') ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="instrumento_re">Instrumento RE</label>
+                                                <input type="text" class="form-control" id="instrumento_re" name="instrumento_re" 
+                                                       value="<?= esc($datos_moral['instrumento_re'] ?? '') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="volumen_re">Volumen RE</label>
+                                                <input type="text" class="form-control" id="volumen_re" name="volumen_re" 
+                                                       value="<?= esc($datos_moral['volumen_re'] ?? '') ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="folio_re">Folio RE</label>
+                                                <input type="text" class="form-control" id="folio_re" name="folio_re" 
+                                                       value="<?= esc($datos_moral['folio_re'] ?? '') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="notario">Notario</label>
+                                                <input type="text" class="form-control" id="notario" name="notario" 
+                                                       value="<?= esc($datos_moral['notario'] ?? '') ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="titular">Titular</label>
+                                                <input type="text" class="form-control" id="titular" name="titular" 
+                                                       value="<?= esc($datos_moral['titular'] ?? '') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nci">NCI</label>
+                                                <input type="text" class="form-control" id="nci" name="nci" 
+                                                       value="<?= esc($datos_moral['nci'] ?? '') ?>">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -281,6 +392,21 @@
                                 </div>
                             </div>
 
+                            <!-- Sección para cambiar contraseña -->
+                            <div class="form-section">
+                                <h3>Cambiar Contraseña</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="password">Nueva Contraseña</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Dejar en blanco para no cambiar">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirm_password">Confirmar Contraseña</label>
+                                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirmar nueva contraseña">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary" id="btnGuardar">
                                     <i class="fas fa-save"></i> Actualizar Usuario
@@ -303,6 +429,75 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="../../public/js/EditarUsuario.js">    </script>
+    <script>
+        $(document).ready(function() {
+            // Mostrar/ocultar campos según tipo de persona
+            function toggleCamposPorTipoPersona() {
+                var tipoPersona = $('#tipo_persona').val();
+                if (tipoPersona == '1') {
+                    $('#datos-fisica').removeClass('hidden');
+                    $('#datos-moral').addClass('hidden');
+                } else if (tipoPersona == '2') {
+                    $('#datos-fisica').addClass('hidden');
+                    $('#datos-moral').removeClass('hidden');
+                } else {
+                    $('#datos-fisica').addClass('hidden');
+                    $('#datos-moral').addClass('hidden');
+                }
+            }
+            
+            $('#tipo_persona').change(toggleCamposPorTipoPersona);
+            toggleCamposPorTipoPersona();
+            
+            // Envío del formulario
+            $('#form-usuario').on('submit', function(e) {
+                e.preventDefault();
+                
+                var form = $(this);
+                var url = form.attr('action');
+                var data = form.serialize();
+                
+                // Validar contraseñas si se ingresó una
+                var password = $('#password').val();
+                var confirmPassword = $('#confirm_password').val();
+                
+                if (password !== '' && password !== confirmPassword) {
+                    Swal.fire('Error', 'Las contraseñas no coinciden', 'error');
+                    return false;
+                }
+                
+                if (password !== '' && password.length < 6) {
+                    Swal.fire('Error', 'La contraseña debe tener al menos 6 caracteres', 'error');
+                    return false;
+                }
+                
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: '¡Éxito!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'Aceptar'
+                            }).then(function() {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Error', 'Ocurrió un error al procesar la solicitud', 'error');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

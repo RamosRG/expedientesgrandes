@@ -7,6 +7,11 @@ use App\Models\BitacoraModel;
 
 class AreasController extends BaseController
 {
+    
+
+public function verAreas(){
+    return view("portalAreas/verAreas");
+}
     public function obtenerAreas(){
         $areas =new AreasModel();
         $areasModel = $areas->getAreas();

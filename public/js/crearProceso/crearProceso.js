@@ -656,8 +656,10 @@ function guardarProceso() {
     let id_area = document.getElementById('areas').value;
     let proveedor = {};
     let nomb_procedimiento = document.getElementById('nomb_procedimiento').value;
+    let no_licitacion = document.getElementById('num_licitacion').value;
     formData.forEach((value, key) => {
         proveedor[key] = value;
+        
     });
 
     // =====================
@@ -692,11 +694,11 @@ function guardarProceso() {
         productos: productos,
         id_area: id_area,
         nomb_procedimiento: nomb_procedimiento,
+        no_licitacion: no_licitacion,
 
     };
 
-    console.log(datos);
-
+   
     fetch("../portalProcesos/guardarEstudioMercado", {
         method: "POST",
         headers: {

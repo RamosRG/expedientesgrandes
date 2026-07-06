@@ -17,58 +17,1646 @@ use App\Models\DocumentosProcesosModel;
 use App\Models\DetalleProveedorProductolModel;
 use App\Models\ContratoAperturaModel;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class PortalProcesosController extends BaseController
 {
 
-  public function documentosProcedimiento()
+public function exportarCotizaLp($id)
 {
-    $idEstudio = $this->request->getPost('id_estudio');
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerEncabezadoEstudio($id);
 
-    $vista = (int)$this->request->getPost('vista');
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
 
-    $empresaModel = new EmpresaModel();
+        $filename = 'SolicitudCotizacion_' . $id . '_' . date('Ymd_His') . '.doc';
 
-    //llamaras al modelo de EstudioMercadoModel();
-     $contratoAperturaModel = new ContratoAperturaModel();
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/cotiza_lp_word', ['data' => $data]));
 
-    $empresas = $empresaModel->getEmpresasByEstudio($idEstudio);
-    $contratoApertura = $contratoAperturaModel->getContratoAperturaById($idEstudio);
-    $descripcionProductos = $contratoAperturaModel->obtenerDescripcionEstudio($idEstudio);
-    //var_dump($contratoApertura);
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar solicitud de cotización: ' . $e->getMessage());
 
-    $data = [
-        'id_estudio' => $idEstudio,
-        'empresas'   => $empresas,
-        'contratoApertura' => $contratoApertura,
-        'productos' => $descripcionProductos,
-    ];
-
-    switch ($vista) {
-
-        case 1:
-            return view("portalProcesos/actaApertura", $data);
-
-        case 2:
-            return view("portalProcesos/contratoApertura", $data);
-
-        case 3:
-            return view("portalProcesos/contratoAdministrativo", $data);
-
-        default:
-            return redirect()->back()->with(
-                'error',
-                'Vista no válida'
-            );
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
     }
 }
+public function exportarRemisionLp($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerEncabezadoEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'RemisionEstudioMercado_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/remision_lp_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar remisión de estudio de mercado: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarCumplimientoPropuestas($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerEncabezadoEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'CumplimientoPropuestas_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/cumplimiento_propuestas_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar cumplimiento de propuestas: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarContratoEstudioMerca($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerDescripcionesPorEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'EstudioMercado_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/contrato_estudio_merca_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar estudio de mercado: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarContratoAdminDos($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerProveedorGanadorPorEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ContratoAdmin_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/contrato_admin_dos_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar contrato administrativo: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarBitacoraCompra($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerBitacoraCompraModel($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ListaCompraBases_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/bitacora_compra_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar lista de compra de bases: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarBitacoraSol($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerParticipantesEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'BitacoraSolicitud_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/bitacora_solicitud_wordLP', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar bitácora de solicitud: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarBasesLicitacion($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerInformacionBases($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'BasesLicitacion_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/bases_licitacion_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar bases de licitación: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarTablaDocumen($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerProveedoresPorEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'TablaDocumentacion_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/tabla_documen_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar tabla de documentación: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarActoPreTabla($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerLicitacionProveedor($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ActaPresentacionApertura_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/acto_pre_tabla_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar acta de presentación y apertura: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarActaFalloLp($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerDatosActaFalloLp($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ActaFalloLP_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/acta_fallo_lp_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar acta de fallo LP: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarActasAperLp($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->AnexoAperPropuestaById($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ActaAperLp_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/acta_aper_lp_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar acta de apertura LP: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarInvitacionEstudio($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerEncabezadoEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'InvitacionEstudio_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/invitacion_estudio_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar invitación al estudio: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarInvitacionProveedores($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerProveedoresCotizacion($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'InvitacionProveedores_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/invitacion_proveedores_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar invitación a proveedores: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarEstudioMercadoDosIR($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerDescripcionesPorEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'EstudioMercado_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/estudio_mercado_dos_ir_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar estudio de mercado: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarContratoCompu($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerInformacionCompu($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ContratoCompu_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/contrato_compu_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar contrato de equipo de cómputo: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarContratoPresentacion($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerInforPresentacion($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ContratoPresentacion_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/contrato_presentacion_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar contrato de presentación: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarBitacoraSolicitud($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerParticipantesEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'BitacoraSolicitud_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/bitacora_solicitud_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar bitácora de solicitud: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarBitacoraEnvioIr($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerParticipantesEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'BitacoraEnvioIR_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/bitacora_envio_ir_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar bitácora de envío IR: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarAnexoEquipos($id)
+{
+    try {
+        $contratoAperturaModel = new ContratoAperturaModel();
+        $contratoApertura = $contratoAperturaModel->getContratoAperturaById($id);
+        $descripcionProductos = $contratoAperturaModel->obtenerDescripcionEstudio($id);
+
+        if (empty($contratoApertura)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'AnexoEquipos_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/anexo_equipos_word', [
+                'data' => $contratoApertura,
+                'productos' => $descripcionProductos
+            ]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar anexo de equipos: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarAnexoAperCoordinador2($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->AnexoAperPropuestaById($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'AnexoAperCoordinador_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/anexo_aper_coordinador_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar anexo apertura coordinador: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarAnexoAperCoordinador($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->AnexoAperPropuestaById($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ActaApertura_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/anexo_aper_propuestas_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar acta de apertura: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarActaFallo($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerDatosActaFallo($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ActaFallo_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/acta_fallo_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar acta de fallo: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarRemisionEstudio($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerEncabezadoEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'RemisionEstudio_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/remision_estudio_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar remisión de estudio: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarRegistroAsistencia($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerEstudioProveedores($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'RegistroAsistencia_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/registro_asistencia_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar registro de asistencia: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarEstudioMercados($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->getEstudioById($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'EstudioMercado_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/estudioMercado_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar estudio de mercado: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarContratoEstudioMercado($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+
+        // Obtener productos del estudio (para la tabla de productos)
+        $productos = $model->obtenerDescripcionesPorEstudio($id);
+        
+        // Obtener datos detallados del estudio (para tabla comparativa y proveedores)
+        $estudio = $model->obtenerEstudioMercadoPorId($id);
+
+        if (empty($productos)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay productos para exportar'
+            ]);
+        }
+
+        if (empty($estudio)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos del estudio para exportar'
+            ]);
+        }
+
+        $filename = 'ContratoEstudioMercado_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword; charset=utf-8')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/contratoEstudioMercado_word', [
+                'productos' => $productos,
+                'estudio' => $estudio
+            ]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar contrato estudio mercado: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarContratoApertura($id)
+{
+    try {
+        $contratoAperturaModel = new ContratoAperturaModel();
+        $contratoApertura = $contratoAperturaModel->getContratoAperturaById($id);
+        $descripcionProductos = $contratoAperturaModel->obtenerDescripcionEstudio($id);
+
+        if (empty($contratoApertura)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ContratoApertura_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/contratoApertura_word', [
+                'data' => $contratoApertura,
+                'productos' => $descripcionProductos
+            ]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar contrato de apertura: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarActaApertura($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->AnexoAperPropuestaById($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ActaAperturaPropuestas_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/actaApertura_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar acta de apertura: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarContratoAdministrativo($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerProveedorGanadorPorEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ContratoAdministrativo_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/contratoAdministrativo_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar contrato administrativo: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarAnexoTabla($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerDescripcionesPorEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'AnexoTabla_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/anexoTabla_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar anexo tabla: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarAnexoAperturaPropuestas($id)
+{
+    try {
+        $model = new EstudioMercadoModel();
+        $data = $model->obtenerProveedoresPorEstudio($id);
+
+        if (empty($data)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $filename = 'ActaAperturaPropuestas_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/anexoApertura_envio_word', ['data' => $data]));
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error al exportar acta de apertura: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function exportarBitacoraEnvio($id)
+{
+    try {
+
+        $model = new EstudioMercadoModel();
+        $participantes = $model->obtenerParticipantesEstudio($id);
+
+        if (empty($participantes)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'No hay datos para exportar'
+            ]);
+        }
+
+        $data = [
+            'estudio'       => $participantes[0],
+            'participantes' => $participantes
+        ];
+
+        $filename = 'BitacoraEnvio_' . $id . '_' . date('Ymd_His') . '.doc';
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/msword')
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"')
+            ->setHeader('Cache-Control', 'max-age=0')
+            ->setBody(view('exportaciones/bitacora_envio_word', $data));
+
+    } catch (\Exception $e) {
+
+        log_message('error', 'Error al exportar bitácora: ' . $e->getMessage());
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
+        ]);
+    }
+}
+public function verCotizaLp()
+    {
+        return view("portalProcesos/cotizaLp");
+    }
+public function verRemisionLp()
+    {
+        return view("portalProcesos/remisionLp");
+    }
+public function verCumplimientoPropuestas()
+    {
+        return view("portalProcesos/cumplimientoPropuesta");
+    }
+public function verEstudioMercadoLp()
+    {
+        return view("portalProcesos/verEstudioMercado");
+    }
+public function verContratoEstudioMerca()
+    {
+        return view("portalProcesos/contratoEstudioMerca");
+    }
+public function verContratoAdminDos()
+    {
+        return view("portalProcesos/contratoAdminDos");
+    }
+public function verBitacoraCompra()
+    {
+        return view("portalProcesos/bitacoraCompra");
+    }
+public function obtenerBitacoraCompra($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerBitacoraCompraModel($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verBitacoraSol()
+    {
+        return view("portalProcesos/bitacoraSol");
+    }
+public function verBasesLicitacion()
+    {
+        return view("portalProcesos/basesLicitacion");
+    }
+public function obtenerBasesLicitacion($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerInformacionBases($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verTablaDocumen()
+    {
+        return view("portalProcesos/tablaDocumen");
+    }
+public function verActoPreTabla()
+    {
+        return view("portalProcesos/actoPreTabla");
+    }
+public function obtenerActoPreTabla($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerLicitacionProveedor($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verAnexoTablaLp()
+    {
+        return view("portalProcesos/anexoTabla");
+    }
+public function obtenerActaFalloLp($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerDatosActaFalloLp($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verActaFalloLp()
+    {
+        return view("portalProcesos/actaFalloLp");
+    }
+public function verActaAperLp()
+    {
+        return view("portalProcesos/actaAperLp");
+    }
+public function verInvitacionEstudio()
+    {
+        return view("portalProcesos/invitacionEstudio");
+    }
+public function obtenerInvitacionProveedores($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerProveedoresCotizacion($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verInvitacionProveedores()
+    {
+        return view("portalProcesos/invitacionProveedores");
+    }
+public function verEstudiosMercadoExIr()
+    {
+        return view("portalProcesos/verEstudioMercado");
+    }
+public function verEstudioMercadoDosIR()
+    {
+        return view("portalProcesos/contratoMercadoDosIr");
+    }
+public function verEstudiMercadoIR()
+    {
+        return view("portalProcesos/contratoEstudioMercado");
+    }
+public function obtenerContratoCompu($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerInformacionCompu($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verContratoCompu()
+    {
+        return view("portalProcesos/contratoCompu");
+    }
+public function verContratoPresentacion()
+    {
+        return view("portalProcesos/contratoPresentacion");
+    }
+public function obtenerContratoPresentacion($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerInforPresentacion($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verBitacoraSolicitud()
+    {
+        return view("portalProcesos/bitacoraSolicitud");
+    }
+public function obtenerBitacoraSolicitud($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerParticipantesEstudio($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verbitacoraEnvioIr()
+    {
+        return view("portalProcesos/bitacoraEnvioIr");
+    }
+public function obtenerAnexoEquiposID($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerAnexoEquipos($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verAnexoEquipos()
+    {
+        return view("portalProcesos/AnexoEquipos");
+    }
+public function verAnexoTablaIR()
+    {
+        return view("portalProcesos/anexoTabla");
+    }
+public function obtenerAnexoAperCoordinador($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerAnexoAperCoordinador($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verAnexoAperCoordinador()
+    {
+        return view("portalProcesos/anexoAperCoordinador");
+    }
+public function obtenerAnexoAperPropuesta($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->AnexoAperPropuestaById($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+public function verAnexoAperPropuesta()
+    {
+        return view("portalProcesos/anexoAperPropuestas");
+    }
+
+public function verActaFallo()
+    {
+        return view("portalProcesos/actaFallo");
+    }
+
+public function obtenerActaFallo($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerDatosActaFallo($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+        public function verContratoAdministrativoPorId()
+    {
+        return view("portalProcesos/contratoAdministrativo");
+    }
+
+        public function obtenerContratoAdministrativo($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerProveedorGanadorPorEstudio($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+        public function verRemisionEstudioPorId()
+    {
+        return view("portalProcesos/remisionEstudio");
+    }
+
+    public function obtenerRemisionEstudioPorId($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerEncabezadoEstudio($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    public function verRegistroAsistenciaPor()
+    {
+        return view("portalProcesos/registroAsistencia");
+    }
+
+    public function obtenerRegistroAsistenciaEstudio($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerEstudioProveedores($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+  public function verContatoEstudioMercadoPorId()
+    {
+        return view("portalProcesos/contratoEstudioMercado");
+    }
+
+    public function obtenerProductosContratoEstudio($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerDescripcionesPorEstudio($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    public function obtenerAnexoTablaPorId($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerDescripcionesPorEstudio($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function verAnexoTabla()
+    {
+        return view("portalProcesos/anexoTabla");
+    }
+
+    public function obtenerAnexoAperturaPropuestaPorId($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerProveedoresPorEstudio($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function verAnexoAperturaPropuestas()
+    {
+        return view("portalProcesos/anexoAperturaPropuestas");
+    }
+    public function obtenerBitacoraEnvioPorId($id)
+    {
+        try {
+
+            $model = new EstudioMercadoModel();
+            $data = $model->obtenerParticipantesEstudio($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+public function verBitacoraEnvio(){
+    return view("portalProcesos/bitacoraEnvio");
+}
+
+    public function obtenerContratoPorId($id)
+    {
+        try {
+            // Llamar al modelo de ContratoAperturaModel
+            $contratoAperturaModel = new ContratoAperturaModel();
+            $contratoApertura = $contratoAperturaModel->getContratoAperturaById($id);
+
+            // Obtener los productos/descripciones del estudio
+            $descripcionProductos = $contratoAperturaModel->obtenerDescripcionEstudio($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $contratoApertura,
+                'productos' => $descripcionProductos  // ✅ Incluir los productos aquí
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    public function obtenerActaAperturaPorId($id)
+    {
+        try {
+
+            $model = new ContratoAperturaModel();
+            $data = $model->getContratoAperturaById($id);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function contratoApertura()
+    {
+        return view("portalProcesos/contratoApertura");
+    }
+
+
+    public function verActasApertura()
+    {
+        return view("portalProcesos/actaApertura");
+    }
+
+    public function documentosProcedimiento()
+    {
+        $idEstudio = $this->request->getPost('id_estudio');
+
+        $vista = (int) $this->request->getPost('vista');
+
+        $empresaModel = new EmpresaModel();
+
+        //llamaras al modelo de EstudioMercadoModel();
+        $contratoAperturaModel = new ContratoAperturaModel();
+        $descripcionProductos = $contratoAperturaModel->obtenerDescripcionEstudio($idEstudio);
+        $contratoApertura = $contratoAperturaModel->getContratoAperturaById($idEstudio);
+
+        $empresas = $empresaModel->getEmpresasByEstudio($idEstudio);
+        //var_dump($contratoApertura);
+
+        $data = [
+            'id_estudio' => $idEstudio,
+            'empresas' => $empresas,
+            'contratoApertura' => $contratoApertura,
+            'productos' => $descripcionProductos,
+        ];
+
+        switch ($vista) {
+
+            case 1:
+                return view("portalProcesos/actaApertura", $data);
+
+            case 2:
+                return view("portalProcesos/contratoApertura", $data);
+
+            case 3:
+                return view("portalProcesos/contratoAdministrativo", $data);
+
+            default:
+                return redirect()->back()->with(
+                    'error',
+                    'Vista no válida'
+                );
+        }
+    }
     private const VINO_OSC = 'FF4A0B1C';
     private const VINO_MED = 'FF8B1A3A';
     private const VINO_PAL = 'FFF3E8EC';
     private const AMARILLO = 'FFFFFF00';
-    private const GRIS     = 'FFD9D9D9';
-    private const BLANCO   = 'FFFFFFFF';
+    private const GRIS = 'FFD9D9D9';
+    private const BLANCO = 'FFFFFFFF';
     private const ROSA_PAL = 'FFFDF5F7';
     public function exportarEstudioMercado(int $id)
     {
@@ -79,7 +1667,7 @@ class PortalProcesosController extends BaseController
             return redirect()->back()->with('error', 'Sin datos para exportar.');
         }
 
-        $primer      = $datos[0];
+        $primer = $datos[0];
         $proveedores = [];
 
         foreach ($datos as $d) {
@@ -92,17 +1680,17 @@ class PortalProcesosController extends BaseController
         }
 
         $provIds = array_keys($proveedores);
-        $nProv   = count($provIds);
+        $nProv = count($provIds);
 
         $productos = [];
         foreach ($datos as $d) {
             $idd = $d['id_descripcion'];
             if (!isset($productos[$idd])) {
                 $productos[$idd] = [
-                    'partida'     => $d['partida'],
+                    'partida' => $d['partida'],
                     'descripcion' => $d['descripcion'],
-                    'unidad'      => $d['unidad_medida'],
-                    'cantidad'    => (float) $d['cantidad'],
+                    'unidad' => $d['unidad_medida'],
+                    'cantidad' => (float) $d['cantidad'],
                     'proveedores' => [],
                 ];
             }
@@ -110,21 +1698,21 @@ class PortalProcesosController extends BaseController
             if ($uid) {
                 $productos[$idd]['proveedores'][$uid] = [
                     'precio' => (float) ($d['precio_unitario'] ?? 0),
-                    'total'  => (float) ($d['precio_total']   ?? 0),
-                    'marca'  => $d['marca_modelo'] ?? '—',
+                    'total' => (float) ($d['precio_total'] ?? 0),
+                    'marca' => $d['marca_modelo'] ?? '—',
                 ];
             }
         }
 
         $colProvStart = 5;
-        $colTotal     = $colProvStart + $nProv * 3;
-        $colRef1      = $colTotal + 1;
-        $colRef2      = $colTotal + 2;
-        $colRef3      = $colTotal + 3;
-        $lastCol      = $colRef3;
+        $colTotal = $colProvStart + $nProv * 3;
+        $colRef1 = $colTotal + 1;
+        $colRef2 = $colTotal + 2;
+        $colRef3 = $colTotal + 3;
+        $lastCol = $colRef3;
 
         $spreadsheet = new Spreadsheet();
-        $ws          = $spreadsheet->getActiveSheet();
+        $ws = $spreadsheet->getActiveSheet();
         $ws->setTitle('Estudio de Mercado');
 
         $ws->getColumnDimension('A')->setWidth(9);
@@ -206,7 +1794,7 @@ class PortalProcesosController extends BaseController
         foreach (array_values($provIds) as $i => $uid) {
             $b = $colProvStart + $i * 3;
             $ws->mergeCells($this->rango(6, $b, 6, $b + 1));
-            $this->celda($ws, $this->coord(6, $b),     'PRECIOS',          self::VINO_OSC, 'FFFFFF', true, 9);
+            $this->celda($ws, $this->coord(6, $b), 'PRECIOS', self::VINO_OSC, 'FFFFFF', true, 9);
             $this->celda($ws, $this->coord(6, $b + 2), 'MARCA Y/O MODELO', self::VINO_OSC, 'FFFFFF', true, 8);
         }
 
@@ -219,9 +1807,9 @@ class PortalProcesosController extends BaseController
 
         foreach (array_values($provIds) as $i => $uid) {
             $b = $colProvStart + $i * 3;
-            $this->celda($ws, $this->coord(7, $b),     'UNITARIO', self::VINO_OSC, 'FFFFFF', true, 8);
-            $this->celda($ws, $this->coord(7, $b + 1), 'TOTAL',    self::VINO_OSC, 'FFFFFF', true, 8);
-            $this->celda($ws, $this->coord(7, $b + 2), '',         self::VINO_OSC, 'FFFFFF', true, 8);
+            $this->celda($ws, $this->coord(7, $b), 'UNITARIO', self::VINO_OSC, 'FFFFFF', true, 8);
+            $this->celda($ws, $this->coord(7, $b + 1), 'TOTAL', self::VINO_OSC, 'FFFFFF', true, 8);
+            $this->celda($ws, $this->coord(7, $b + 2), '', self::VINO_OSC, 'FFFFFF', true, 8);
         }
         foreach ([$colTotal, $colRef1, $colRef2, $colRef3] as $c) {
             $this->soloBorde($ws, $this->coord(7, $c));
@@ -229,32 +1817,32 @@ class PortalProcesosController extends BaseController
 
         // ── FILAS DE DATOS ────────────────────────────────────────────
         $filaInicio = 8;
-        $fila       = $filaInicio;
+        $fila = $filaInicio;
 
         foreach ($productos as $prod) {
             $ws->getRowDimension($fila)->setRowHeight(18);
 
-            $this->celda($ws, "A{$fila}", $prod['partida'],     self::BLANCO, '000000', false, 9, 'center');
+            $this->celda($ws, "A{$fila}", $prod['partida'], self::BLANCO, '000000', false, 9, 'center');
             $this->celda($ws, "B{$fila}", $prod['descripcion'], self::BLANCO, '000000', false, 9, 'left');
-            $this->celda($ws, "C{$fila}", $prod['unidad'],      self::BLANCO, '000000', false, 9, 'center');
-            $this->celda($ws, "D{$fila}", $prod['cantidad'],    self::BLANCO, '000000', false, 9, 'center');
+            $this->celda($ws, "C{$fila}", $prod['unidad'], self::BLANCO, '000000', false, 9, 'center');
+            $this->celda($ws, "D{$fila}", $prod['cantidad'], self::BLANCO, '000000', false, 9, 'center');
 
             $totalRefsEnFila = [];
 
             foreach (array_values($provIds) as $i => $uid) {
-                $b    = $colProvStart + $i * 3;
+                $b = $colProvStart + $i * 3;
                 $ltrU = Coordinate::stringFromColumnIndex($b);
                 $ltrT = Coordinate::stringFromColumnIndex($b + 1);
-                $cU   = "{$ltrU}{$fila}";
-                $cT   = "{$ltrT}{$fila}";
-                $cM   = Coordinate::stringFromColumnIndex($b + 2) . $fila;
+                $cU = "{$ltrU}{$fila}";
+                $cT = "{$ltrT}{$fila}";
+                $cM = Coordinate::stringFromColumnIndex($b + 2) . $fila;
 
                 $pdata = $prod['proveedores'][$uid] ?? null;
 
                 if ($pdata) {
-                    $this->celda($ws, $cU, $pdata['precio'],        self::BLANCO, '000000', false, 9, 'center', '$#,##0.00');
+                    $this->celda($ws, $cU, $pdata['precio'], self::BLANCO, '000000', false, 9, 'center', '$#,##0.00');
                     $this->celda($ws, $cT, "={$ltrU}{$fila}*D{$fila}", self::BLANCO, '000000', false, 9, 'center', '$#,##0.00');
-                    $this->celda($ws, $cM, $pdata['marca'],         self::BLANCO, '000000', false, 9, 'center');
+                    $this->celda($ws, $cM, $pdata['marca'], self::BLANCO, '000000', false, 9, 'center');
                     $totalRefsEnFila[] = $cT;
                 } else {
                     $this->celda($ws, $cU, '—', self::BLANCO, '000000', false, 9, 'center');
@@ -291,12 +1879,12 @@ class PortalProcesosController extends BaseController
         $this->celda($ws, "A{$fila}", 'SUBTOTAL', self::VINO_MED, 'FFFFFF', true, 10);
 
         $subtotalCells = [];
-        $subRefs       = [];
+        $subRefs = [];
 
         foreach (array_values($provIds) as $i => $uid) {
-            $b    = $colProvStart + $i * 3;
+            $b = $colProvStart + $i * 3;
             $ltrT = Coordinate::stringFromColumnIndex($b + 1);
-            $this->celda($ws, $this->coord($fila, $b),     '', self::VINO_PAL, '000000', false, 9);
+            $this->celda($ws, $this->coord($fila, $b), '', self::VINO_PAL, '000000', false, 9);
             $this->celda(
                 $ws,
                 $this->coord($fila, $b + 1),
@@ -310,7 +1898,7 @@ class PortalProcesosController extends BaseController
             );
             $this->celda($ws, $this->coord($fila, $b + 2), '', self::VINO_PAL, '000000', false, 9);
             $subtotalCells[$uid] = "{$ltrT}{$fila}";
-            $subRefs[]           = "{$ltrT}{$fila}";
+            $subRefs[] = "{$ltrT}{$fila}";
         }
 
         $this->celda(
@@ -337,9 +1925,9 @@ class PortalProcesosController extends BaseController
         $ivaRefs = [];
 
         foreach (array_values($provIds) as $i => $uid) {
-            $b    = $colProvStart + $i * 3;
+            $b = $colProvStart + $i * 3;
             $ltrT = Coordinate::stringFromColumnIndex($b + 1);
-            $this->celda($ws, $this->coord($fila, $b),     '', self::ROSA_PAL, '000000', false, 9);
+            $this->celda($ws, $this->coord($fila, $b), '', self::ROSA_PAL, '000000', false, 9);
             $this->celda(
                 $ws,
                 $this->coord($fila, $b + 1),
@@ -379,9 +1967,9 @@ class PortalProcesosController extends BaseController
         $totRefs = [];
 
         foreach (array_values($provIds) as $i => $uid) {
-            $b    = $colProvStart + $i * 3;
+            $b = $colProvStart + $i * 3;
             $ltrT = Coordinate::stringFromColumnIndex($b + 1);
-            $this->celda($ws, $this->coord($fila, $b),     '', self::VINO_OSC, 'FFFFFF', true, 9);
+            $this->celda($ws, $this->coord($fila, $b), '', self::VINO_OSC, 'FFFFFF', true, 9);
             $this->celda(
                 $ws,
                 $this->coord($fila, $b + 1),
@@ -419,7 +2007,7 @@ class PortalProcesosController extends BaseController
         // ── Congelar paneles y descargar ──────────────────────────────
         $ws->freezePane('E8');
 
-        $writer   = new Xlsx($spreadsheet);
+        $writer = new Xlsx($spreadsheet);
         $filename = 'EstudioMercado_' . $id . '.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -429,7 +2017,7 @@ class PortalProcesosController extends BaseController
         $writer->save('php://output');
         exit;
     }
- 
+
     // ── Helpers ───────────────────────────────────────────────────────────
 
     /** "B5" desde fila y columna (1-based) */
@@ -454,12 +2042,12 @@ class PortalProcesosController extends BaseController
         $ws,
         string $coord,
         $valor,
-        string $bgARGB   = 'FFFFFFFF',
+        string $bgARGB = 'FFFFFFFF',
         string $fontColor = '000000',
-        bool   $bold      = false,
-        int    $fontSize  = 9,
-        string $halign    = 'center',
-        string $numFmt    = ''
+        bool $bold = false,
+        int $fontSize = 9,
+        string $halign = 'center',
+        string $numFmt = ''
     ): void {
         $ws->getCell($coord)->setValue($valor);
 
@@ -478,8 +2066,8 @@ class PortalProcesosController extends BaseController
         $style->getAlignment()
             ->setHorizontal(
                 $halign === 'left'
-                    ? Alignment::HORIZONTAL_LEFT
-                    : Alignment::HORIZONTAL_CENTER
+                ? Alignment::HORIZONTAL_LEFT
+                : Alignment::HORIZONTAL_CENTER
             )
             ->setVertical(Alignment::VERTICAL_CENTER)
             ->setWrapText(true);
@@ -487,7 +2075,7 @@ class PortalProcesosController extends BaseController
         $style->getBorders()->applyFromArray([
             'allBorders' => [
                 'borderStyle' => Border::BORDER_THIN,
-                'color'       => ['argb' => 'FF000000'],
+                'color' => ['argb' => 'FF000000'],
             ],
         ]);
 
@@ -502,11 +2090,11 @@ class PortalProcesosController extends BaseController
         $ws->getStyle($coord)->getBorders()->applyFromArray([
             'allBorders' => [
                 'borderStyle' => Border::BORDER_THIN,
-                'color'       => ['argb' => 'FF000000'],
+                'color' => ['argb' => 'FF000000'],
             ],
         ]);
     }
- 
+
 
 
     // ══════════════════════════════════════════════════════════════════
@@ -518,15 +2106,15 @@ class PortalProcesosController extends BaseController
      */
     private function writeCell(
         $sheet,
-        int    $row,
-        int    $col,
+        int $row,
+        int $col,
         $value,
-        string $bgARGB    = 'FFFFFFFF',
+        string $bgARGB = 'FFFFFFFF',
         string $fontColor = '000000',
-        bool   $bold      = false,
-        int    $fontSize  = 9,
-        string $halign    = 'center',
-        string $numFmt    = ''
+        bool $bold = false,
+        int $fontSize = 9,
+        string $halign = 'center',
+        string $numFmt = ''
     ): void {
         $cell = $sheet->getCellByColumnAndRow($col, $row);
         $cell->setValue($value);
@@ -552,7 +2140,7 @@ class PortalProcesosController extends BaseController
 
         $thin = [
             'borderStyle' => Border::BORDER_THIN,
-            'color'       => ['argb' => 'FF000000'],
+            'color' => ['argb' => 'FF000000'],
         ];
         $style->getBorders()->applyFromArray([
             'allBorders' => $thin,
@@ -571,7 +2159,7 @@ class PortalProcesosController extends BaseController
             ->applyFromArray([
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
-                    'color'       => ['argb' => 'FF000000'],
+                    'color' => ['argb' => 'FF000000'],
                 ],
             ]);
     }
@@ -583,8 +2171,6 @@ class PortalProcesosController extends BaseController
         $a2 = Coordinate::stringFromColumnIndex($c2) . $r2;
         $sheet->mergeCells("{$a1}:{$a2}");
     }
-
-    /** Formatea fecha de BD a dd/mm/yyyy. */
     private function formatFecha(string $fecha): string
     {
         try {
@@ -594,7 +2180,6 @@ class PortalProcesosController extends BaseController
             return $fecha;
         }
     }
-
     public function guardarProceso()
     {
         try {
@@ -623,6 +2208,7 @@ class PortalProcesosController extends BaseController
             // 1. GUARDAR PROCESO (SOLO UNA VEZ)
             $proceso = [
                 'nombre_estudio' => $data['nomb_procedimiento'],
+                'no_licitacion' => $data['no_licitacion'],
                 'fk_area' => $data['id_area'],
                 'created_at' => date('Y-m-d H:i:s')
             ];
@@ -701,11 +2287,10 @@ class PortalProcesosController extends BaseController
             ]);
         }
     }
-    public function verEstudioMercado($idEstudio)
+    public function verEstudioMercado()
     {
         return view("portalProcesos/verEstudioMercado");
     }
-
     public function obtenerEstudioMercadoPorId($id)
     {
         try {
@@ -790,6 +2375,7 @@ class PortalProcesosController extends BaseController
             $estudioMercadoModel->insert([
 
                 'nombre_estudio' => $data['nomb_procedimiento'],
+                'no_licitacion' => $data['no_licitacion'],
 
                 'fk_area' => $data['id_area']
 

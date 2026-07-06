@@ -1,0 +1,124 @@
+$(document).ready(function () {
+    const id = obtenerIdDesdeURL();
+
+    if (id) {
+        cargarAnexoAperturaPropuestas(id);
+    }
+});
+
+function obtenerIdDesdeURL() {
+    const partes = window.location.pathname.split('/');
+    return partes[partes.length - 1];
+}
+
+function cargarAnexoAperturaPropuestas(id) {
+    fetch(`../obtenerAnexoAperturaPropuestaPorId/${id}`)
+        .then(response => response.json())
+        .then(response => {
+            if (!response.success) {
+                alert("No se encontró información");
+                return;
+            }
+
+            const proveedores = response.data;
+            if (!proveedores || proveedores.length === 0) {
+                alert("No existen proveedores registrados");
+                return;
+            }
+
+            // DATOS GENERALES (fuera de la tabla)
+            if (document.getElementById('nombre_estudio')) {
+                document.getElementById('nombre_estudio').textContent = proveedores[0].nombre_estudio ?? '';
+            }
+            if (document.getElementById('no_licitacion')) {
+                document.getElementById('no_licitacion').textContent = proveedores[0].no_licitacion ?? '';
+            }
+
+            // Construir tabla dinámica
+            construirTablaRequisitos(proveedores);
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Error al cargar la información");
+        });
+}
+
+function construirTablaRequisitos(proveedores) {
+    const thead = document.getElementById('theadRequisitos');
+    const tbody = document.getElementById('tbodyRequisitos');
+
+    if (!thead || !tbody) return;
+
+    thead.innerHTML = '';
+    tbody.innerHTML = '';
+
+    // ==========================================
+    // FILA 1: Nombres de proveedores (cada uno ocupa 2 columnas)
+    // ==========================================
+    let firstRow = '<tr>';
+    firstRow += '<th>N.P.</th>';
+    firstRow += '<th>DOCUMENTACIÓN DE LA OFERTA TÉCNICA SOLICITADA</th>';
+    
+    proveedores.forEach(proveedor => {
+        firstRow += `<th class="empresa-columna" colspan="2">${proveedor.nombre_empresa ?? ''}</th>`;
+    });
+    firstRow += '</tr>';
+    thead.innerHTML += firstRow;
+
+    // ==========================================
+    // FILA 2: "PRESENTÓ" y "NO PRESENTÓ" debajo de cada proveedor
+    // ==========================================
+    let secondRow = '<tr style="background:#e8e8e8;">';
+    secondRow += '<td colspan="2"></td>';
+    
+    proveedores.forEach(() => {
+        secondRow += '<td class="centrado"><strong>PRESENTÓ</strong></td>';
+        secondRow += '<td class="centrado"><strong>NO PRESENTÓ</strong></td>';
+    });
+    secondRow += '</tr>';
+    thead.innerHTML += secondRow;
+
+    // ==========================================
+    // CUERPO: Requisitos fijos
+    // ==========================================
+    const requisitos = obtenerRequisitosFijos();
+    
+    requisitos.forEach(requisito => {
+        let row = '<tr>';
+        row += `<td class="requisito-numero">${requisito.numero}</td>`;
+        row += `<td class="requisito-descripcion">${requisito.descripcion}</td>`;
+        
+        // Por cada proveedor: celda PRESENTÓ + celda NO PRESENTÓ
+        proveedores.forEach(() => {
+            row += `<td class="celda-editable check-editable" contenteditable="true"></td>`;
+            row += `<td class="celda-editable check-editable" contenteditable="true"></td>`;
+        });
+        row += '</tr>';
+        tbody.innerHTML += row;
+    });
+}
+
+function obtenerRequisitosFijos() {
+    return [
+        { numero: "1", descripcion: "PRESENTAR ESCRITO ELABORADO EN PAPEL MEMBRETADO DEL OFERENTE, EN EL CUAL <strong>INDIQUE EL NÚMERO TOTAL DE FOLIOS</strong> DE LOS QUE CONSTA SU PROPUESTA, DICHA CARTA NO DEBERÁ ESTAR FOLIADA, LA PROPUESTA TÉCNICA DEBERÁ ESTAR FIRMADA AUTÓGRAFAMENTE POR EL PROPIETARIO O REPRESENTANTE LEGAL DE LA EMPRESA, <strong>LA TOTALIDAD DE LA PROPUESTA TÉCNICA DEBERÁ ESTAR IMPRESA Y FOLIADA DE MANERA CONSECUTIVA POR UNA SOLA CARA</strong>." },
+        { numero: "2", descripcion: "PRESENTAR <strong>PROPUESTA TÉCNICA</strong> DE LAS PARTIDAS, REQUISITANDO TODOS LOS DATOS SOLICITADOS EN EL PUNTO DE <strong>“PROPUESTA TÉCNICA”</strong>, LA CUAL DEBE CUMPLIR CON LA DESCRIPCIÓN Y ESPECIFICACIONES TÉCNICAS SOLICITADAS EN EL “ANEXO 1”." },
+        { numero: "3", descripcion: "COPIA SIMPLE, COMPLETA Y LEGIBLE DE LA <strong>IDENTIFICACIÓN VIGENTE</strong> (PASAPORTE VIGENTE, CREDENCIAL PARA VOTAR CON FOTOGRAFÍA VIGENTE O LICENCIA PARA CONDUCIR) DEL PROPIETARIO O REPRESENTANTE LEGAL DE LA EMPRESA; Y EN SU CASO, DE LA PERSONA QUE REPRESENTARÁ A LA EMPRESA EN EL ACTO DE PRESENTACIÓN Y APERTURA DE PROPUESTAS, LA CUAL DEBERÁ PRESENTAR EL <strong>“ANEXO 3”</strong> DEBIDAMENTE REQUISITADO." },
+        { numero: "4", descripcion: "COPIA SIMPLE, COMPLETA Y LEGIBLE DE LA CÉDULA DE IDENTIFICACIÓN FISCAL Y CONSTANCIA DE SITUACIÓN FISCAL; ASÍ COMO PRESENTAR ESCRITO BAJO PROTESTA DE DECIR VERDAD, DE ESTAR AL CORRIENTE EN LAS DECLARACIONES DE IMPUESTOS Y EN EL CUMPLIMIENTO DE SUS OBLIGACIONES FISCALES Y, ANEXAR LA OPINIÓN POSITIVA DEL SAT." },
+        { numero: "5", descripcion: "COPIA SIMPLE, COMPLETA Y LEGIBLE DE LOS <strong>ESTADOS FINANCIEROS BÁSICOS</strong> (ESTADO DE POSICIÓN FINANCIERA) AL MES DE DICIEMBRE DE 2025, CONFORME A LA NORMAS DE INFORMACIÓN FINANCIERA EMITIDAS POR EL CONSEJO MEXICANO PARA LA INVESTIGACIÓN Y DESARROLLO DE NORMAS DE INFORMACIÓN FINANCIERA, LOS CITADOS ESTADOS FINANCIEROS DEBERÁN ESTAR FIRMADOS POR CONTADOR PÚBLICO INTERNO O EXTERNO, POR LO QUE DEBERÁN ANEXAR ORIGINAL O COPIA CERTIFICADA Y COPIA SIMPLE COMPLETA Y LEGIBLE DE LA CÉDULA PROFESIONAL DEL CITADO CONTADOR." },
+        { numero: "6", descripcion: "COPIA SIMPLE, COMPLETA Y LEGIBLE DE LA <strong>DECLARACIÓN ANUAL 2024</strong> Y LOS ÚLTIMOS PAGOS PROVISIONALES CORRESPONDIENTES DEL <strong>01 DE ENERO AL 30 DE NOVIEMBRE DE 2025</strong>; COMPLETAS CON ANEXOS Y COMPROBANTE QUE GENERA EL SISTEMA DEL SERVICIO DE ADMINISTRACIÓN TRIBUTARIA." },
+        { numero: "7", descripcion: "PARA PERSONAS JURÍDICAS COLECTIVAS, PRESENTAR ORIGINAL O COPIA CERTIFICADA Y COPIA SIMPLE, COMPLETA Y LEGIBLE DEL ACTA CONSTITUTIVA Y SU ÚLTIMA MODIFICACIÓN, ANEXAR DOCUMENTO QUE AVALE QUE SE ENCUENTRA INSCRITA EN EL REGISTRO PÚBLICO DE COMERCIO; PARA PERSONAS FÍSICAS, PRESENTAR ORIGINAL O COPIA CERTIFICADA Y COPIA SIMPLE, COMPLETA Y LEGIBLE DEL ACTA DE NACIMIENTO Y CURP." },
+        { numero: "8", descripcion: "ORIGINAL O COPIA CERTIFICADA Y COPIA SIMPLE, COMPLETA Y LEGIBLE DEL <strong>PODER NOTARIAL DEL REPRESENTANTE O APODERADO</strong> QUE FIRMA LA PROPUESTA, EN EL CUAL SE INDIQUE QUE TIENE PODER GENERAL PARA ACTOS DE ADMINISTRACIÓN Y/O <strong>PODER ESPECIAL</strong> PARA CONCURSOS, LICITACIONES Y FIRMA DE CONTRATOS; LOS PODERES NOTARIALES EXPEDIDOS DENTRO DEL TERRITORIO DEL ESTADO DE MÉXICO, ESTARÁN SUJETOS A LO DISPUESTO POR EL ARTÍCULO 7.768 DEL CÓDIGO CIVIL DEL ESTADO DE MÉXICO, QUE A LA LETRA DICE: “EL MANDATO DEBE CONTENER EL PLAZO POR EL QUE SE CONFIERE, DE NO CONTENERLO SE PRESUME QUE HA SIDO OTORGADO POR TRES AÑOS.” (EN CASO DE SER PERSONA FÍSICA, LA PRESENTACIÓN DE ESTE DOCUMENTO SERÁ OPCIONAL)”." },
+        { numero: "9", descripcion: "ORIGINAL Y COPIA SIMPLE COMPLETA Y LEGIBLE DEL CERTIFICADO DE <strong>EMPRESA MEXIQUENSE VIGENTE</strong>, LA OMISIÓN DE ESTE CERTIFICADO NO INVALIDARÁ LA OFERTA. LA NO PRESENTACIÓN DE ESTE DOCUMENTO NO ES CAUSAL DE DESECHAMIENTO CUANTITATIVA O DESCALIFICACIÓN CUALITATIVA, DADO QUE ÚNICAMENTE SERÁ UTILIZADO PARA EL CRITERIO DE ADJUDICACIÓN CONFORME A LO ESTIPULADO EN EL ARTÍCULO 70, FRACCIÓN IX DEL REGLAMENTO, EL PORCENTAJE DE LAS PERSONAS FÍSICAS O JURÍDICAS COLECTIVAS QUE PRESENTEN DICHO DOCUMENTO SERÁ DE UN 5% (CINCO POR CIENTO), A FAVOR DE ELLAS." },
+        { numero: "10", descripcion: "PRESENTAR ESCRITO BAJO PROTESTA DE DECIR VERDAD, EN EL QUE MANIFIESTE NO ENCONTRARSE EN NINGUNO DE LOS SUPUESTOS DEL <strong>ARTÍCULO 74 DE LA LEY DE RESPONSABILIDADES ADMINISTRATIVAS DEL ESTADO DE MÉXICO Y MUNICIPIOS</strong>." },
+        { numero: "11", descripcion: "PRESENTAR ESCRITO BAJO PROTESTA DE DECIR VERDAD EN EL QUE MANIFIESTE QUE TIENE LA CAPACIDAD TÉCNICA, LABORAL Y FINANCIERA PARA PRESTAR EL SERVICIO; ASÍ COMO PARA CELEBRAR LOS CONTRATOS CORRESPONDIENTES; Y, SE COMPROMETE, DE RESULTAR ADJUDICADO, ENTREGARLOS, SIN CAMBIOS EN LAS CANTIDADES, CONCEPTOS, CARACTERÍSTICAS SOLICITADAS, EN LA FECHA ESTABLECIDA Y LUGAR QUE LA UNIDAD SOLICITANTE LO REQUIERA." },
+        { numero: "12", descripcion: "PRESENTAR ESCRITO BAJO PROTESTA DE DECIR VERDAD EN EL QUE MANIFIESTE QUE EN CASO DE RESULTAR ADJUDICADO <strong>NO SUBCONTRATARÁ</strong> DE MANERA TOTAL O PARCIAL, NI CEDERÁ TOTAL O PARCIALMENTE LOS DERECHOS Y OBLIGACIONES QUE DERIVEN DEL CONTRATO." },
+        { numero: "13", descripcion: "PRESENTAR ESCRITO BAJO PROTESTA DE DECIR VERDAD, EN EL QUE MANIFIESTE QUE LA PRESENTACIÓN DE PROPUESTAS SIGNIFICA, EL <strong>PLENO CONOCIMIENTO Y ACEPTACIÓN</strong> DE LOS REQUISITOS Y LINEAMIENTOS ESTABLECIDOS EN LA PRESENTE SOLICITUD DE PARTICIPACIÓN." },
+        { numero: "14", descripcion: "PRESENTAR <strong>CURRÍCULUM</strong>, ELABORADO EN PAPEL MEMBRETADO DEL OFERENTE Y SUSCRITO POR SU REPRESENTANTE LEGAL O POR QUIEN TENGA FACULTAD LEGAL PARA ELLO." },
+        { numero: "15", descripcion: "PRESENTAR ESCRITO BAJO PROTESTA DE DECIR VERDAD, EN EL QUE SEÑALE UN DOMICILIO, ASÍ COMO COPIA SIMPLE DEL <strong>COMPROBANTE DE DOMICILIO CON UNA ANTIGÜEDAD NO MAYOR A 3 MESES</strong> Y UN DOMICILIO ELECTRÓNICO (CORREO ELECTRÓNICO), PARA EFECTOS DE OÍR Y RECIBIR NOTIFICACIONES O CUALQUIER OTRO DOCUMENTO Y DE CUALQUIER NATURALEZA, MENCIONANDO QUE ESTOS MISMOS SE ASENTARÁN EN EL CONTRATO CORRESPONDIENTE EN CASO DE RESULTAR ADJUDICADO. LO ANTERIOR DE CONFORMIDAD CON LO ESTABLECIDO EN EL ARTÍCULO 70 FRACCIÓN VIII DEL REGLAMENTO Y CAPÍTULO TERCERO DEL CÓDIGO DE PROCEDIMIENTOS ADMINISTRATIVOS DEL ESTADO DE MÉXICO." },
+        { numero: "16", descripcion: "PRESENTAR ESCRITO BAJO PROTESTA DE DECIR VERDAD, EN EL QUE MANIFIESTE QUE NO DESEMPEÑA EMPLEO, CARGO O COMISIÓN EN EL SERVICIO PÚBLICO O, EN SU CASO, QUE, A PESAR DE DESEMPEÑARLO, CON LA FORMALIZACIÓN DEL CONTRATO CORRESPONDIENTE NO SE ACTUALIZA UN CONFLICTO DE INTERÉS. LO ANTERIOR DE CONFORMIDAD CON LOS <strong>SUPUESTOS PREVISTOS EN EL ARTÍCULO 50 FRACCIÓN VII DE LA LEY DE RESPONSABILIDADES ADMINISTRATIVAS DEL ESTADO DE MÉXICO Y MUNICIPIOS</strong>." },
+        { numero: "17", descripcion: "PRESENTAR ESCRITO BAJO PROTESTA DE DECIR VERDAD, EN EL QUE <strong>MANIFIESTE QUE POR SÍ MISMO O A TRAVÉS DE INTERPÓSITA PERSONA SE ABSTENDRÁ DE ADOPTAR CONDUCTAS PARA QUE LOS SERVIDORES PÚBLICOS DEL AYUNTAMIENTO DE TEMASCALCINGO, MÉXICO, INDUZCAN O ALTEREN LAS EVALUACIONES DE LAS PROPUESTAS</strong>, EL RESULTADO DEL PROCEDIMIENTO U OTROS ASPECTOS QUE OTORGUEN CONDICIONES VENTAJOSAS EN RELACIÓN CON LOS DEMÁS PARTICIPANTES." },
+        { numero: "18", descripcion: "PRESENTAR EN CARTA MEMBRETADA Y FIRMADA POR EL REPRESENTANTE LEGAL O EN SU CASO COPIA DEL ESTADO DE CUENTA BANCARIO NO MAYOR A TRES MESES DE ANTIGÜEDAD, EN AMBOS CASOS DEBERÁN CONTAR CON LOS SIGUIENTES DATOS: • <strong>NÚMERO DE CUENTA</strong>. • <strong>CLAVE INTERBANCARIA</strong>. • <strong>TITULAR</strong>. • <strong>BANCO</strong>. • <strong>SUCURSAL PROPUESTA CONJUNTA</strong>." },
+        { numero: "19", descripcion: "AFIANZADORAS AUTORIZADAS PARA LA EMISIÓN DE FIANZAS, DE ACUERDO AL <strong>“ANEXO 2”</strong>." },
+        { numero: "20", descripcion: "DATOS DEL LICITANTE Y SU REPRESENTANTE LEGAL, MEDIANTE ESCRITO QUE CONTENGA DATOS DE LA RAZÓN SOCIAL QUE PARTICIPA Y EN EL QUE EL FIRMANTE MANIFIESTE <strong>“BAJO PROTESTA DE DECIR VERDAD”</strong>, QUE CUENTA CON FACULTADES SUFICIENTES PARA SUSCRIBIR A NOMBRE DE SU REPRESENTADA LA PROPUESTA CORRESPONDIENTE, <strong>“ANEXO 3”</strong>." }
+    ];
+}

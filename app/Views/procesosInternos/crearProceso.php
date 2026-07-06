@@ -200,9 +200,18 @@
 
             <div class="w3-card w3-white w3-round-large w3-padding w3-margin-bottom">
 
+                            <!-- NOMBRE PARTIDA -->
+                <div class="w3-row w3-margin-bottom">
+                    <div class="w3-container">
+                        <label class="w3-text-black">
+                            <b>NUMERO LICITACIÓN</b>
+                        </label>
+                        <input type="text" id="num_licitacion" class="w3-input w3-border"
+                            placeholder="Escribe tu número de licitación">
+                    </div>
+
                 <!-- NOMBRE PARTIDA -->
                 <div class="w3-row w3-margin-bottom">
-
                     <div class="w3-container">
                         <label class="w3-text-black">
                             <b>NOMBRE DEL PROCEDIMIENTO</b>

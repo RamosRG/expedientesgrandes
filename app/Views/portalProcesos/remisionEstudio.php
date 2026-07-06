@@ -17,6 +17,7 @@
             font-family: 'Century Gothic', 'Segoe UI', 'Arial', sans-serif;
             padding: 30px 20px;
             color: #1a2c3e;
+            font-size: 10pt;
         }
 
         .contenedor-principal {
@@ -116,7 +117,7 @@
             border: 1px solid #cfdde6;
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
             margin-bottom: 38px;
-            padding: 20mm 18mm 20mm 18mm;
+            padding: 25mm 30mm 25mm 30mm; /* Superior: 2.5cm, Derecho: 3cm, Inferior: 2.5cm, Izquierdo: 3cm */
             position: relative;
             border-radius: 2px;
         }
@@ -124,7 +125,7 @@
         .contenido-hoja {
             width: 100%;
             height: 100%;
-            font-size: 11pt;
+            font-size: 10pt;
             line-height: 1.5;
             color: #000000;
             font-family: 'Century Gothic', 'Segoe UI', Arial, sans-serif;
@@ -134,7 +135,7 @@
         .encabezado-anio {
             text-align: center;
             font-weight: bold;
-            font-size: 11pt;
+            font-size: 10pt;
             letter-spacing: 0.5px;
             margin-bottom: 25px;
             border-bottom: 2px solid #1e4a6b;
@@ -144,8 +145,8 @@
 
         /* Bloques de texto con sangría y justificación */
         .fecha-linea {
-            text-align: left;
-            margin: 12px 0 8px 0;
+            text-align: right;
+            margin: 6px 0 6px 0;
             font-weight: normal;
         }
 
@@ -210,13 +211,13 @@
 
         .numero-pagina {
             position: absolute;
-            bottom: 15mm;
-            right: 18mm;
+            bottom: 25mm;
+            right: 30mm;
             font-size: 9pt;
             font-weight: bold;
         }
 
-        /* Campos editables estilo "subrayado verde" */
+        /* Campos editables estilo "subrayado verde" - solo partes subrayadas */
         .campo-verde {
             display: inline-block;
             border-bottom: 1px solid #2c7a4d;
@@ -227,7 +228,7 @@
             outline: none;
             color: #14532d;
             font-family: monospace;
-            font-size: 11pt;
+            font-size: 10pt;
             text-align: left;
         }
 
@@ -241,9 +242,17 @@
         .campo-mediano { min-width: 180px; }
         .campo-largo { min-width: 280px; }
 
-        /* Ajustes para que todo respete el diseño tipo oficio */
         .bold-label {
             font-weight: bold;
+        }
+
+        /* Estilo para forzar alineación derecha en las líneas específicas */
+        .linea-derecha {
+            text-align: right;
+        }
+
+        .linea-derecha .campo-verde {
+            text-align: left;
         }
 
         @media print {
@@ -259,6 +268,7 @@
                 box-shadow: none;
                 margin: 0;
                 page-break-after: avoid;
+                padding: 25mm 30mm 25mm 30mm;
             }
             .campo-verde {
                 background: transparent !important;
@@ -291,52 +301,52 @@
                         "2025. BICENTENARIO DE LA VIDA MUNICIPAL EN EL ESTADO DE MÉXICO"
                     </div>
 
-                    <!-- Fecha -->
-                    <div class="fecha-linea">
+                    <!-- Fecha - alineada a la derecha -->
+                    <div class="fecha-linea linea-derecha">
                         <strong>TEMASCALCINGO, ESTADO DE MÉXICO, A </strong>
-                        <span class="campo-verde campo-mediano" contenteditable="true">06 DE AGOSTO DEL 2025</span>
+                        <span id="created_at" class="campo-verde campo-mediano" contenteditable="true"></span>
                     </div>
 
-                    <!-- Dependencia -->
-                    <div class="fecha-linea">
+                    <!-- Dependencia - alineada a la derecha -->
+                    <div class="fecha-linea linea-derecha">
                         <strong>DEPENDENCIA:</strong>
-                        <span class="campo-verde campo-mediano" contenteditable="true">DIRECCIÓN DE ADMINISTRACIÓN Y DESARROLLO DE PERSONAL</span>
+                        DIRECCIÓN DE ADMINISTRACIÓN Y DESARROLLO DE PERSONAL
                     </div>
 
-                    <!-- Oficio número -->
-                    <div class="fecha-linea">
+                    <!-- Oficio número - alineada a la derecha -->
+                    <div class="fecha-linea linea-derecha">
                         <strong>OFICIO NO. MTM/DADP/CAYS/</strong>
-                        <span class="campo-verde campo-corto" contenteditable="true">079/2025</span>
+                        <span id="no_licitacion" class="campo-verde campo-corto" contenteditable="true"></span>
                     </div>
 
-                    <!-- Asunto (se mantiene igual) -->
-                    <div class="fecha-linea" style="margin-bottom: 20px;">
+                    <!-- Asunto - alineado a la derecha -->
+                    <div class="fecha-linea linea-derecha" style="margin-bottom: 20px;">
                         <strong>ASUNTO: REMISIÓN DE ESTUDIO DE MERCADO Y SOLICITUD DE OFICIO JUSTIFICATORIO</strong>
                     </div>
 
-                    <!-- Destinatario: nombre y área -->
+                    <!-- Destinatario: nombre y área - editables -->
                     <div class="destinatario-linea">
                         <strong>C.</strong>
-                        <span class="campo-verde campo-largo" contenteditable="true">MTRA. MARÍA FERNANDA LOZANO HIDALGO</span>
+                        <span id="coordinador" class="campo-verde campo-largo" contenteditable="true"></span>
                     </div>
                     <div class="destinatario-linea" style="margin-bottom: 18px;">
                         <strong>COORDINADORA DE</strong>
-                        <span class="campo-verde campo-mediano" contenteditable="true">RECURSOS MATERIALES Y SERVICIOS GENERALES</span>
+                        <span id="area" class="campo-verde campo-mediano" contenteditable="true"></span>
                     </div>
 
                     <div class="saludo-formal">
                         <strong>P R E S E N T E</strong>
                     </div>
 
-                    <!-- Cuerpo del oficio (texto completo con campos editables) -->
+                    <!-- Cuerpo del oficio (texto completo con campos editables en las partes subrayadas) -->
                     <div class="texto-cuerpo">
                         En referencia al <strong>Oficio NO. MTM/CMPYB/</strong>
-                        <span class="campo-verde campo-corto" contenteditable="true">034/2025</span>, de fecha
-                        <span class="campo-verde campo-mediano" contenteditable="true">30 de julio de 2025</span>,
+                        <span id="no_licitacion1" class="campo-verde campo-corto" contenteditable="true"></span>, de fecha
+                        <span id="created_at1" class="campo-verde campo-mediano" contenteditable="true"></span>,
                         donde solicita se lleve a cabo la
-                        <span class="campo-verde campo-largo" contenteditable="true">"investigación de mercado para la adquisición de artículos de papelería y útiles de oficina"</span>
+                        <span id="nombre_estudio" class="campo-verde campo-largo" contenteditable="true"></span>
                         como lo especifica la
-                        <span class="campo-verde campo-largo" contenteditable="true">solicitud de suministro No. SA/043/2025</span>,
+                        <span id="catalogo1" class="campo-verde campo-largo" contenteditable="true"></span>,
                         me permito remitir a usted el estudio de mercado realizado por el área de la Coordinación de Recursos Materiales, para que en atención a lo estipulado en los Artículos 13 y 14 de la Ley de Contratación Pública del Estado de México y Municipios, 15 inciso b) del Reglamento, solicite al área de la Tesorería Municipal, suficiencia presupuestal por el monto del precio de referencia, para la compra en mención, remitiendo copia de la solicitud y respuesta de suficiencia a esta Dirección de Administración y Desarrollo de Personal para la integración al expediente de compra.
                     </div>
 
@@ -356,22 +366,22 @@
                         "SERVIR CON VALORES"
                     </div>
 
-                    <!-- Firma y cargo centrados perfectamente -->
+                    <!-- Firma y cargo centrados perfectamente - editables -->
                     <div class="firma-area">
                         <div class="firma-linea">
-                            <span class="campo-verde campo-largo" contenteditable="true">C. PAULO SERGIO HERNÁNDEZ CUADRIELLO</span>
+                            C. MIRIAM VIANEY OVANDO RUBIO 
                         </div>
                         <div class="cargo-firma">
-                            COORDINADOR DE RECURSOS MATERIALES
+                            DIRECTORA DE ADMINISTRACIÓN Y DESARROLLO DE PERSONAL
                         </div>
                     </div>
 
-                    <!-- c.c.p. e iniciales -->
+                    <!-- c.c.p. e iniciales (fijos) -->
                     <div class="copia-archivo">
-                        <strong>C. c. p.</strong> Archivo
+                        <strong>C. PAULO SERGIO HERNÁNDEZ CUADRIELLO</strong> 
                     </div>
                     <div class="iniciales">
-                        <strong>P.S.H.C.</strong>
+                        <strong>COORDINADOR DE ADQUISICIONES Y SERVICIOS</strong>
                     </div>
 
                     <!-- Número de página -->
@@ -383,6 +393,10 @@
         </div>
     </div>
 </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="../../public/js/portalProceso/remisionEstudio.js"></script>
 
 <script>
     document.getElementById('btnGuardarOficio').addEventListener('click', function() {

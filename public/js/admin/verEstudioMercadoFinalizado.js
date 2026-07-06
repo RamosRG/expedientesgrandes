@@ -7,14 +7,7 @@ function obtenerIdDesdeURL() {
     const partes = window.location.pathname.split('/');
     return partes[partes.length - 1];
 }
-/**
- * verEstudioMercadoFinalizado.js
- * Carga y renderiza el estudio de mercado en la tabla.
- *
- * Fix:  precio_total  →  la API devuelve "precio_total" (no "total")
- *       Normalización de claves de proveedor unificada en un solo lugar
- *       tfoot construido una sola vez y reemplazado limpiamente
- */
+
 
 function cargarEstudio(id) {
 
@@ -63,31 +56,31 @@ function cargarEstudio(id) {
             };
 
             /* ── Agrupación ──────────────────────────────────────────── */
-            const agrupado     = {};   // { id_descripcion: { ...fila } }
+            const agrupado = {};   // { id_descripcion: { ...fila } }
             const proveedoresSet = new Set();
 
             response.data.forEach(item => {
 
-                const idDesc    = item.id_descripcion;
+                const idDesc = item.id_descripcion;
                 const proveedor = normalizarProveedor(item);
 
                 if (proveedor) proveedoresSet.add(proveedor);
 
                 if (!agrupado[idDesc]) {
                     agrupado[idDesc] = {
-                        partida:     item.partida,
+                        partida: item.partida,
                         descripcion: item.descripcion,
-                        unidad:      item.unidad_medida,
-                        cantidad:    parseFloat(item.cantidad) || 0,
+                        unidad: item.unidad_medida,
+                        cantidad: parseFloat(item.cantidad) || 0,
                         proveedores: {}
                     };
                 }
 
                 if (proveedor) {
                     agrupado[idDesc].proveedores[proveedor] = {
-                        precio:       parseFloat(item.precio_unitario)  || 0,
+                        precio: parseFloat(item.precio_unitario) || 0,
                         // ✅ la columna real del modelo es precio_total
-                        total:        parseFloat(item.precio_total)     || 0,
+                        total: parseFloat(item.precio_total) || 0,
                         marca_modelo: item.marca_modelo || "—"
                     };
                 }
@@ -139,7 +132,7 @@ function cargarEstudio(id) {
 
             Object.values(agrupado).forEach(item => {
 
-                let fila  = `
+                let fila = `
 <tr>
     <td>${item.partida}</td>
     <td style="text-align:left">${item.descripcion}</td>
@@ -147,7 +140,7 @@ function cargarEstudio(id) {
     <td>${item.cantidad}</td>`;
 
                 let sumaFilas = 0;
-                let conteo    = 0;
+                let conteo = 0;
 
                 proveedores.forEach(p => {
                     const datos = item.proveedores[p];
@@ -156,7 +149,7 @@ function cargarEstudio(id) {
                         const precio = datos.precio;
                         // Si el backend ya calculó precio_total úsalo;
                         // si viene en 0 (no calculado), calcularlo localmente.
-                        const total  = datos.total > 0
+                        const total = datos.total > 0
                             ? datos.total
                             : precio * item.cantidad;
 

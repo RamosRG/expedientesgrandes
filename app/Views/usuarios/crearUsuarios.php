@@ -226,7 +226,6 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <!-- CORREGIDO: id unificado a campo-apellido_materno -->
                                     <div class="form-group" id="campo-apellido_materno">
                                         <label for="apellido_materno">Apellido Materno</label>
                                         <input type="text" class="form-control" id="apellido_materno"
@@ -269,8 +268,6 @@
 
                             <!-- ===========================
                                  DATOS FISCALES (CONDICIONAL)
-                                 CORREGIDO: tipo_persona y ambas
-                                 sub-secciones están DENTRO de aquí
                             ============================ -->
                             <div id="seccion-datos-fiscales" class="form-section" style="display:none;">
                                 <h3 style="color: var(--vino-oscuro);">Datos Fiscales</h3>
@@ -291,7 +288,7 @@
                                 <!-- Campos exclusivos de PROVEEDOR -->
                                 <div id="campos-proveedor" style="display:none;">
 
-                                    <!-- Selector tipo persona (CORREGIDO: dentro de sección fiscal) -->
+                                    <!-- Selector tipo persona -->
                                     <div class="form-row">
                                         <div class="form-group">
                                             <label for="tipo_persona">
@@ -305,7 +302,7 @@
                                             </select>
                                         </div>
 
-                                        <!-- RFC visible siempre que sea proveedor -->
+                                        <!-- RFC -->
                                         <div class="form-group" id="campo-rfc">
                                             <label for="rfc">
                                                 RFC
@@ -318,7 +315,7 @@
                                     </div>
 
                                     <!-- ===========================
-                                         PERSONA FÍSICA
+                                         PERSONA FÍSICA (CORREGIDO Y COMPLETADO)
                                     ============================ -->
                                     <div id="campos-persona-fisica" style="display:none;">
                                         <h4 style="color: var(--vino-oscuro); margin-bottom: 15px;">
@@ -361,7 +358,7 @@
 
                                         <div class="form-row">
                                             <div class="form-group">
-                                                <label for="num_oficialia">Número Oficialía</label>
+                                                <label for="num_oficilia">Número Oficialía</label>
                                                 <input type="text" class="form-control" id="num_oficialia"
                                                     name="num_oficialia" value="<?= old('num_oficialia') ?>">
                                             </div>
@@ -383,13 +380,18 @@
                                                     value="<?= old('fecha_nacimiento_registro') ?>">
                                             </div>
                                         </div>
+                                            <div class="form-group">
+                                                <label for="lugar_nacimiento">NCI Fisica</label>
+                                                <input type="text" class="form-control" id="nci_fisica"
+                                                    name="nci_fisica"
+                                                    value="<?= old('nci_fisica') ?>">
+                                            </div>
+                                        </div>
+
                                     </div><!-- /campos-persona-fisica -->
 
                                     <!-- ===========================
-                                         PERSONA MORAL
-                                         CORREGIDO: ahora es HERMANO
-                                         de campos-persona-fisica,
-                                         no hijo
+                                         PERSONA MORAL (COMPLETADO - AGREGADOS CAMPOS FALTANTES)
                                     ============================ -->
                                     <div id="campos-persona-moral" style="display:none;">
                                         <h4 style="color: var(--vino-oscuro); margin-bottom: 15px;">
@@ -416,18 +418,72 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="giro_economico">Giro Económico</label>
-                                                <input type="text" class="form-control" id="giro_economico"
-                                                    name="giro_economico" value="<?= old('giro_economico') ?>">
+                                                <label for="num_credencial_representante">Número Credencial Representante</label>
+                                                <input type="text" class="form-control" id="num_credencial_representante"
+                                                    name="num_credencial_representante"
+                                                    value="<?= old('num_credencial_representante') ?>">
                                             </div>
                                         </div>
 
                                         <div class="form-row">
                                             <div class="form-group">
+                                                <label for="giro_economico">Giro Económico</label>
+                                                <input type="text" class="form-control" id="giro_economico"
+                                                    name="giro_economico" value="<?= old('giro_economico') ?>">
+                                            </div>
+
+                                            <div class="form-group">
                                                 <label for="registro_publico">Registro Público</label>
                                                 <input type="text" class="form-control" id="registro_publico"
                                                     name="registro_publico"
                                                     value="<?= old('registro_publico') ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="instrumento_re">Instrumento RE</label>
+                                                <input type="text" class="form-control" id="instrumento_re"
+                                                    name="instrumento_re" value="<?= old('instrumento_re') ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="volumen_re">Volumen RE</label>
+                                                <input type="text" class="form-control" id="volumen_re"
+                                                    name="volumen_re" value="<?= old('volumen_re') ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="folio_re">Folio RE</label>
+                                                <input type="text" class="form-control" id="folio_re"
+                                                    name="folio_re" value="<?= old('folio_re') ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="notario">Notario</label>
+                                                <input type="text" class="form-control" id="notario"
+                                                    name="notario" value="<?= old('notario') ?>">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="titular">Titular</label>
+                                                <input type="text" class="form-control" id="titular"
+                                                    name="titular" value="<?= old('titular') ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="nci">NCI</label>
+                                                <input type="text" class="form-control" id="nci"
+                                                    name="nci" value="<?= old('nci') ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="num_acta_cons">Número Acta Constitucional</label>
+                                                <input type="text" class="form-control" id="num_acta_cons"
+                                                    name="num_acta_cons" value="<?= old('num_acta_cons') ?>">
                                             </div>
                                         </div>
                                     </div><!-- /campos-persona-moral -->
@@ -437,19 +493,17 @@
                             </div><!-- /seccion-datos-fiscales -->
 
                             <!-- ===========================
-                                 DIRECCIÓN (CONDICIONAL)
+                                 DIRECCIÓN
                             ============================ -->
                             <div id="seccion-direccion" class="form-section" style="display:none;">
                                 <h3 style="color: var(--vino-oscuro);">Dirección</h3>
 
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="calle">Calle</label>
-                                        <input type="text" class="form-control" id="calle" name="calle"
-                                            value="<?= old('calle') ?>" placeholder="Nombre de la calle">
+                                        <label for="calle_numero">Calle y Número</label>
+                                        <input type="text" class="form-control" id="calle_numero" name="calle_numero"
+                                            value="<?= old('calle_numero') ?>" placeholder="Ej: Av. Principal #123">
                                     </div>
-
-                                   
                                 </div>
 
                                 <div class="form-row">
@@ -474,7 +528,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="codigo_postal">Codigo Postal</label>
+                                        <label for="codigo_postal">Código Postal</label>
                                         <input type="text" class="form-control" id="codigo_postal" name="codigo_postal"
                                             value="<?= old('codigo_postal') ?>">
                                     </div>
@@ -482,18 +536,15 @@
 
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="pais">Pais</label>
+                                        <label for="pais">País</label>
                                         <input type="text" class="form-control" id="pais"
-                                            name="pais" value="<?= old('pais') ?>"
-                                            maxlength="5">
+                                            name="pais" value="<?= old('pais') ?>">
                                     </div>
                                 </div>
                             </div><!-- /seccion-direccion -->
 
                             <!-- ===========================
                                  ACCIONES
-                                 CORREGIDO: fuera de todas las
-                                 secciones condicionales
                             ============================ -->
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary" id="btnGuardar">
@@ -509,6 +560,7 @@
                 </div>
             </div>
         </main>
+
 
         <footer class="portal-footer">
             <p>Sistema de Gestión de Procesos &copy; <?= date('Y') ?> - Todos los derechos reservados</p>

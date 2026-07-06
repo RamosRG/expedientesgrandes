@@ -81,7 +81,7 @@ class AdminController extends BaseController
 
                 'telefono_principal' => $data['telefono_principal'],
 
-                'calle_numero' => $data['calle'],
+                'calle_numero' => $data['calle_numero'],
                 'colonia' => $data['colonia'],
                 'ciudad' => $data['ciudad'],
                 'estado' => $data['estado'],
@@ -148,83 +148,107 @@ class AdminController extends BaseController
                         $data['lugar_nacimiento'] ?? null,
 
                         'fecha_nacimiento_registro' =>
-                        $data['fecha_nacimiento_registro'] ?? null
+                        $data['fecha_nacimiento_registro'] ?? null,
+
+                        'nci_fisica' =>
+                        $data['nci_fisica'] ?? null
 
                     ];
 
                     $personaFisicaModel->insert($personaFisica);
                 }
 
-                // =================================================
-                // PERSONA MORAL
-                // =================================================
 
-                if ($data['tipo_persona'] == 2) {
+            if ($data['tipo_persona'] == 2) {
 
-                    $personaMoralModel = new DatosPersonaMoralModel();
+                $personaMoralModel = new DatosPersonaMoralModel();
 
-                    $personaMoral = [
+                $personaMoral = [
 
-                        'fk_usuario' => $idUsuario,
+                    'fk_usuario' => $idUsuario,
 
-                        'razon_social' =>
-                        $data['razon_social'] ?? null,
+                    'razon_social' =>
+                    $data['razon_social'] ?? null,
 
-                        'rfc' =>
-                        $data['rfc'] ?? null,
+                    'rfc' =>
+                    $data['rfc'] ?? null,
 
-                        'representante_legal' =>
-                        $data['representante_legal'] ?? null,
+                    'representante_legal' =>
+                    $data['representante_legal'] ?? null,
 
-                        'giro_economico' =>
-                        $data['giro_economico'] ?? null,
+                    'num_credencial_representante' =>
+                    $data['num_credencial_representante'] ?? null,
 
-                        'registro_publico' =>
-                        $data['registro_publico'] ?? null
+                    'giro_economico' =>
+                    $data['giro_economico'] ?? null,
 
-                    ];
+                    'registro_publico' =>
+                    $data['registro_publico'] ?? null,
 
-                    $personaMoralModel->insert($personaMoral);
-                }
+                    'instrumento_re' =>
+                    $data['instrumento_re'] ?? null,
+
+                    'volumen_re' =>
+                    $data['volumen_re'] ?? null,
+
+                    'folio_re' =>
+                    $data['folio_re'] ?? null,
+
+                    'notario' =>
+                    $data['notario'] ?? null,
+
+                    'titular' =>
+                    $data['titular'] ?? null,
+
+                    'nci' =>
+                    $data['nci'] ?? null,
+
+                    'num_acta_cons' =>
+                    $data['num_acta_cons'] ?? null
+
+                ];
+
+                $personaMoralModel->insert($personaMoral);
             }
+        }
 
-            // =====================================================
-            // FINALIZAR TRANSACCIÓN
-            // =====================================================
+        // =====================================================
+        // FINALIZAR TRANSACCIÓN
+        // =====================================================
 
-            $db->transComplete();
+        $db->transComplete();
 
-            if ($db->transStatus() === false) {
-
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'Error al guardar la información'
-                ]);
-            }
-
-            // =====================================================
-            // RESPUESTA
-            // =====================================================
+        if ($db->transStatus() === false) {
 
             return $this->response->setJSON([
-
-                'success' => true,
-                'message' => 'Usuario guardado exitosamente',
-                'redirect' => '../usuarios/listar',
-                'id_usuario' => $idUsuario
-
-            ]);
-        } catch (\Exception $e) {
-
-            log_message(
-                'error',
-                'Error al guardar usuario: ' . $e->getMessage()
-            );
-
-            return $this->response->setJSON([
-
                 'success' => false,
-                'message' => 'Error del sistema: ' . $e->getMessage()
+                'message' => 'Error al guardar la información'
+            ]);
+        }
+
+        // =====================================================
+        // RESPUESTA
+        // =====================================================
+
+        return $this->response->setJSON([
+
+            'success' => true,
+            'message' => 'Usuario guardado exitosamente',
+            'redirect' => '../usuarios/listar',
+            'id_usuario' => $idUsuario
+
+        ]);
+    } catch (\Exception $e) {
+
+        log_message(
+            'error',
+            'Error al guardar usuario: ' . $e->getMessage()
+        );
+
+        return $this->response->setJSON([
+
+            'success' => false,
+            'message' => 'Error del sistema: ' . $e->getMessage()
 
             ]);
         }

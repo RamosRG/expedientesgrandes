@@ -34,4 +34,37 @@ class DescripcionCatalogoModel extends Model
             ->get()
             ->getResultArray();
     }
+
+   public function crearProductoNuevo()
+{
+    try {
+
+        $model = new DescripcionCatalogoModel();
+
+        $datos = [
+
+            'descripcion' => $this->request->getPost('descripcion'),
+
+            'fk_catalogo' => $this->request->getPost('fk_catalogo'),
+
+            'unidad_medida' => $this->request->getPost('unidad_medida')
+
+        ];
+
+        $model->insert($datos);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Producto registrado correctamente'
+        ]);
+
+    } catch (\Exception $e) {
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+
+    }
+}
 }

@@ -25,25 +25,81 @@ class ProcesosInternosController extends BaseController
     switch ($vista) {
 
         case 1:
-            return view("portalProcesos/bitacoraSolicitudProveedores");
+            return view("procesosInternos/verBitacoraEnvio");
         case 2:
-            return view("portalProcesos/aperturaPropuesta");
+            return view("procesosInternos/verAnexoAperturaPropuestas");
         case 3:
-            return view("portalProcesos/anexoPapeleria");
+            return view("procesosInternos/verAnexoTabla");
         case 4:
-            return view("portalProcesos/contratoFerreteria");
+            return view("procesosInternos/verContratoAdministrativo");
         case 5:
-            return view("portalProcesos/actaPresentacion");
+            return view("procesosInternos/verActaApertura");
         case 6:
-            return view("portalProcesos/contrato");
+            return view("procesosInternos/verContratoApertura");
         case 7:
-            return view("portalProcesos/estudioMercadoPapeleria");
+            return view("procesosInternos/verContratoEstudioMercado");
         case 8:
             return view("procesosInternos/estudioMercado");
         case 9:
-            return view("portalProcesos/actaApertura");
+            return view("procesosInternos/verRegistroAsistencia");
         case 10:
-            return view("portalProcesos/actaApertura");
+            return view("procesosInternos/verRemisionEstudio");
+        case 11:
+            return view("procesosInternos/verActaFallo");
+        case 12:
+            return view("procesosInternos/verAnexoAperPropuesta");
+        case 13:
+            return view("procesosInternos/verAnexoAperCoordinador");
+        case 14:
+            return view("procesosInternos/verAnexoTablaIR");
+        case 15:
+            return view("procesosInternos/verAnexoEquipos");
+        case 16:
+            return view("procesosInternos/verbitacoraEnvioIr");
+        case 17:
+            return view("procesosInternos/verBitacoraSolicitud");
+        case 18:
+            return view("procesosInternos/verContratoPresentacion");
+        case 19:
+            return view("procesosInternos/verContratoCompu");
+        case 20:
+            return view("procesosInternos/verEstudiMercadoIR");
+        case 21:
+            return view("procesosInternos/verEstudioMercadoDosIR");
+        case 22:
+            return view("procesosInternos/verEstudiosMercadoExIr");
+        case 23:
+            return view("procesosInternos/verInvitacionProveedores");
+        case 27:
+            return view("procesosInternos/verInvitacionEstudio");
+        case 28:
+            return view("procesosInternos/verActaAperLp");
+        case 29:
+            return view("procesosInternos/verActaFalloLp");
+        case 30:
+            return view("procesosInternos/verAnexoTablaLp");
+        case 31:
+            return view("procesosInternos/verActoPreTabla");
+        case 32:
+            return view("procesosInternos/verTablaDocumen");
+        case 33:
+            return view("procesosInternos/verBasesLicitacion");
+        case 34:
+            return view("procesosInternos/verBitacoraSol");
+        case 35:
+            return view("procesosInternos/verBitacoraCompra");
+        case 36:
+            return view("procesosInternos/verContratoAdminDos");
+        case 37:
+            return view("procesosInternos/verContratoEstudioMerca");
+        case 38:
+            return view("procesosInternos/verEstudioMercadoLp");
+        case 39:
+            return view("procesosInternos/verCumplimientoPropuestas");
+        case 40:
+            return view("procesosInternos/verRemisionLp");
+        case 41:
+            return view("procesosInternos/verCotizaLp");
 
         case 2:
             return view("portalProcesos/contratoApertura");
@@ -60,13 +116,16 @@ class ProcesosInternosController extends BaseController
     }
 
    public function verDocumentos($id)
+   
 {
+
     $model = new DocumentosProcesosModel();
 
     $data['documentos'] = $model->getDocumentosByProceso($id);
     $data['idProceso'] = $id;
 
     return view("procesosInternos/mostrarArchivosProcedimiento", $data);
+
 }
 
     public function estudioMercadoFinalizado()
@@ -81,9 +140,11 @@ class ProcesosInternosController extends BaseController
     {
         if ($id == 1) {
             return view("procesosInternos/crearProceso");
-        } elseif ($id == 2) {
+        } 
+        else if ($id == 2) {
             return view("portalProcesos/anexoPropuesta");
         }
+        
     }
 
     public function getProcesosById($id = null)
@@ -124,7 +185,7 @@ class ProcesosInternosController extends BaseController
     {
         if ($id == 1) {
             return view("portalProcesos/crearDocumento");
-        } elseif ($id == 2) {
+        } else if ($id == 2) {
             return view("portalProcesos/anexoPropuesta");
         }
     }

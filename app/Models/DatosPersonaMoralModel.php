@@ -25,6 +25,7 @@ class DatosPersonaMoralModel extends Model
         'notario',
         'titular',
         'nci',
+        'num_acta_cons',
     ];
             
 

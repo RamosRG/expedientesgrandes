@@ -323,14 +323,14 @@
                 Listado Usuarios
             </a>
 
-            <a href="#" class="w3-bar-item w3-button w3-padding">
+            <a href="../portalCatalogo/verCatalogo" class="w3-bar-item w3-button w3-padding">
                 <i class="fa fa-book fa-fw"></i>
                 Catalogo de productos
             </a>
 
-            <a href="#" class="w3-bar-item w3-button w3-padding">
-                <i class="fa fa-cog fa-fw"></i>
-                Configuración
+            <a href="../areas/verAreas" class="w3-bar-item w3-button w3-padding">
+                <i class="fa fa-search fa-fw"></i>
+                Listado Areas
             </a>
 
         </div>
@@ -354,13 +354,8 @@
             <div class="breadcrumb">
                 <a href="<?= '/' ?>">Inicio</a>
                 <span class="breadcrumb-separator">/</span>
-                <a href="<?='../usuarios/crearUsuarios' ?>">crearUsuarios</a>
-                <span class="breadcrumb-separator">/</span>
                 <span>Portal de Procesos</span>
             </div>
-            <a href="<?= '../usuarios/crearUsuarios' ?>" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Volver
-            </a>
         </nav>
 
         <main class="portal-content">

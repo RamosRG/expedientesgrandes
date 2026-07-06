@@ -1,0 +1,109 @@
+/* ============================================
+   CONTROL DE FLUJO ENTRE PÁGINAS
+   ============================================ */
+
+/* Las hojas deben tener altura fija y ocultar desborde */
+.hoja {
+    width: 210mm;
+    height: 297mm; /* Altura fija A4 */
+    background: white;
+    border: 1px solid #cfdde6;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    margin-bottom: 38px;
+    padding: 18mm 16mm 20mm 16mm;
+    position: relative;
+    border-radius: 2px;
+    page-break-after: always;
+    overflow: hidden; /* Oculta el contenido que exceda */
+    box-sizing: border-box;
+}
+
+/* Contenedor flexible que permite scroll natural */
+.contenido-hoja {
+    width: 100%;
+    height: 100%;
+    font-size: 9pt;
+    line-height: 1.45;
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Los elementos que deben romper página automáticamente */
+.romper-pagina {
+    page-break-before: always;
+    break-before: page;
+    margin-top: 20px;
+}
+
+/* Evitar que las tablas se corten a la mitad */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 7.2pt;
+    page-break-inside: auto;
+}
+
+tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tfoot {
+    display: table-footer-group;
+}
+
+/* Elementos que NO deben romperse */
+.subtitulo-sec, 
+.texto, 
+.fila-firma, 
+.tabla-info,
+.texto-observacion,
+.encabezado-muni {
+    page-break-inside: avoid;
+}
+
+/* Asegurar que la primera hoja tenga todo el contenido */
+#hoja1 .contenido-hoja {
+    justify-content: flex-start;
+}
+
+/* Para la segunda hoja, el contenido empieza desde arriba */
+#hoja2 .contenido-hoja {
+    padding-top: 5mm;
+}
+
+/* ESTILOS PARA IMPRESIÓN */
+@media print {
+    body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    .header-superior,
+    .barra-acciones {
+        display: none !important;
+    }
+    
+    .hoja {
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 18mm 16mm 20mm 16mm !important;
+        height: 297mm !important;
+        page-break-after: always !important;
+        overflow: hidden !important;
+    }
+    
+    .hoja:last-child {
+        page-break-after: avoid !important;
+    }
+}

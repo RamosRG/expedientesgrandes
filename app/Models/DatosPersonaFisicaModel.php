@@ -21,6 +21,7 @@ class DatosPersonaFisicaModel extends Model
         'num_oficilia',
         'lugar_nacimiento',
         'fecha_nacimiento_registro',
+        'nci_fisica',
         'created_at',
         'updated_at'
     ];
