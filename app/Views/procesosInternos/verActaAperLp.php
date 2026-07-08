@@ -158,6 +158,40 @@
             font-size: 18px;
             color: var(--vino-oscuro);
         }
+        /* Contenedor del botón */
+.acciones-superior {
+    display: flex;
+    justify-content: flex-end; /* Lo manda a la derecha */
+    align-items: center;
+    margin: 20px 0 30px;
+}
+
+/* Botón Volver */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border: 2px solid #8b1a3a;
+    border-radius: 15px;
+    background: #fff;
+    color: #8b1a3a;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .3s ease;
+}
+
+.btn-volver i {
+    font-size: 22px;
+}
+
+.btn-volver:hover {
+    background: #8b1a3a;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 26, 58, .25);
+}
     </style>
 </head>
 
@@ -178,6 +212,11 @@
 
                 <span>Actas de Apertura LP</span>
             </div>
+                            <div class="acciones-superior">
+        <a href="<?= '/expedientesGrandes.temascalcingo.gob.mx/procesosInternos/verDocumentos/2' ?>" class="btn-volver">
+            <i class="fas fa-arrow-left"></i>
+            <span>Volver</span>
+        </a>
         </nav>
         <!-- DATOS GENERALES -->
         <div class="card">

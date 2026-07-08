@@ -179,11 +179,6 @@
                 Catalogo de productos
             </a>
 
-            <a href="#" class="w3-bar-item w3-button w3-padding">
-                <i class="fa fa-cog fa-fw"></i>
-                Configuración
-            </a>
-
         </div>
 
     </nav>

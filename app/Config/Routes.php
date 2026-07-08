@@ -37,6 +37,9 @@ $routes->group('admin', function ($routes) {
 $routes->group('areas', function ($routes) {
     $routes->get('obtenerAreas', 'AreasController::obtenerAreas');
     $routes->get('verAreas', 'AreasController::verAreas');
+    $routes->get('ver', 'AreasController::verAreas');
+$routes->post('crearArea', 'AreasController::crearArea');
+$routes->get('obtenerAreas', 'AreasController::obtenerAreas');
     
 });
 

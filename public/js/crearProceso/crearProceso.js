@@ -707,17 +707,25 @@ function guardarProceso() {
         body: JSON.stringify(datos)
     })
         .then(res => res.json())
-        .then(data => {
+.then(data => {
 
-            console.log("RESPUESTA:", data);
+    console.log("RESPUESTA:", data);
 
-            if (data.success) {
-                alert(data.message);
-            } else {
-                alert('Error al guardar');
-            }
+    if (data.success) {
 
-        })
+        alert(data.message);
+
+        setTimeout(function () {
+            window.location.href = "../portalProcesos/procesos";
+        }, 1000);
+
+    } else {
+
+        alert("Error al guardar");
+
+    }
+
+})
         .catch(error => {
             console.error(error);
         });

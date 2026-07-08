@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -10,21 +11,22 @@ class AreasModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $allowedFields = ['area'];  
+    protected $allowedFields = ['area', 'estado'];
     
-    protected $useTimestamps = true;
+    // Desactivar timestamps automáticos si no existen en la tabla
+    protected $useTimestamps = false;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     
-    // Método para obtener roles
+    // Método para obtener áreas activas (estado = 1)
     public function getAreas()
     {
-        return $this->findAll();
+        return $this->where('estado', 1)->findAll();
     }
     
-    // Método para obtener rol por nombre
-    public function getRolByNombre($nombre)
+    // Método para obtener todas las áreas (incluyendo inactivas)
+    public function getAllAreas()
     {
-        return $this->where('nombre', $nombre)->first();
+        return $this->findAll();
     }
 }

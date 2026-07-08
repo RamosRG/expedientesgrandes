@@ -155,6 +155,40 @@
             font-size: 18px;
             color: var(--vino-oscuro);
         }
+        /* Contenedor del botón */
+.acciones-superior {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    margin: 20px 0 30px;
+}
+
+/* Botón Volver */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border: 2px solid #8b1a3a;
+    border-radius: 15px;
+    background: #fff;
+    color: #8b1a3a;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .3s ease;
+}
+
+.btn-volver i {
+    font-size: 22px;
+}
+
+.btn-volver:hover {
+    background: #8b1a3a;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 26, 58, .25);
+}
     </style>
 </head>
 
@@ -166,16 +200,24 @@
             <h1>Estudio de Mercado</h1>
         </div>
 
-        <nav class="portal-nav" style="margin-bottom: 30px;">
-            <div class="breadcrumb">
-                <a href="<?= '/' ?>">Inicio</a>
-                <span class="breadcrumb-separator">/</span>
-                <a href="<?= '../../procesosInternos/procesos' ?>">Portal Procesos</a>
-                <span class="breadcrumb-separator">/</span>
+<nav class="portal-nav">
 
-                <span>Estudio de Mercado</span>
-            </div>
-        </nav>
+    <div class="breadcrumb">
+        <a href="<?= '/' ?>">Inicio</a>
+        <span class="breadcrumb-separator">/</span>
+        <a href="<?= '../../procesosInternos/procesos' ?>">Portal Procesos</a>
+        <span class="breadcrumb-separator">/</span>
+        <span>Estudio de Mercado</span>
+    </div>
+
+    <div class="acciones-superior">
+        <a href="<?= '../../portalProcesos/procesos' ?>" class="btn-volver">
+            <i class="fas fa-arrow-left"></i>
+            <span>Volver Portal Procesos</span>
+        </a>
+    </div>
+
+</nav>
         <!-- DATOS GENERALES -->
         <div class="card">
             <h2>Estudios de Mercado Finalizados</h2>

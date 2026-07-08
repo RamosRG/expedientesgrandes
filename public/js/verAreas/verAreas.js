@@ -1,4 +1,4 @@
-// Archivo: public/js/verUsuarios.js
+// Archivo: public/js/verAreas/verAreas.js
 
 let dataTable;
 let cordinadorData = [];

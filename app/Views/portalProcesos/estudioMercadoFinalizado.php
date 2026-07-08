@@ -158,6 +158,7 @@
             font-size: 18px;
             color: var(--vino-oscuro);
         }
+        
     </style>
 </head>
 

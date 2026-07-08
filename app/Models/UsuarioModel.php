@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -18,9 +19,10 @@ class UsuarioModel extends Model
         'correo',
         'contrasena_hash',
         'telefono_principal',
-        'active',
+        'active',        // Usamos active para activar/desactivar
         'id_rol',
         'fk_tipo_persona',
+        'fk_area',       // Relación con área
         'calle_numero',
         'colonia',
         'ciudad',
@@ -36,26 +38,29 @@ class UsuarioModel extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     
-
+    // Métodos existentes...
     public function obtenerCoordinadorRol4()
-{
-    return $this->db->table('usuarios')
-        ->select('usuarios.*, roles.*, roles.nombre AS "rol", area.*')
-        ->join('roles', 'roles.id_rol = usuarios.id_rol')
-        ->join('area', 'usuarios.fk_area = area.id_area')
-        ->where('usuarios.id_rol', 4)
-        ->get()
-        ->getResult();
-}
- public function getProveedores()
-{
-    return $this->select('usuarios.*, roles.nombre AS nombre_rol')
-        ->join('roles', 'roles.id_rol = usuarios.id_rol')
-        ->where('usuarios.id_rol', 3) // Trae todos los usuarios con rol proveedor
-        ->get()
-        ->getResultArray();
-}
-    // Método para obtener usuario con su rol
+    {
+        return $this->db->table('usuarios')
+            ->select('usuarios.*, roles.*, roles.nombre AS "rol", area.*')
+            ->join('roles', 'roles.id_rol = usuarios.id_rol')
+            ->join('area', 'usuarios.fk_area = area.id_area')
+            ->where('usuarios.id_rol', 4)
+            ->where('usuarios.active', 1)
+            ->get()
+            ->getResult();
+    }
+
+    public function getProveedores()
+    {
+        return $this->select('usuarios.*, roles.nombre AS nombre_rol')
+            ->join('roles', 'roles.id_rol = usuarios.id_rol')
+            ->where('usuarios.id_rol', 3)
+            ->where('usuarios.active', 1)
+            ->get()
+            ->getResultArray();
+    }
+
     public function editarUsuario($id)
     {
         return $this->select('usuarios.*, roles.nombre AS nombre_rol')  
@@ -63,14 +68,12 @@ class UsuarioModel extends Model
             ->where('usuarios.id_usuario', $id)
             ->first();
     }
-    
-    // Método para obtener todos los usuarios con sus roles
 
     public function getUsuariosConRol()
-{
-    return $this->select("CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno) AS nombre_completo, usuarios.correo, usuarios.active, roles.nombre AS rol")
-        ->join('roles', 'roles.id_rol = usuarios.id_rol')
-        ->findAll();
-}
-
+    {
+        return $this->select("CONCAT(usuarios.nombre, ' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno) AS nombre_completo, usuarios.correo, usuarios.active, roles.nombre AS rol")
+            ->join('roles', 'roles.id_rol = usuarios.id_rol')
+            ->where('usuarios.active', 1)
+            ->findAll();
+    }
 }
